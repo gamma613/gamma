@@ -1,15 +1,13 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist_Mono, Outfit } from "next/font/google";
 import "./globals.css";
 import Image from "next/image";
 import Link from "next/link";
 import { Player } from "@/modules/player";
 import ClientProviders from "./ClientProviders";
+import { cn } from "@/lib/utils";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+const outfit = Outfit({ subsets: ['latin'], variable: '--font-outfit' });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
@@ -30,12 +28,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`min-h-screen ${geistSans.variable} ${geistMono.variable} antialiased`}>
+    <html lang="en" className={cn("font-sans", outfit.variable)}>
+      <body className={`${geistMono.variable} antialiased`}>
         <ClientProviders>
-          <div className="min-h-screen mx-auto px-6 flex flex-col max-w-md sm:max-w-3xl" style={{background: '#99ff0010'}}>
-            <header className="h-[50px] md:h-[80px] px-6 flex items-center border-b">
-              <div className="flex-1">
+          <header className="fixed inset-x-0 top-0 z-30">
+            <div className="mx-auto px-6 max-w-md sm:max-w-3xl">
+              <div className="h-[50px] md:h-[80px] flex items-center px-3 bg-[var(--background)]">
                 <Link href='/' className="inline-block">
                   <Image
                     src="/logo-transparent.png"
@@ -45,27 +43,22 @@ export default function RootLayout({
                     priority
                   />
                 </Link>
-                {/* <button className="text-xl" onClick={() => console.log('hi')}>☰</button> */}
-                
+
+                <div className="flex flex-1 px-3 justify-center">
+                  <Player />
+                </div>
+
+                <div className="flex justify-end">
+                  🍔 
+                </div>
               </div>
+            </div>
+          </header>
 
-              <div className="flex justify-center">
-                <Player />
-              </div>
-
-              <div className="flex-1 flex justify-end">
-                🍔 
-              </div>
-
-            </header>
-
+          <div className="mx-auto px-6 flex flex-col max-w-md sm:max-w-3xl pt-[62px] md:pt-[98px]">
             <main className="flex-1">
               {children}
             </main>
-
-            {/* <footer className="h-[50px] shrink-0 border-t">
-              fooder
-            </footer> */}
           </div>
         </ClientProviders>
       </body>
