@@ -25,7 +25,7 @@ export function SeekBar({
 
   // Avoid SSR/client attribute mismatches when persisted position/duration are loaded on the client.
   if (!hydrated) {
-    return <div aria-hidden="true" className={cn('w-full h-2 bg-muted', className)} />;
+    return <div aria-hidden="true" className={cn('w-full h-2 bg-secondary', className)} />;
   }
 
   return (
