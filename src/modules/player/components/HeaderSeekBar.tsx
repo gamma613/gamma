@@ -3,9 +3,11 @@
 import { useMemo, useState } from 'react';
 
 import { cn } from '@/lib/utils';
+import { useHydrated } from '@/lib/useHydrated';
 import { usePlayer } from '../context/usePlayer';
 
 export function HeaderSeekBar({ className }: { className?: string }) {
+  const hydrated = useHydrated();
   const { track, positionSeconds, durationSeconds, seek } = usePlayer();
 
   const [isScrubbing, setIsScrubbing] = useState(false);
@@ -25,6 +27,11 @@ export function HeaderSeekBar({ className }: { className?: string }) {
       background: `linear-gradient(to right, hsl(var(--primary)) ${pct}%, hsl(var(--muted)) ${pct}%)`,
     } as const;
   }, [pct]);
+
+  // Avoid SSR/client attribute mismatches when persisted position/duration are loaded on the client.
+  if (!hydrated) {
+    return <div aria-hidden="true" className={cn('w-full h-[7px] rounded-full bg-muted', className)} />;
+  }
 
   return (
     <input
@@ -48,7 +55,7 @@ export function HeaderSeekBar({ className }: { className?: string }) {
         setScrubSeconds(v);
       }}
       className={cn(
-        'w-full h-[10px] appearance-none rounded-full bg-muted outline-none',
+        'w-full h-[7px] appearance-none rounded-full bg-muted outline-none',
         'disabled:cursor-not-allowed disabled:opacity-60',
         'focus-visible:ring-3 focus-visible:ring-ring/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background',
         // WebKit.
@@ -72,4 +79,3 @@ export function HeaderSeekBar({ className }: { className?: string }) {
     />
   );
 }
-
