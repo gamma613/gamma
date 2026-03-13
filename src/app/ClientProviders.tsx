@@ -2,14 +2,14 @@
 
 import React from 'react';
 import { PlayerProvider } from '@/modules/player';
-import { AuroraBackground } from '@/components/ui/aurora';
+import { BokehBackground } from '@/components/ui/bokeh';
 
 export default function ClientProviders({ children }: { children: React.ReactNode }) {
   return (
-    <AuroraBackground showRadialGradient={true} animationSpeed={30}>
+    <BokehBackground>
       <PlayerProvider defaultTrack={{ src: '/api/stream/mixes/repossession', title: 'Repossession' }}>
         {children}
       </PlayerProvider>
-    </AuroraBackground>
+    </BokehBackground>
   );
 }
