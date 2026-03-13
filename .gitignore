@@ -40,5 +40,17 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# generated content
 certificates
-.content-collections/cache/
+.content-collections
+
+
+# Large audio assets
+/protected-assets/mixes/*.mp3
+/protected-assets/mixes/**/*.mp3
+/protected-assets/mixes/*.wav
+/protected-assets/mixes/**/*.wav
+/protected-assets/mixes/*.m4a
+/protected-assets/mixes/**/*.m4a
+/protected-assets/mixes/*.flac
+/protected-assets/mixes/**/*.flac
