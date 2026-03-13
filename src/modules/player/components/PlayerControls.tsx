@@ -36,7 +36,7 @@ export function PlayerControls({ className }: { className?: string }) {
         <Button
           type="button"
           variant="default"
-          className="h-11 w-11 md:h-9 md:w-9 p-0 hover:bg-primary/90 active:bg-primary/80"
+          className="h-11 w-11 md:h-9 md:w-9 p-0"
           aria-label={playing ? 'Pause' : 'Play'}
           onClick={() => toggle()}
         >
