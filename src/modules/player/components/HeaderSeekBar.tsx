@@ -1,12 +1,18 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo, useState, type CSSProperties } from 'react';
 
 import { cn } from '@/lib/utils';
 import { useHydrated } from '@/lib/useHydrated';
 import { usePlayer } from '../context/usePlayer';
 
-export function HeaderSeekBar({ className }: { className?: string }) {
+export function HeaderSeekBar({
+  className,
+  thicknessPx = 10,
+}: {
+  className?: string;
+  thicknessPx?: number;
+}) {
   const hydrated = useHydrated();
   const { track, positionSeconds, durationSeconds, seek } = usePlayer();
 
@@ -28,9 +34,19 @@ export function HeaderSeekBar({ className }: { className?: string }) {
     } as const;
   }, [pct]);
 
+  const cssVars = useMemo(() => {
+    return { '--seekbar-h': `${thicknessPx}px` } as CSSProperties & Record<'--seekbar-h', string>;
+  }, [thicknessPx]);
+
   // Avoid SSR/client attribute mismatches when persisted position/duration are loaded on the client.
   if (!hydrated) {
-    return <div aria-hidden="true" className={cn('w-full h-[7px] rounded-full bg-muted', className)} />;
+    return (
+      <div
+        aria-hidden="true"
+        className={cn('w-full h-[var(--seekbar-h)] rounded-full bg-muted', className)}
+        style={cssVars}
+      />
+    );
   }
 
   return (
@@ -55,11 +71,11 @@ export function HeaderSeekBar({ className }: { className?: string }) {
         setScrubSeconds(v);
       }}
       className={cn(
-        'w-full h-[7px] appearance-none rounded-full bg-muted outline-none',
+        'w-full h-[var(--seekbar-h)] appearance-none rounded-full bg-muted outline-none',
         'disabled:cursor-not-allowed disabled:opacity-60',
         'focus-visible:ring-3 focus-visible:ring-ring/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background',
         // WebKit.
-        '[&::-webkit-slider-runnable-track]:h-[10px] [&::-webkit-slider-runnable-track]:rounded-full [&::-webkit-slider-runnable-track]:bg-transparent',
+        '[&::-webkit-slider-runnable-track]:h-[var(--seekbar-h)] [&::-webkit-slider-runnable-track]:rounded-full [&::-webkit-slider-runnable-track]:bg-transparent',
         '[&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full',
         '[&::-webkit-slider-thumb]:h-[22px] [&::-webkit-slider-thumb]:w-[22px]',
         '[&::-webkit-slider-thumb]:bg-background [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-primary',
@@ -67,15 +83,15 @@ export function HeaderSeekBar({ className }: { className?: string }) {
         '[&::-webkit-slider-thumb]:transition-[width,height] [&::-webkit-slider-thumb]:duration-150',
         'hover:[&::-webkit-slider-thumb]:h-11 hover:[&::-webkit-slider-thumb]:w-11',
         // Firefox.
-        '[&::-moz-range-track]:h-[10px] [&::-moz-range-track]:rounded-full [&::-moz-range-track]:bg-muted',
-        '[&::-moz-range-progress]:h-[10px] [&::-moz-range-progress]:rounded-full [&::-moz-range-progress]:bg-primary',
+        '[&::-moz-range-track]:h-[var(--seekbar-h)] [&::-moz-range-track]:rounded-full [&::-moz-range-track]:bg-muted',
+        '[&::-moz-range-progress]:h-[var(--seekbar-h)] [&::-moz-range-progress]:rounded-full [&::-moz-range-progress]:bg-primary',
         '[&::-moz-range-thumb]:h-[22px] [&::-moz-range-thumb]:w-[22px] [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-background',
         '[&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-primary [&::-moz-range-thumb]:shadow-sm',
         '[&::-moz-range-thumb]:transition-[width,height] [&::-moz-range-thumb]:duration-150',
         'hover:[&::-moz-range-thumb]:h-11 hover:[&::-moz-range-thumb]:w-11',
         className,
       )}
-      style={trackStyle}
+      style={{ ...cssVars, ...trackStyle }}
     />
   );
 }
