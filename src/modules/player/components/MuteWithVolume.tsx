@@ -5,6 +5,7 @@ import { HugeiconsIcon } from '@hugeicons/react';
 import { VolumeHighIcon, VolumeMute02Icon } from '@hugeicons/core-free-icons';
 
 import { Button } from '@/components/ui/button';
+import { Slider } from '@/components/ui/slider';
 import { cn } from '@/lib/utils';
 import { usePlayer } from '../context/usePlayer';
 
@@ -19,40 +20,16 @@ export function MuteWithVolume({
 }) {
   const { muted, volume, setMuted, setVolume } = usePlayer();
 
-  const volumePct = useMemo(() => {
+  const sliderValue = useMemo(() => {
     const v = muted ? 0 : volume;
-    if (!Number.isFinite(v)) return 0;
-    return Math.max(0, Math.min(100, v * 100));
+    if (!Number.isFinite(v)) return [0];
+    return [Math.max(0, Math.min(1, v))];
   }, [muted, volume]);
-
-  const volumeStyle = useMemo(() => {
-    return {
-      background: `linear-gradient(to right, hsl(var(--primary)) ${volumePct}%, hsl(var(--muted)) ${volumePct}%)`,
-    } as const;
-  }, [volumePct]);
 
   const popoverPositionClassName =
     anchor === 'top'
       ? 'left-1/2 top-full -translate-x-1/2 mt-0'
       : 'left-1/2 bottom-full -translate-x-1/2 mb-0';
-
-  const rangeClassName = cn(
-    // Rotated so "up" is louder (max) and "down" is quieter (min).
-    'w-24 h-2 -rotate-90',
-    'bg-muted appearance-none rounded-full outline-none',
-    'focus-visible:ring-3 focus-visible:ring-ring/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background',
-    // WebKit track/thumb.
-    '[&::-webkit-slider-runnable-track]:rounded-full [&::-webkit-slider-runnable-track]:bg-transparent',
-    '[&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full',
-    '[&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4',
-    '[&::-webkit-slider-thumb]:bg-background [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-primary',
-    '[&::-webkit-slider-thumb]:shadow-sm',
-    // Firefox track/progress/thumb.
-    '[&::-moz-range-track]:h-2 [&::-moz-range-track]:rounded-full [&::-moz-range-track]:bg-muted',
-    '[&::-moz-range-progress]:h-2 [&::-moz-range-progress]:rounded-full [&::-moz-range-progress]:bg-primary',
-    '[&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-background',
-    '[&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-primary [&::-moz-range-thumb]:shadow-sm',
-  );
 
   return (
     <div className={cn('relative group', className)}>
@@ -71,26 +48,27 @@ export function MuteWithVolume({
         className={cn(
           'absolute z-40 hidden group-hover:block group-focus-within:block',
           // Keep the slider close to the icon so we don't lose hover on the way down.
-          'rounded-lg border bg-background/70 p-2 text-popover-foreground shadow-md supports-[backdrop-filter]:backdrop-blur-md',
+          'rounded-lg border bg-background/80 p-2 text-popover-foreground shadow-md supports-[backdrop-filter]:backdrop-blur-md',
           'w-14',
           popoverPositionClassName,
         )}
       >
         <div className="h-24 w-full flex items-center justify-center">
-          <input
+          <Slider
             aria-label="Volume"
-            type="range"
-            min={0}
+            orientation="vertical"
+            value={sliderValue}
             max={1}
             step={0.01}
-            value={muted ? 0 : volume}
-            onChange={(e) => {
-              const v = Number.parseFloat(e.target.value);
+            onValueChange={(next) => {
+              const v = next[0] ?? 0;
               setVolume(v);
               setMuted(v === 0);
             }}
-            className={rangeClassName}
-            style={volumeStyle}
+            className="h-24 w-6 flex-col"
+            trackClassName="h-full w-2"
+            rangeClassName="w-full"
+            thumbClassName="h-4 w-4"
           />
         </div>
       </div>
