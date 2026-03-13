@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { Geist_Mono, Outfit } from "next/font/google";
 import "./globals.css";
-import Image from "next/image";
-import Link from "next/link";
-import { Player } from "@/modules/player";
+import { Header, HeaderProvider } from "@/modules/header";
 import ClientProviders from "./ClientProviders";
 import { cn } from "@/lib/utils";
 
@@ -31,29 +29,9 @@ export default function RootLayout({
     <html lang="en" className={cn("font-sans", outfit.variable)}>
       <body className={`${geistMono.variable} antialiased`}>
         <ClientProviders>
-          <header className="fixed inset-x-0 top-0 z-30">
-            <div className="mx-auto px-6 max-w-md sm:max-w-3xl">
-              <div className="h-[50px] md:h-[80px] flex items-center px-3 bg-[var(--background)]">
-                <Link href='/' className="inline-block">
-                  <Image
-                    src="/logo-transparent.png"
-                    alt="gamma logo"
-                    height="44"
-                    width="44"
-                    priority
-                  />
-                </Link>
-
-                <div className="flex flex-1 px-3 justify-center">
-                  <Player />
-                </div>
-
-                <div className="flex justify-end">
-                  🍔 
-                </div>
-              </div>
-            </div>
-          </header>
+          <HeaderProvider>
+            <Header />
+          </HeaderProvider>
 
           <div className="mx-auto px-6 flex flex-col max-w-md sm:max-w-3xl pt-[62px] md:pt-[98px]">
             <main className="flex-1">
