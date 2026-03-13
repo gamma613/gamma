@@ -76,6 +76,11 @@ export function PlayerProvider({
     };
   });
 
+  const stateRef = useRef<PlayerState>(state);
+  useEffect(() => {
+    stateRef.current = state;
+  }, [state]);
+
   const lastPersistMsRef = useRef<number>(0);
   useEffect(() => {
     // Throttle persistence to avoid spamming localStorage on progress events.
@@ -84,6 +89,25 @@ export function PlayerProvider({
     lastPersistMsRef.current = now;
     persist(state);
   }, [state]);
+
+  useEffect(() => {
+    const flush = () => {
+      persist(stateRef.current);
+    };
+
+    const onPageHide = () => flush();
+    const onVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') flush();
+    };
+
+    window.addEventListener('pagehide', onPageHide);
+    document.addEventListener('visibilitychange', onVisibilityChange);
+
+    return () => {
+      window.removeEventListener('pagehide', onPageHide);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+    };
+  }, []);
 
   useEffect(() => {
     // Best-effort: ensure only one tab plays at a time.
@@ -197,5 +221,4 @@ export function PlayerProvider({
 
   return <PlayerContext.Provider value={value}>{children}</PlayerContext.Provider>;
 }
-
 

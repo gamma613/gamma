@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import ReactPlayer from 'react-player';
 
 import { usePlayer } from '../context/usePlayer';
@@ -10,6 +10,20 @@ import { usePlayer } from '../context/usePlayer';
 export const Player = () => {
   const playerRef = useRef<HTMLVideoElement | null>(null);
   const { track, playing, positionSeconds, setPlaying, setPositionSeconds, setDurationSeconds } = usePlayer();
+  const hasRestoredRef = useRef(false);
+
+  const restoreIfNeeded = useCallback(() => {
+    if (hasRestoredRef.current) return;
+    if (!playerRef.current) return;
+    if (!(positionSeconds > 0)) return;
+    // Seeking before metadata is loaded can be ignored by the browser; we also try onLoadedMetadata.
+    try {
+      playerRef.current.currentTime = positionSeconds;
+    } catch {
+      // Ignore.
+    }
+    hasRestoredRef.current = true;
+  }, [positionSeconds]);
 
   // Keep the underlying player in sync when state changes (seek from persisted state, external UI, etc.).
   useEffect(() => {
@@ -20,6 +34,17 @@ export const Player = () => {
     playerRef.current.currentTime = positionSeconds;
   }, [positionSeconds]);
 
+  // If the user hits play after a refresh, ensure we restore the persisted seek position first.
+  useEffect(() => {
+    if (!playing) return;
+    restoreIfNeeded();
+  }, [playing, restoreIfNeeded]);
+
+  useEffect(() => {
+    // New track: allow restoring again (typically to 0 unless a seek is set externally).
+    hasRestoredRef.current = false;
+  }, [track?.src]);
+
   if (!track) return null;
 
   return (
@@ -28,12 +53,12 @@ export const Player = () => {
       src={track.src}
       playing={playing}
       controls={true}
+      preload="metadata"
       onPlay={() => setPlaying(true)}
       onPause={() => setPlaying(false)}
       onEnded={() => setPlaying(false)}
       onLoadedMetadata={() => {
-        if (!playerRef.current) return;
-        if (positionSeconds > 0) playerRef.current.currentTime = positionSeconds;
+        restoreIfNeeded();
       }}
       onDurationChange={() => {
         if (!playerRef.current) return;
@@ -42,6 +67,8 @@ export const Player = () => {
       onTimeUpdate={() => {
         if (!playerRef.current) return;
         const t = playerRef.current.currentTime ?? 0;
+        // Avoid overwriting a persisted seek target with an initial `0` timeupdate.
+        if (!hasRestoredRef.current && positionSeconds > 0 && t < 1) return;
         setPositionSeconds(t);
       }}
       height="40px"
