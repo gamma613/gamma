@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Menu } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import { HeaderPlayer, HeaderSeekBar } from '@/modules/player';
+import { HeaderPlayer, SeekBar } from '@/modules/player';
 import { useHeader } from '../context/useHeader';
 
 export function Header() {
@@ -38,7 +38,7 @@ export function Header() {
             </div>
           </div>
 
-          <HeaderSeekBar className="absolute inset-x-0 bottom-0" thicknessPx={10} />
+          <SeekBar className="absolute inset-x-0 bottom-0" thicknessPx={10} />
         </div>
       </div>
     </header>

@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
 import { useHydrated } from '@/lib/useHydrated';
 import { usePlayer } from '../context/usePlayer';
 
-export function HeaderSeekBar({
+export function SeekBar({
   className,
   thicknessPx = 10,
 }: {
