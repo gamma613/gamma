@@ -1,4 +1,13 @@
+import { Metadata } from "next";
 import Image from "next/image";
+
+export const metadata: Metadata = {
+  description: "",
+  title: {
+    default: "DJ gamma 🦇 Ottawa, Canada",
+    template: "%s | DJ gamma 🦇 Ottawa, Canada",
+  },
+};
 
 export default function Home() {
   return (

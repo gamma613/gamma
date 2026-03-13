@@ -3,17 +3,24 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev  --experimental-https",
     "build": "next build",
+    "build:content": "content-collections build",
     "start": "next start",
     "lint": "eslint"
   },
   "dependencies": {
+    "@content-collections/core": "0.14.1",
     "next": "16.1.6",
     "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "react-dom": "19.2.3",
+    "react-player": "^3.4.0",
+    "slugify": "^1.6.6",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@content-collections/cli": "^0.1.9",
+    "@content-collections/next": "0.2.11",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
