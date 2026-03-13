@@ -1,6 +1,7 @@
 import { defineCollection, defineConfig } from "@content-collections/core";
 import { z } from "zod";
 import slugify from 'slugify';
+import { MIX_ART_EXTS, MIX_AUDIO_EXTS } from "./src/lib/mixes/supported";
 
 // ----------------------------------------------------------------------
 
@@ -9,9 +10,9 @@ import slugify from 'slugify';
 /** Shape of a mix item data source */
 const mixSchema = z.object({
   artExt: z.object({
-    cover: z.enum(["jpg", "png"]).nullable().optional(),
+    cover: z.enum(MIX_ART_EXTS as unknown as [string, ...string[]]).nullable().optional(),
   }).optional(),
-  audioExt: z.enum(["mp3"]).nullable().optional(),
+  audioExt: z.enum(MIX_AUDIO_EXTS as unknown as [string, ...string[]]).nullable().optional(),
   bpm: z.number().positive().nullable().optional(),
   bpm2: z.number().positive().nullable().optional(),
   content: z.string().optional().nullable(),
