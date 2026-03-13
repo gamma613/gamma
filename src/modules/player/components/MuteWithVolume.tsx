@@ -32,10 +32,14 @@ export function MuteWithVolume({
   }, [volumePct]);
 
   const popoverPositionClassName =
-    anchor === 'top' ? 'left-1/2 top-full -translate-x-1/2 mt-2' : 'left-1/2 bottom-full -translate-x-1/2 mb-2';
+    anchor === 'top'
+      ? 'left-1/2 top-full -translate-x-1/2 mt-0'
+      : 'left-1/2 bottom-full -translate-x-1/2 mb-0';
 
   const rangeClassName = cn(
-    'w-full h-2 bg-muted appearance-none rounded-full outline-none',
+    // Rotated so "up" is louder (max) and "down" is quieter (min).
+    'w-24 h-2 rotate-90',
+    'bg-muted appearance-none rounded-full outline-none',
     'focus-visible:ring-3 focus-visible:ring-ring/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background',
     // WebKit track/thumb.
     '[&::-webkit-slider-runnable-track]:rounded-full [&::-webkit-slider-runnable-track]:bg-transparent',
@@ -66,27 +70,30 @@ export function MuteWithVolume({
       <div
         className={cn(
           'absolute z-40 hidden group-hover:block group-focus-within:block',
-          'w-44 rounded-lg border bg-popover p-3 text-popover-foreground shadow-md',
+          // Keep the slider close to the icon so we don't lose hover on the way down.
+          'rounded-lg border bg-popover p-2 text-popover-foreground shadow-md',
+          'w-14',
           popoverPositionClassName,
         )}
       >
-        <input
-          aria-label="Volume"
-          type="range"
-          min={0}
-          max={1}
-          step={0.01}
-          value={muted ? 0 : volume}
-          onChange={(e) => {
-            const v = Number.parseFloat(e.target.value);
-            setVolume(v);
-            setMuted(v === 0);
-          }}
-          className={rangeClassName}
-          style={volumeStyle}
-        />
+        <div className="h-24 w-full flex items-center justify-center">
+          <input
+            aria-label="Volume"
+            type="range"
+            min={0}
+            max={1}
+            step={0.01}
+            value={muted ? 0 : volume}
+            onChange={(e) => {
+              const v = Number.parseFloat(e.target.value);
+              setVolume(v);
+              setMuted(v === 0);
+            }}
+            className={rangeClassName}
+            style={volumeStyle}
+          />
+        </div>
       </div>
     </div>
   );
 }
-
