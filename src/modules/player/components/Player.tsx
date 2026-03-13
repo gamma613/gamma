@@ -49,10 +49,10 @@ export const Player = () => {
   }, [track?.src]);
 
   // Keep SSR + initial hydration deterministic; render the real UI after hydration.
-  if (!hydrated || !track) return <div className="min-w-[320px] h-11" />;
+  if (!hydrated || !track) return <div className="h-11" />;
 
   return (
-    <div className="min-w-[320px]">
+    <div>
       <div
         aria-hidden="true"
         style={{

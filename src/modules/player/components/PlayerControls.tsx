@@ -83,13 +83,7 @@ export function PlayerControls({ className }: { className?: string }) {
   if (!track) return null;
 
   return (
-    <div
-      className={cn(
-        'min-w-[320px] select-none rounded-xl border bg-card/70 text-card-foreground',
-        'px-3 py-2 supports-[backdrop-filter]:backdrop-blur-md',
-        className,
-      )}
-    >
+    <div className={cn('select-none', className)}>
       <div className="flex items-center gap-2">
         <Button
           type="button"
