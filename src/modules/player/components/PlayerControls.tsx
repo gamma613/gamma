@@ -45,10 +45,18 @@ export function PlayerControls({ className }: { className?: string }) {
 
         <MuteWithVolume anchor="top" />
 
-        <div className="ml-auto flex items-center gap-2 tabular-nums text-xs text-muted-foreground">
-          <span className="text-foreground">{formatTime(positionSeconds)}</span>
-          <span className="hidden sm:inline">/</span>
-          <span className="hidden sm:inline">{formatTime(durationSeconds)}</span>
+        <div className="ml-auto flex flex-col items-end">
+          {track.title ? (
+            <div className="max-w-[12rem] sm:max-w-[16rem] truncate text-[11px] leading-tight text-muted-foreground" title={track.title}>
+              {track.title}
+            </div>
+          ) : null}
+
+          <div className="flex items-center gap-2 tabular-nums text-xs text-muted-foreground">
+            <span className="text-foreground">{formatTime(positionSeconds)}</span>
+            <span className="hidden sm:inline">/</span>
+            <span className="hidden sm:inline">{formatTime(durationSeconds)}</span>
+          </div>
         </div>
       </div>
     </div>
