@@ -2,11 +2,12 @@
 
 import { useMemo, useState } from 'react';
 import { HugeiconsIcon } from '@hugeicons/react';
-import { PauseIcon, PlayIcon, VolumeHighIcon, VolumeMute02Icon } from '@hugeicons/core-free-icons';
+import { PauseIcon, PlayIcon } from '@hugeicons/core-free-icons';
 
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { usePlayer } from '../context/usePlayer';
+import { MuteWithVolume } from './MuteWithVolume';
 
 function formatTime(totalSeconds: number): string {
   if (!Number.isFinite(totalSeconds) || totalSeconds < 0) return '0:00';
@@ -24,10 +25,6 @@ export function PlayerControls({ className }: { className?: string }) {
     track,
     playing,
     toggle,
-    muted,
-    volume,
-    setMuted,
-    setVolume,
     positionSeconds,
     durationSeconds,
     seek,
@@ -38,12 +35,6 @@ export function PlayerControls({ className }: { className?: string }) {
 
   const displayPosition = isScrubbing ? scrubSeconds : positionSeconds;
   const canSeek = Number.isFinite(durationSeconds) && durationSeconds > 0;
-
-  const volumePct = useMemo(() => {
-    const v = muted ? 0 : volume;
-    if (!Number.isFinite(v)) return 0;
-    return Math.max(0, Math.min(100, v * 100));
-  }, [muted, volume]);
 
   const pct = useMemo(() => {
     if (!canSeek) return 0;
@@ -74,12 +65,6 @@ export function PlayerControls({ className }: { className?: string }) {
     } as const;
   }, [canSeek, pct]);
 
-  const volumeStyle = useMemo(() => {
-    return {
-      background: `linear-gradient(to right, hsl(var(--primary)) ${volumePct}%, hsl(var(--muted)) ${volumePct}%)`,
-    } as const;
-  }, [volumePct]);
-
   if (!track) return null;
 
   return (
@@ -95,33 +80,7 @@ export function PlayerControls({ className }: { className?: string }) {
           <HugeiconsIcon icon={playing ? PauseIcon : PlayIcon} size={22} color="currentColor" />
         </Button>
 
-        <Button
-          type="button"
-          variant="outline"
-          className="h-11 w-11 md:h-9 md:w-9 p-0 bg-background/60 hover:bg-muted"
-          aria-label={muted || volume === 0 ? 'Unmute' : 'Mute'}
-          onClick={() => setMuted(!muted)}
-        >
-          <HugeiconsIcon icon={muted || volume === 0 ? VolumeMute02Icon : VolumeHighIcon} size={22} color="currentColor" />
-        </Button>
-
-        <div className="hidden md:flex items-center gap-2 min-w-[180px]">
-          <input
-            aria-label="Volume"
-            type="range"
-            min={0}
-            max={1}
-            step={0.01}
-            value={muted ? 0 : volume}
-            onChange={(e) => {
-              const v = Number.parseFloat(e.target.value);
-              setVolume(v);
-              setMuted(v === 0);
-            }}
-            className={cn('w-full h-2 bg-muted', rangeBaseClassName, '[&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4', '[&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:w-4')}
-            style={volumeStyle}
-          />
-        </div>
+        <MuteWithVolume anchor="top" />
 
         <div className="ml-auto flex items-center gap-2 tabular-nums text-xs text-muted-foreground">
           <span className="text-foreground">{formatTime(displayPosition)}</span>
