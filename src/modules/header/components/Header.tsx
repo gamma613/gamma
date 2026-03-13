@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Menu } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import { Player } from '@/modules/player';
+import { HeaderPlayer } from '@/modules/player';
 import { useHeader } from '../context/useHeader';
 
 export function Header() {
@@ -20,7 +20,7 @@ export function Header() {
           </Link>
 
           <div className="flex flex-1 px-3 justify-center">
-            <Player />
+            <HeaderPlayer />
           </div>
 
           <div className="flex justify-end">
