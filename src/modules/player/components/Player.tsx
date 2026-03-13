@@ -5,10 +5,12 @@ import ReactPlayer from 'react-player';
 
 import { usePlayer } from '../context/usePlayer';
 import { PlayerControls } from './PlayerControls';
+import { useHydrated } from '@/lib/useHydrated';
 
 // ----------------------------------------------------------------------
 
 export const Player = () => {
+  const hydrated = useHydrated();
   const playerRef = useRef<HTMLVideoElement | null>(null);
   const { track, playing, muted, volume, positionSeconds, setPlaying, setPositionSeconds, setDurationSeconds } = usePlayer();
   const hasRestoredRef = useRef(false);
@@ -46,7 +48,8 @@ export const Player = () => {
     hasRestoredRef.current = false;
   }, [track?.src]);
 
-  if (!track) return null;
+  // Keep SSR + initial hydration deterministic; render the real UI after hydration.
+  if (!hydrated || !track) return <div className="min-w-[320px] h-11" />;
 
   return (
     <div className="min-w-[320px]">
