@@ -3,14 +3,10 @@ import fsp from "fs/promises"
 import fs from "fs"
 
 import path from "path"
-import { getMix } from "@/lib/mixes/getMix"
-import { Mix } from "content-collections"
+import { MIX_ART_TYPES, type MixArtType, imageContentTypeFromExt } from "@/lib/mixes/supported"
+import { resolveMixArtFile } from "@/lib/mixes/resolveAsset"
 
 // ----------------------------------------------------------------------
-
-
-/** Supported art types */
-type ArtTypes = keyof NonNullable<Mix["artExt"]>;
 
 /** Configuration */
 const CONFIG = {
@@ -18,7 +14,7 @@ const CONFIG = {
     cover: {
       fallback: "public/mixes/default-cover.jpg",
     }
-  } satisfies Record<ArtTypes, {
+  } satisfies Record<MixArtType, {
     fallback: string;
   }>,
   debug: false,
@@ -28,36 +24,24 @@ const CONFIG = {
 
 export async function GET(
   req: Request,
-  { params }: { params: Promise<{ slug: string, type: ArtTypes }> }
+  { params }: { params: Promise<{ slug: string, type: string }> }
 ) {
   const { slug, type } = await params
 
   // Validate art type
-  const artConfig = CONFIG.art[type];
+  if (!MIX_ART_TYPES.includes(type as MixArtType)) {
+    return new NextResponse("Invalid art type", { status: 400 });
+  }
+
+  const artConfig = CONFIG.art[type as MixArtType];
   if (!artConfig) {
     return new NextResponse("Invalid art type", { status: 400 });
   }
 
   // Try to get art
   try {
-    // Get the mix
-    const mix = getMix(slug);
-    if (!mix) {
-      throw new Error(`Mix not found: ${slug}`);
-    }
-
-    // See if there is a type
-    const ext = mix.artExt?.[type];
-    if (!ext) {
-      throw new Error(`No ${type} defined for ${slug}`);
-    }
-
-    const imageFile = path.join(
-      process.cwd(),
-      "protected-assets/mixes",
-      slug,
-      `${type}.${ext}`,
-    );
+    const imageFile = await resolveMixArtFile(slug, type as MixArtType);
+    if (!imageFile) throw new Error(`No ${type} art found for ${slug}`);
 
     return await renderImage(imageFile);
   } catch(err) {
@@ -85,7 +69,7 @@ async function renderImage(filePath: string) {
   const stream = fs.createReadStream(filePath);
   return new NextResponse(stream as unknown as BodyInit, {
     headers: {
-      "Content-Type": `image/${ext === "jpg" ? "jpeg" : ext}`,
+      "Content-Type": imageContentTypeFromExt(ext),
       /**
        * browser caches for 5 minutes
        * CDN caches for 30 minutes
