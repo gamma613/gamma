@@ -2,10 +2,15 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { Menu } from 'lucide-react';
 
+import { Button } from '@/components/ui/button';
 import { Player } from '@/modules/player';
+import { useHeader } from '../context/useHeader';
 
 export function Header() {
+  const { setNavOpen } = useHeader();
+
   return (
     <header className="fixed inset-x-0 top-0 z-30">
       <div className="mx-auto max-w-md sm:max-w-3xl">
@@ -19,11 +24,19 @@ export function Header() {
           </div>
 
           <div className="flex justify-end">
-            <Image src="/logo-transparent.png" alt="gamma logo" height="44" width="44" priority />
+            <Button
+              type="button"
+              variant="ghost"
+              className="h-11 w-11 p-0 md:h-9 md:w-9"
+              aria-label="Navigate"
+              title="Navigate"
+              onClick={() => setNavOpen(true)}
+            >
+              <Menu className="size-5" />
+            </Button>
           </div>
         </div>
       </div>
     </header>
   );
 }
-
