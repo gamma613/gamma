@@ -39,10 +39,33 @@ export function PlayerControls({ className }: { className?: string }) {
   const displayPosition = isScrubbing ? scrubSeconds : positionSeconds;
   const canSeek = Number.isFinite(durationSeconds) && durationSeconds > 0;
 
+  const volumePct = useMemo(() => {
+    const v = muted ? 0 : volume;
+    if (!Number.isFinite(v)) return 0;
+    return Math.max(0, Math.min(100, v * 100));
+  }, [muted, volume]);
+
   const pct = useMemo(() => {
     if (!canSeek) return 0;
     return Math.max(0, Math.min(100, (displayPosition / durationSeconds) * 100));
   }, [canSeek, displayPosition, durationSeconds]);
+
+  const rangeBaseClassName = cn(
+    // Prevent layout shift and use consistent focus rings across browsers.
+    'appearance-none rounded-full outline-none',
+    'focus-visible:ring-3 focus-visible:ring-ring/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+    'disabled:cursor-not-allowed disabled:opacity-50',
+    // WebKit track/thumb.
+    '[&::-webkit-slider-runnable-track]:rounded-full [&::-webkit-slider-runnable-track]:bg-transparent',
+    '[&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full',
+    '[&::-webkit-slider-thumb]:bg-background [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-primary',
+    '[&::-webkit-slider-thumb]:shadow-sm',
+    // Firefox track/progress/thumb.
+    '[&::-moz-range-track]:rounded-full [&::-moz-range-track]:bg-muted',
+    '[&::-moz-range-progress]:rounded-full [&::-moz-range-progress]:bg-primary',
+    '[&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-background',
+    '[&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-primary [&::-moz-range-thumb]:shadow-sm',
+  );
 
   const scrubStyle = useMemo(() => {
     if (!canSeek) return undefined;
@@ -51,14 +74,26 @@ export function PlayerControls({ className }: { className?: string }) {
     } as const;
   }, [canSeek, pct]);
 
+  const volumeStyle = useMemo(() => {
+    return {
+      background: `linear-gradient(to right, hsl(var(--primary)) ${volumePct}%, hsl(var(--muted)) ${volumePct}%)`,
+    } as const;
+  }, [volumePct]);
+
   if (!track) return null;
 
   return (
-    <div className={cn('min-w-[320px] select-none', className)}>
+    <div
+      className={cn(
+        'min-w-[320px] select-none rounded-xl border bg-card/70 text-card-foreground',
+        'px-3 py-2 supports-[backdrop-filter]:backdrop-blur-md',
+        className,
+      )}
+    >
       <div className="flex items-center gap-2">
         <Button
           type="button"
-          variant="secondary"
+          variant="default"
           className="h-11 w-11 md:h-9 md:w-9 p-0"
           aria-label={playing ? 'Pause' : 'Play'}
           onClick={() => toggle()}
@@ -69,7 +104,7 @@ export function PlayerControls({ className }: { className?: string }) {
         <Button
           type="button"
           variant="outline"
-          className="h-11 w-11 md:h-9 md:w-9 p-0"
+          className="h-11 w-11 md:h-9 md:w-9 p-0 bg-background/60 hover:bg-muted"
           aria-label={muted || volume === 0 ? 'Unmute' : 'Mute'}
           onClick={() => setMuted(!muted)}
         >
@@ -89,11 +124,8 @@ export function PlayerControls({ className }: { className?: string }) {
               setVolume(v);
               setMuted(v === 0);
             }}
-            className={cn(
-              'w-full h-2 appearance-none rounded-full bg-muted',
-              '[&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-foreground',
-              '[&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-foreground [&::-moz-range-thumb]:border-0',
-            )}
+            className={cn('w-full h-2 bg-muted', rangeBaseClassName, '[&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4', '[&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:w-4')}
+            style={volumeStyle}
           />
         </div>
 
@@ -126,9 +158,10 @@ export function PlayerControls({ className }: { className?: string }) {
             setScrubSeconds(v);
           }}
           className={cn(
-            'w-full h-3 appearance-none rounded-full bg-muted',
-            '[&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-primary',
-            '[&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-primary [&::-moz-range-thumb]:border-0',
+            'w-full h-3 bg-muted',
+            rangeBaseClassName,
+            '[&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:w-5',
+            '[&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:w-5',
           )}
           style={scrubStyle}
         />
