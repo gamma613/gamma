@@ -39,6 +39,8 @@ function persist(state: PlayerState) {
       JSON.stringify({
         track: state.track,
         playing: state.playing,
+        muted: state.muted,
+        volume: state.volume,
         positionSeconds: state.positionSeconds,
         durationSeconds: state.durationSeconds,
       } satisfies PlayerState),
@@ -61,6 +63,8 @@ export function PlayerProvider({
       return {
         track: defaultTrack ?? null,
         playing: false,
+        muted: false,
+        volume: 1,
         positionSeconds: 0,
         durationSeconds: 0,
       };
@@ -71,6 +75,8 @@ export function PlayerProvider({
       track: persisted?.track ?? defaultTrack ?? null,
       // Don't auto-play on load; restore track + position and let the user hit play.
       playing: false,
+      muted: persisted?.muted ?? false,
+      volume: typeof persisted?.volume === 'number' ? persisted.volume : 1,
       positionSeconds: persisted?.positionSeconds ?? 0,
       durationSeconds: persisted?.durationSeconds ?? 0,
     };
@@ -192,6 +198,15 @@ export function PlayerProvider({
     [broadcastPlay],
   );
 
+  const setMuted: PlayerActions['setMuted'] = useCallback((nextMuted) => {
+    setState((s) => ({ ...s, muted: nextMuted }));
+  }, []);
+
+  const setVolume: PlayerActions['setVolume'] = useCallback((nextVolume) => {
+    const v = Math.max(0, Math.min(1, nextVolume));
+    setState((s) => ({ ...s, volume: v }));
+  }, []);
+
   const seek: PlayerActions['seek'] = useCallback((seconds) => {
     setState((s) => ({ ...s, positionSeconds: Math.max(0, seconds) }));
   }, []);
@@ -212,13 +227,14 @@ export function PlayerProvider({
       pause,
       toggle,
       setPlaying,
+      setMuted,
+      setVolume,
       seek,
       setDurationSeconds,
       setPositionSeconds,
     }),
-    [tabId, state, play, pause, toggle, setPlaying, seek, setDurationSeconds, setPositionSeconds],
+    [tabId, state, play, pause, toggle, setPlaying, setMuted, setVolume, seek, setDurationSeconds, setPositionSeconds],
   );
 
   return <PlayerContext.Provider value={value}>{children}</PlayerContext.Provider>;
 }
-
