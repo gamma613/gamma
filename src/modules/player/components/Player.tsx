@@ -4,12 +4,13 @@ import { useCallback, useEffect, useRef } from 'react';
 import ReactPlayer from 'react-player';
 
 import { usePlayer } from '../context/usePlayer';
+import { PlayerControls } from './PlayerControls';
 
 // ----------------------------------------------------------------------
 
 export const Player = () => {
   const playerRef = useRef<HTMLVideoElement | null>(null);
-  const { track, playing, positionSeconds, setPlaying, setPositionSeconds, setDurationSeconds } = usePlayer();
+  const { track, playing, muted, volume, positionSeconds, setPlaying, setPositionSeconds, setDurationSeconds } = usePlayer();
   const hasRestoredRef = useRef(false);
 
   const restoreIfNeeded = useCallback(() => {
@@ -48,30 +49,48 @@ export const Player = () => {
   if (!track) return null;
 
   return (
-    <ReactPlayer
-      ref={playerRef}
-      src={track.src}
-      playing={playing}
-      controls={true}
-      preload="metadata"
-      onPlay={() => setPlaying(true)}
-      onPause={() => setPlaying(false)}
-      onEnded={() => setPlaying(false)}
-      onLoadedMetadata={() => {
-        restoreIfNeeded();
-      }}
-      onDurationChange={() => {
-        if (!playerRef.current) return;
-        setDurationSeconds(playerRef.current.duration ?? 0);
-      }}
-      onTimeUpdate={() => {
-        if (!playerRef.current) return;
-        const t = playerRef.current.currentTime ?? 0;
-        // Avoid overwriting a persisted seek target with an initial `0` timeupdate.
-        if (!hasRestoredRef.current && positionSeconds > 0 && t < 1) return;
-        setPositionSeconds(t);
-      }}
-      height="40px"
-    />
+    <div className="min-w-[320px]">
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          width: 1,
+          height: 1,
+          overflow: 'hidden',
+          clip: 'rect(0 0 0 0)',
+          whiteSpace: 'nowrap',
+        }}
+      >
+        <ReactPlayer
+          ref={playerRef}
+          src={track.src}
+          playing={playing}
+          controls={false}
+          muted={muted}
+          volume={volume}
+          preload="metadata"
+          playsInline
+          onPlay={() => setPlaying(true)}
+          onPause={() => setPlaying(false)}
+          onEnded={() => setPlaying(false)}
+          onLoadedMetadata={() => {
+            restoreIfNeeded();
+          }}
+          onDurationChange={() => {
+            if (!playerRef.current) return;
+            setDurationSeconds(playerRef.current.duration ?? 0);
+          }}
+          onTimeUpdate={() => {
+            if (!playerRef.current) return;
+            const t = playerRef.current.currentTime ?? 0;
+            // Avoid overwriting a persisted seek target with an initial `0` timeupdate.
+            if (!hasRestoredRef.current && positionSeconds > 0 && t < 1) return;
+            setPositionSeconds(t);
+          }}
+        />
+      </div>
+
+      <PlayerControls />
+    </div>
   );
 };
