@@ -38,7 +38,7 @@ export function MuteWithVolume({
 
   const rangeClassName = cn(
     // Rotated so "up" is louder (max) and "down" is quieter (min).
-    'w-24 h-2 rotate-90',
+    'w-24 h-2 -rotate-90',
     'bg-muted appearance-none rounded-full outline-none',
     'focus-visible:ring-3 focus-visible:ring-ring/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background',
     // WebKit track/thumb.
@@ -71,7 +71,7 @@ export function MuteWithVolume({
         className={cn(
           'absolute z-40 hidden group-hover:block group-focus-within:block',
           // Keep the slider close to the icon so we don't lose hover on the way down.
-          'rounded-lg border bg-popover p-2 text-popover-foreground shadow-md',
+          'rounded-lg border bg-background/70 p-2 text-popover-foreground shadow-md supports-[backdrop-filter]:backdrop-blur-md',
           'w-14',
           popoverPositionClassName,
         )}
