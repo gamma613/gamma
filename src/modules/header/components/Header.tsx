@@ -14,7 +14,7 @@ export function Header() {
   return (
     <header className="fixed inset-x-0 top-0 z-30">
       <div className="mx-auto max-w-md sm:max-w-3xl">
-        <div className="relative bg-[var(--background)]">
+        <div className="relative bg-background/80 supports-[backdrop-filter]:backdrop-blur-md">
           <div className="min-h-[50px] md:min-h-[80px] transition-[min-height] duration-300 ease-out flex items-center px-3">
             <Link href="/" className="inline-block">
               <Image src="/logo-transparent.png" alt="gamma logo" height="44" width="44" priority />

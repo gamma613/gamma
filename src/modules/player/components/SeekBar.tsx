@@ -8,7 +8,7 @@ import { usePlayer } from '../context/usePlayer';
 
 export function SeekBar({
   className,
-  thicknessPx = 10,
+  thicknessPx = 2,
 }: {
   className?: string;
   thicknessPx?: number;

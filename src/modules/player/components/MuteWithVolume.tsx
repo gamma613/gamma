@@ -59,7 +59,12 @@ export function MuteWithVolume({
       <Button
         type="button"
         variant="outline"
-        className="h-11 w-11 md:h-9 md:w-9 p-0 bg-background/60 hover:bg-muted"
+        className={cn(
+          'h-11 w-11 md:h-9 md:w-9 p-0',
+          // Make hover state readable against a dark/translucent header.
+          'bg-background/40 hover:bg-muted/80',
+          'hover:border-ring/60',
+        )}
         aria-label={muted || volume === 0 ? 'Unmute' : 'Mute'}
         title={muted || volume === 0 ? 'Unmute' : 'Mute'}
         onClick={() => setMuted(!muted)}
