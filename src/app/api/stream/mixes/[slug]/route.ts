@@ -4,6 +4,8 @@ import fs from "fs"
 import path from "path"
 
 import { getMix } from "@/lib/mixes/getMix"
+import { resolveMixAudioFile } from "@/lib/mixes/resolveAsset"
+import { audioContentTypeFromExt } from "@/lib/mixes/supported"
 
 // ----------------------------------------------------------------------
 
@@ -19,14 +21,13 @@ export async function GET(
       throw new Error(`Mix not found: ${slug}`)
     }
 
-    const ext = mix.audioExt
+    const audioFile = await resolveMixAudioFile(slug)
+    if (!audioFile) {
+      throw new Error(`Audio not found: ${slug}`)
+    }
 
-    const audioFile = path.join(
-      process.cwd(),
-      "protected-assets/mixes",
-      slug,
-      `audio.${ext}`,
-    )
+    const ext = path.extname(audioFile).replace(".", "").toLowerCase()
+    const contentType = audioContentTypeFromExt(ext)
 
     const stat = await fsp.stat(audioFile)
     const fileSize = stat.size
@@ -38,7 +39,7 @@ export async function GET(
 
       return new NextResponse(stream as unknown as BodyInit, {
         headers: {
-          "Content-Type": "audio/mpeg",
+          "Content-Type": contentType,
           "Content-Length": fileSize.toString(),
           "Accept-Ranges": "bytes",
           "Cache-Control":
@@ -61,7 +62,7 @@ export async function GET(
         "Content-Range": `bytes ${start}-${end}/${fileSize}`,
         "Accept-Ranges": "bytes",
         "Content-Length": chunkSize.toString(),
-        "Content-Type": "audio/mpeg",
+        "Content-Type": contentType,
         "Cache-Control":
           "public, max-age=300, s-maxage=1800, stale-while-revalidate=604800",
       },
