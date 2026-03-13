@@ -38,7 +38,7 @@ export function Header() {
             </div>
           </div>
 
-          <SeekBar className="absolute inset-x-0 bottom-0" thicknessPx={10} />
+          <SeekBar className="absolute inset-x-0 bottom-0" />
         </div>
       </div>
     </header>
