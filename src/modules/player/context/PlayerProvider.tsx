@@ -78,8 +78,8 @@ export function PlayerProvider({
       setState((s) => ({
         ...s,
         track: typeof persisted.track !== 'undefined' ? (persisted.track ?? null) : s.track,
-        // Don't auto-play on load; restore track + position and let the user hit play.
-        playing: false,
+        // Restore "playing" state from persistence (browser may still block autoplay).
+        playing: typeof persisted.playing === 'boolean' ? persisted.playing : s.playing,
         muted: typeof persisted.muted === 'boolean' ? persisted.muted : s.muted,
         volume: typeof persisted.volume === 'number' ? persisted.volume : s.volume,
         positionSeconds: typeof persisted.positionSeconds === 'number' ? persisted.positionSeconds : s.positionSeconds,
@@ -175,6 +175,16 @@ export function PlayerProvider({
       // Ignore.
     }
   }, [tabId]);
+
+  const didBroadcastInitialPlayRef = useRef(false);
+  useEffect(() => {
+    if (!didLoadPersisted) return;
+    if (didBroadcastInitialPlayRef.current) return;
+    if (!state.playing) return;
+    if (!state.track) return;
+    broadcastPlay();
+    didBroadcastInitialPlayRef.current = true;
+  }, [broadcastPlay, didLoadPersisted, state.playing, state.track]);
 
   const play: PlayerActions['play'] = useCallback(
     (track, opts) => {
