@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Geist_Mono, Outfit } from "next/font/google";
-import "./globals.css";
+import "@/theme/styles/app.css";
 import { Header, HeaderProvider } from "@/modules/header";
 import ClientProviders from "./ClientProviders";
 import { cn } from "@/lib/utils";
