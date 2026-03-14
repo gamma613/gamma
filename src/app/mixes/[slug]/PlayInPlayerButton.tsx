@@ -15,4 +15,3 @@ export function PlayInPlayerButton({ src, title }: { src: string; title: string 
     </button>
   );
 }
-

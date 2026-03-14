@@ -1,4 +1,4 @@
-import { MuteButton, Player, PlayToggleButton, TrackTitle, VolumeSlider } from '@/modules/player';
+import { MuteButton, Player, PlayToggleButton, TrackArt, TrackTitle, VolumeSlider } from '@/modules/player';
 //
 import { TrackDuration } from '@/modules/player/components/TrackDuration';
 import { TrackPosition } from '@/modules/player/components/TrackPosition';
@@ -11,6 +11,7 @@ export function NowPlaying() {
       <div aria-hidden="true" className="hidden">
         <Player />
       </div>
+      <TrackArt width={50} height={50} />
       
       <PlayToggleButton /> 
       <MuteButton /> 

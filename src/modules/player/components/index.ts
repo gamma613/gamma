@@ -5,4 +5,5 @@ export * from './SeekBar';
 export * from './TrackDuration';
 export * from './TrackPosition';
 export * from './TrackTitle';
+export * from './TrackArt';
 export * from './VolumeSlider';
