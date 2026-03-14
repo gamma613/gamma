@@ -43,7 +43,7 @@ export function PlayerControls({ className }: { className?: string }) {
           <HugeiconsIcon icon={playing ? PauseIcon : PlayIcon} size={22} color="currentColor" />
         </Button>
 
-        <MuteWithVolume anchor="top" />
+        <MuteWithVolume anchor="bottom" />
 
         <div className="ml-auto flex flex-col items-start">
           {track.title ? (
