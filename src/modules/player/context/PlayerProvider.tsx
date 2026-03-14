@@ -58,29 +58,37 @@ export function PlayerProvider({
   defaultTrack?: PlayerTrack;
 }) {
   const tabId = useMemo(() => getTabId(), []);
-  const [state, setState] = useState<PlayerState>(() => {
-    if (typeof window === 'undefined') {
-      return {
-        track: defaultTrack ?? null,
+  // Important: keep the first client render identical to the server render to
+  // avoid hydration mismatches. Persisted state is loaded after mount.
+  const [state, setState] = useState<PlayerState>(() => ({
+    track: defaultTrack ?? null,
+    playing: false,
+    muted: false,
+    volume: 1,
+    positionSeconds: 0,
+    durationSeconds: 0,
+  }));
+  const [didLoadPersisted, setDidLoadPersisted] = useState(false);
+
+  useEffect(() => {
+    const persisted = loadPersisted();
+
+    if (persisted) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- hydrate from localStorage after mount to avoid SSR/client mismatch
+      setState((s) => ({
+        ...s,
+        track: typeof persisted.track !== 'undefined' ? (persisted.track ?? null) : s.track,
+        // Don't auto-play on load; restore track + position and let the user hit play.
         playing: false,
-        muted: false,
-        volume: 1,
-        positionSeconds: 0,
-        durationSeconds: 0,
-      };
+        muted: typeof persisted.muted === 'boolean' ? persisted.muted : s.muted,
+        volume: typeof persisted.volume === 'number' ? persisted.volume : s.volume,
+        positionSeconds: typeof persisted.positionSeconds === 'number' ? persisted.positionSeconds : s.positionSeconds,
+        durationSeconds: typeof persisted.durationSeconds === 'number' ? persisted.durationSeconds : s.durationSeconds,
+      }));
     }
 
-    const persisted = loadPersisted();
-    return {
-      track: persisted?.track ?? defaultTrack ?? null,
-      // Don't auto-play on load; restore track + position and let the user hit play.
-      playing: false,
-      muted: persisted?.muted ?? false,
-      volume: typeof persisted?.volume === 'number' ? persisted.volume : 1,
-      positionSeconds: persisted?.positionSeconds ?? 0,
-      durationSeconds: persisted?.durationSeconds ?? 0,
-    };
-  });
+    setDidLoadPersisted(true);
+  }, []);
 
   const stateRef = useRef<PlayerState>(state);
   useEffect(() => {
@@ -89,12 +97,15 @@ export function PlayerProvider({
 
   const lastPersistMsRef = useRef<number>(0);
   useEffect(() => {
+    // Avoid overwriting storage with defaults before we've loaded persisted state.
+    if (!didLoadPersisted) return;
+
     // Throttle persistence to avoid spamming localStorage on progress events.
     const now = Date.now();
     if (now - lastPersistMsRef.current < 1000) return;
     lastPersistMsRef.current = now;
     persist(state);
-  }, [state]);
+  }, [didLoadPersisted, state]);
 
   useEffect(() => {
     const flush = () => {
