@@ -43,11 +43,12 @@ export function SeekBar({
         setIsScrubbing(false);
         if (canSeek) seek(next[0] ?? 0);
       }}
-      className={cn('w-full', className)}
-      // Rectangular seekbar (no radius) but otherwise shadcn-slider-like.
-      trackClassName="h-2 rounded-none"
-      rangeClassName="rounded-none"
-      thumbClassName="h-5 w-5"
+      className={cn(
+        'w-full',
+        // Rectangular seekbar (no radius).
+        '[&_[data-slot=slider-track]]:rounded-none',
+        className,
+      )}
     />
   );
 }

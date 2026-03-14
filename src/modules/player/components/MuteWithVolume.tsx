@@ -68,10 +68,11 @@ export function MuteWithVolume({
               setVolume(v);
               setMuted(v === 0);
             }}
-            className="h-24 w-6 flex-col"
-            trackClassName="h-full w-2"
-            rangeClassName="w-full"
-            thumbClassName="h-4 w-4"
+            className={cn(
+              'h-24 w-6 flex-col',
+              '[&_[data-slot=slider-track]]:w-2',
+              '[&_[data-slot=slider-thumb]]:size-4',
+            )}
           />
         </div>
       </div>
