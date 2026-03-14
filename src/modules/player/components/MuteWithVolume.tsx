@@ -31,14 +31,17 @@ export function MuteWithVolume({
       ? 'left-1/2 top-full -translate-x-1/2 mt-0'
       : 'left-1/2 bottom-full -translate-x-1/2 mb-0';
 
+  const buttonLabel = muted || volume === 0 ?
+    'Unmute / adjust volume' : 'Mute / adjust volume'
+
   return (
     <div className={cn('relative group', className)}>
       <Button
         type="button"
         variant="outline"
         className="h-11 w-11 md:h-9 md:w-9 p-0"
-        aria-label={muted || volume === 0 ? 'Unmute' : 'Mute'}
-        title={muted || volume === 0 ? 'Unmute' : 'Mute'}
+        aria-label={buttonLabel}
+        title={buttonLabel}
         onClick={() => setMuted(!muted)}
       >
         <HugeiconsIcon icon={muted || volume === 0 ? VolumeMute02Icon : VolumeHighIcon} size={22} color="currentColor" />
