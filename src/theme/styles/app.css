@@ -5,6 +5,7 @@
   in the cascade when you want to stage shadcn theme-builder changes.
 */
 
+@import "./tokens.css";
 /* @import "./skins/slider.css"; */
 /* @import "./skins/experimental.css"; */
 

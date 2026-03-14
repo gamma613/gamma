@@ -14,7 +14,7 @@ export function Header() {
   return (
     <header
       className="fixed inset-x-0 bottom-0 z-30 bg-background/30 supports-[backdrop-filter]:backdrop-blur-md"
-      style={{ height: '100px' }}
+      style={{ height: "var(--header-height)" }}
     >
       <SeekBar className="mt-auto" />
       <div className="mx-auto max-w-md sm:max-w-3xl px-3 h-full flex flex-col">
