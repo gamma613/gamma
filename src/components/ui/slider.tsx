@@ -57,3 +57,4 @@ function Slider({
 }
 
 export { Slider }
+export type SliderProps = React.ComponentPropsWithoutRef<typeof Slider>;

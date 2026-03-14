@@ -1,11 +1,13 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-
 import { Slider } from '@/components/ui/slider';
-import { cn } from '@/lib/utils';
 import { useHydrated } from '@/lib/useHydrated';
+import { cn } from '@/lib/utils';
+//
 import { usePlayer } from '../context/usePlayer';
+
+// ----------------------------------------------------------------------
 
 export function SeekBar({
   className,

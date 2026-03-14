@@ -1,11 +1,10 @@
 'use client';
 
+import { useHydrated } from '@/lib/useHydrated';
 import { useCallback, useEffect, useRef } from 'react';
 import ReactPlayer from 'react-player';
-
+//
 import { usePlayer } from '../context/usePlayer';
-import { PlayerControls } from './PlayerControls';
-import { useHydrated } from '@/lib/useHydrated';
 
 // ----------------------------------------------------------------------
 
@@ -48,52 +47,39 @@ export const Player = () => {
     hasRestoredRef.current = false;
   }, [track?.src]);
 
+  // Early return if there's no track
+  if (!track) return null;
+
   // Keep SSR + initial hydration deterministic; render the real UI after hydration.
-  if (!hydrated || !track) return <div className="h-11" />;
-
+  if (!hydrated) return null;
+  
   return (
-    <div>
-      <div
-        aria-hidden="true"
-        style={{
-          position: 'absolute',
-          width: 1,
-          height: 1,
-          overflow: 'hidden',
-          clip: 'rect(0 0 0 0)',
-          whiteSpace: 'nowrap',
-        }}
-      >
-        <ReactPlayer
-          ref={playerRef}
-          src={track.src}
-          playing={playing}
-          controls={false}
-          muted={muted}
-          volume={volume}
-          preload="metadata"
-          playsInline
-          onPlay={() => setPlaying(true)}
-          onPause={() => setPlaying(false)}
-          onEnded={() => setPlaying(false)}
-          onLoadedMetadata={() => {
-            restoreIfNeeded();
-          }}
-          onDurationChange={() => {
-            if (!playerRef.current) return;
-            setDurationSeconds(playerRef.current.duration ?? 0);
-          }}
-          onTimeUpdate={() => {
-            if (!playerRef.current) return;
-            const t = playerRef.current.currentTime ?? 0;
-            // Avoid overwriting a persisted seek target with an initial `0` timeupdate.
-            if (!hasRestoredRef.current && positionSeconds > 0 && t < 1) return;
-            setPositionSeconds(t);
-          }}
-        />
-      </div>
-
-      <PlayerControls />
-    </div>
+    <ReactPlayer
+      ref={playerRef}
+      src={track.src}
+      playing={playing}
+      controls={false}
+      muted={muted}
+      volume={volume}
+      preload="metadata"
+      playsInline
+      onPlay={() => setPlaying(true)}
+      onPause={() => setPlaying(false)}
+      onEnded={() => setPlaying(false)}
+      onLoadedMetadata={() => {
+        restoreIfNeeded();
+      }}
+      onDurationChange={() => {
+        if (!playerRef.current) return;
+        setDurationSeconds(playerRef.current.duration ?? 0);
+      }}
+      onTimeUpdate={() => {
+        if (!playerRef.current) return;
+        const t = playerRef.current.currentTime ?? 0;
+        // Avoid overwriting a persisted seek target with an initial `0` timeupdate.
+        if (!hasRestoredRef.current && positionSeconds > 0 && t < 1) return;
+        setPositionSeconds(t);
+      }}
+    />
   );
 };
