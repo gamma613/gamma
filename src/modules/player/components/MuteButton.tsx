@@ -1,7 +1,7 @@
 'use client';
 
 import { Button, ButtonProps } from '@/components/ui/button';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { VolumeHighIcon, VolumeMute02Icon } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { useEffect, useRef } from 'react';
@@ -24,32 +24,30 @@ export function MuteButton({ ...buttonProps }: MuteButtonProps) {
   const buttonLabel = effectivelyMuted ? 'Unmute' : 'Mute';
 
   return (
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Button
-            aria-label={buttonLabel}
-            type="button"
-            onClick={() => {
-              if (effectivelyMuted) {
-                setMuted(false);
-                if (volume === 0) {
-                  const nextVol = lastNonZeroVolumeRef.current > 0 ? lastNonZeroVolumeRef.current : 0.5;
-                  setVolume(nextVol);
-                }
-                return;
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Button
+          aria-label={buttonLabel}
+          type="button"
+          onClick={() => {
+            if (effectivelyMuted) {
+              setMuted(false);
+              if (volume === 0) {
+                const nextVol = lastNonZeroVolumeRef.current > 0 ? lastNonZeroVolumeRef.current : 0.5;
+                setVolume(nextVol);
               }
+              return;
+            }
 
-              setMuted(true);
-            }}
-            variant="outline"
-            {...buttonProps}
-          >
-            <HugeiconsIcon icon={effectivelyMuted ? VolumeMute02Icon : VolumeHighIcon} size={22} color="currentColor" />
-          </Button>
-        </TooltipTrigger>
-        <TooltipContent side="top">{buttonLabel}</TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
+            setMuted(true);
+          }}
+          variant="outline"
+          {...buttonProps}
+        >
+          <HugeiconsIcon icon={effectivelyMuted ? VolumeMute02Icon : VolumeHighIcon} size={22} color="currentColor" />
+        </Button>
+      </TooltipTrigger>
+      <TooltipContent side="top">{buttonLabel}</TooltipContent>
+    </Tooltip>
   );
 }
