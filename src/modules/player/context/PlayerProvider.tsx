@@ -243,6 +243,7 @@ export function PlayerProvider({
   const value: PlayerContextValue = useMemo(
     () => ({
       tabId,
+      ready: didLoadPersisted,
       ...state,
       play,
       pause,
@@ -254,7 +255,20 @@ export function PlayerProvider({
       setDurationSeconds,
       setPositionSeconds,
     }),
-    [tabId, state, play, pause, toggle, setPlaying, setMuted, setVolume, seek, setDurationSeconds, setPositionSeconds],
+    [
+      tabId,
+      didLoadPersisted,
+      state,
+      play,
+      pause,
+      toggle,
+      setPlaying,
+      setMuted,
+      setVolume,
+      seek,
+      setDurationSeconds,
+      setPositionSeconds,
+    ],
   );
 
   return <PlayerContext.Provider value={value}>{children}</PlayerContext.Provider>;

@@ -15,7 +15,7 @@ export function SeekBar({
   className?: string;
 }) {
   const hydrated = useHydrated();
-  const { track, positionSeconds, durationSeconds, seek } = usePlayer();
+  const { ready, track, positionSeconds, durationSeconds, seek } = usePlayer();
 
   const [isScrubbing, setIsScrubbing] = useState(false);
   const [scrubSeconds, setScrubSeconds] = useState(0);
@@ -25,25 +25,24 @@ export function SeekBar({
 
   const value = useMemo(() => [displayPosition], [displayPosition]);
 
-  // Avoid SSR/client attribute mismatches when persisted position/duration are loaded on the client.
-  if (!hydrated) {
-    return <div aria-hidden="true" className={cn('w-full h-2 bg-secondary', className)} />;
-  }
+  // Avoid SSR/client attribute mismatches and initial "wrong track" paint:
+  // render nothing until hydration + persisted state + duration are ready.
+  if (!hydrated || !ready || !canSeek) return null;
 
   return (
     <Slider
       aria-label="Seek"
-      value={canSeek ? value : [0]}
-      max={canSeek ? durationSeconds : 0}
+      value={value}
+      max={durationSeconds}
       step={0.25}
-      disabled={!canSeek}
+      disabled={false}
       onValueChange={(next) => {
         setIsScrubbing(true);
         setScrubSeconds(next[0] ?? 0);
       }}
       onValueCommit={(next) => {
         setIsScrubbing(false);
-        if (canSeek) seek(next[0] ?? 0);
+        seek(next[0] ?? 0);
       }}
       className={cn(
         'w-full',

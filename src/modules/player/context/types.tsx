@@ -24,4 +24,8 @@ export type PlayerActions = {
   setPositionSeconds: (seconds: number) => void;
 };
 
-export type PlayerContextValue = PlayerState & PlayerActions & { tabId: string; };
+export type PlayerContextValue = PlayerState &
+  PlayerActions & {
+    tabId: string;
+    ready: boolean;
+  };
