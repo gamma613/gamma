@@ -46,7 +46,7 @@ export function SeekBar({
       }}
       className={cn(
         'w-full',
-        !isReady && 'hidden',
+        !isReady && 'invisible pointer-events-none',
         // Rectangular seekbar (no radius).
         '[&_[data-slot=slider-track]]:rounded-none',
         className,

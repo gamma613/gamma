@@ -34,7 +34,7 @@ export function VolumeSlider({ ...sliderProps }: VolumeSliderProps) {
       step={0.01}
       value={sliderValue}
       {...sliderProps}
-      className={cn(!isReady && 'hidden', sliderProps.className)}
+      className={cn(!isReady && 'invisible pointer-events-none', sliderProps.className)}
     />
 );
 }
