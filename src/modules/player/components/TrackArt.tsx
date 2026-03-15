@@ -47,7 +47,8 @@ export function TrackArt(props: TrackArtProps) {
 
   if (!artSrc) return null;
 
-  const resolvedAlt = alt ?? (track?.title ? `${track.title} ${artType} art` : `${artType} art`);
+  const resolvedAlt =
+    alt ?? `${artType} art${track?.title ? ` for ${track.title}` : ''}`;
 
   return <Image src={artSrc} alt={resolvedAlt} {...imageProps} />;
 }
