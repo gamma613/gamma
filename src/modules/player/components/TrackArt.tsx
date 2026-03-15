@@ -8,7 +8,7 @@ import { usePlayer } from '../context/usePlayer';
 
 // ----------------------------------------------------------------------
 
-function streamInfoFromTrackSrc(src: string): { kind: string; slug: string } | null {
+function slugFromTrackSrc(src: string, kind: string): string | null {
   // Supports both relative and absolute URLs.
   const pathname = (() => {
     try {
@@ -18,9 +18,8 @@ function streamInfoFromTrackSrc(src: string): { kind: string; slug: string } | n
     }
   })();
 
-  const m = pathname.match(/^\/api\/stream\/([^/]+)\/([^/]+)\/?$/);
-  if (!m?.[1] || !m?.[2]) return null;
-  return { kind: decodeURIComponent(m[1]), slug: decodeURIComponent(m[2]) };
+  const m = pathname.match(new RegExp(`^/api/stream/${kind}/([^/]+)/?$`));
+  return m?.[1] ? decodeURIComponent(m[1]) : null;
 }
 
 export type TrackArtProps = Omit<ImageProps, 'src' | 'alt'> & {
@@ -32,18 +31,21 @@ export function TrackArt(props: TrackArtProps) {
   const { track } = usePlayer();
 
   const trackSrc = track?.src;
+  const trackKind = track?.kind;
+  const trackCover = track?.cover;
   const { type: artType = 'cover', alt, ...imageProps } = props;
 
   const artSrc = useMemo(() => {
-    if (!trackSrc) return null;
+    // Prefer explicit metadata over deriving URLs from the stream src.
+    if (artType === 'cover' && trackCover) return trackCover;
 
-    const info = streamInfoFromTrackSrc(trackSrc);
-    if (!info) return null;
-
-    const routeFactory = ROUTES[info.kind as keyof typeof ROUTES];
+    if (!trackSrc || !trackKind) return null;
+    const slug = slugFromTrackSrc(trackSrc, trackKind);
+    if (!slug) return null;
+    const routeFactory = ROUTES[trackKind as keyof typeof ROUTES];
     if (!routeFactory) return null;
-    return routeFactory(encodeURIComponent(info.slug)).art(artType);
-  }, [artType, trackSrc]);
+    return routeFactory(encodeURIComponent(slug)).art(artType);
+  }, [artType, trackCover, trackKind, trackSrc]);
 
   if (!artSrc) return null;
 

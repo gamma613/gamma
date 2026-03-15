@@ -1,4 +1,4 @@
-import { MuteButton, Player, PlayToggleButton, TrackArt, TrackTitle, VolumeSlider } from '@/modules/player';
+import { MuteButton, Player, PlayToggleButton, TrackArt, TrackArtist, TrackTitle, VolumeSlider } from '@/modules/player';
 //
 import { TrackDuration } from '@/modules/player/components/TrackDuration';
 import { TrackPosition } from '@/modules/player/components/TrackPosition';
@@ -17,6 +17,7 @@ export function NowPlaying() {
       <MuteButton /> 
       <VolumeSlider />
       <div className="ml-auto flex flex-col items-start">
+        <TrackArtist className="w-full max-w-[12rem] sm:max-w-[16rem] truncate text-xs leading-none text-muted-foreground" />
         <TrackTitle className="w-full max-w-[12rem] sm:max-w-[16rem] truncate text-xs leading-none text-muted-foreground" />
         <div className="flex items-center gap-2 tabular-nums text-xs leading-none text-muted-foreground">
           <TrackPosition className="text-foreground" />

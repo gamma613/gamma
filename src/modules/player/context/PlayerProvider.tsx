@@ -77,7 +77,14 @@ export function PlayerProvider({
       // eslint-disable-next-line react-hooks/set-state-in-effect -- hydrate from localStorage after mount to avoid SSR/client mismatch
       setState((s) => ({
         ...s,
-        track: typeof persisted.track !== 'undefined' ? (persisted.track ?? null) : s.track,
+        track:
+          typeof persisted.track === 'undefined'
+            ? s.track
+            : persisted.track === null
+              ? null
+              : defaultTrack && persisted.track && persisted.track.src === defaultTrack.src
+                ? { ...defaultTrack, ...persisted.track }
+                : persisted.track,
         // Restore "playing" state from persistence (browser may still block autoplay).
         playing: typeof persisted.playing === 'boolean' ? persisted.playing : s.playing,
         muted: typeof persisted.muted === 'boolean' ? persisted.muted : s.muted,
@@ -88,7 +95,7 @@ export function PlayerProvider({
     }
 
     setDidLoadPersisted(true);
-  }, []);
+  }, [defaultTrack]);
 
   const stateRef = useRef<PlayerState>(state);
   useEffect(() => {

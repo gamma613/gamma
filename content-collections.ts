@@ -9,6 +9,7 @@ import { MIX_ART_EXTS, MIX_AUDIO_EXTS } from "./src/lib/mixes/supported";
 
 /** Shape of a mix item data source */
 const mixSchema = z.object({
+  artist: z.string().min(1).optional().nullable(),
   artExt: z.object({
     cover: z.enum(MIX_ART_EXTS as unknown as [string, ...string[]]).nullable().optional(),
   }).optional(),

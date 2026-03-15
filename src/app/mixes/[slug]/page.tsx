@@ -35,7 +35,7 @@ export default async function MixPage({ params }: Props,) {
     <div className="py-6 mx-auto max-w-sm sm:max-w-none">
       <div className="flex items-center gap-3">
         <h1 className="flex-1">{mix.title}</h1>
-        <PlayInPlayerButton src={`/api/stream/mixes/${slug}`} title={mix.title ?? slug} />
+        <PlayInPlayerButton slug={slug} title={mix.title ?? slug} artist={mix.artist ?? undefined} cover={mix.artwork?.cover} />
       </div>
       <div className="flex flex-col sm:flex-row gap-4 items-start">
         <Image 
@@ -54,7 +54,7 @@ export default async function MixPage({ params }: Props,) {
                 Artist
               </MetaTh>
               <MetaTd>
-                Gamma
+                {mix.artist ?? 'Gamma'}
               </MetaTd>
             </tr>
 
