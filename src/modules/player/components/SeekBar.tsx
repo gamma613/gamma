@@ -23,29 +23,30 @@ export function SeekBar({
   const canSeek = Boolean(track) && Number.isFinite(durationSeconds) && durationSeconds > 0;
   const displayPosition = isScrubbing ? scrubSeconds : positionSeconds;
 
-  const value = useMemo(() => [displayPosition], [displayPosition]);
-
-  // Avoid SSR/client attribute mismatches and initial "wrong track" paint:
-  // render nothing until hydration + persisted state + duration are ready.
-  if (!hydrated || !ready || !canSeek) return null;
+  const isReady = hydrated && ready && canSeek;
+  const value = useMemo(() => [isReady ? displayPosition : 0], [displayPosition, isReady]);
 
   return (
     <Slider
       aria-label="Seek"
+      aria-disabled={!isReady}
+      disabled={!isReady}
       value={value}
-      max={durationSeconds}
+      max={isReady ? durationSeconds : 0}
       step={0.25}
-      disabled={false}
       onValueChange={(next) => {
+        if (!isReady) return;
         setIsScrubbing(true);
         setScrubSeconds(next[0] ?? 0);
       }}
       onValueCommit={(next) => {
+        if (!isReady) return;
         setIsScrubbing(false);
         seek(next[0] ?? 0);
       }}
       className={cn(
         'w-full',
+        !isReady && 'hidden',
         // Rectangular seekbar (no radius).
         '[&_[data-slot=slider-track]]:rounded-none',
         className,

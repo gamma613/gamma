@@ -2,6 +2,7 @@
 
 import { Slider, SliderProps } from '@/components/ui/slider';
 import { useHydrated } from '@/lib/useHydrated';
+import { cn } from '@/lib/utils';
 //
 import { usePlayer } from '../context/usePlayer';
 
@@ -13,16 +14,19 @@ export function VolumeSlider({ ...sliderProps }: VolumeSliderProps) {
   const hydrated = useHydrated();
   const { ready, muted, volume, setMuted, setVolume } = usePlayer();
 
-  if (!hydrated || !ready) return null;
+  const isReady = hydrated && ready;
 
   const v = muted ? 0 : volume;
-  const sliderValue = [Number.isFinite(v) ? Math.max(0, Math.min(1, v)) : 0];
+  const sliderValue = isReady ? [Number.isFinite(v) ? Math.max(0, Math.min(1, v)) : 0] : [0];
 
   return (
     <Slider
       aria-label="Volume"
+      aria-disabled={!isReady}
       max={1}
+      disabled={!isReady}
       onValueChange={(next) => {
+        if (!isReady) return;
         const v = next[0] ?? 0;
         setVolume(v);
         setMuted(v === 0);
@@ -30,6 +34,7 @@ export function VolumeSlider({ ...sliderProps }: VolumeSliderProps) {
       step={0.01}
       value={sliderValue}
       {...sliderProps}
+      className={cn(!isReady && 'hidden', sliderProps.className)}
     />
 );
 }
