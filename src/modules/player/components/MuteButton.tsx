@@ -44,7 +44,7 @@ export function MuteButton({ ...buttonProps }: MuteButtonProps) {
           variant="outline"
           {...buttonProps}
         >
-          <HugeiconsIcon icon={effectivelyMuted ? VolumeMute02Icon : VolumeHighIcon} size={22} color="currentColor" />
+          <HugeiconsIcon icon={effectivelyMuted ? VolumeMute02Icon : VolumeHighIcon} size={22}  />
         </Button>
       </TooltipTrigger>
       <TooltipContent side="top">{buttonLabel}</TooltipContent>

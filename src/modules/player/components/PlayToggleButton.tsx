@@ -19,13 +19,12 @@ export const PlayToggleButton = ({ ...buttonProps }: PlayButtonToggleProps) => {
     <Tooltip>
       <TooltipTrigger asChild>
         <Button
-          type="button"
-          variant="default"
           aria-label={label}
+          type="button"
           onClick={() => toggle()}
           {...buttonProps}
         >
-          <HugeiconsIcon icon={playing ? PauseIcon : PlayIcon} size={22} color="currentColor" />
+          <HugeiconsIcon icon={playing ? PauseIcon : PlayIcon} size={22}  />
         </Button>
       </TooltipTrigger>
       <TooltipContent side="top">{label}</TooltipContent>
