@@ -7,17 +7,18 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 
 export default function ClientProviders({ children }: { children: React.ReactNode }) {
   const mix = getMix('repossession');
+  if (!mix) throw new Error('Default mix not found: repossession');
 
   return (
     <BokehBackground>
       <TooltipProvider>
         <PlayerProvider
           defaultTrack={{
-            kind: 'mixes',
-            src: `/api/stream/mixes/${mix?.slug ?? 'repossession'}`,
-            title: mix?.title ?? 'Repossession',
-            artist: mix?.artist ?? undefined,
-            cover: mix?.artwork?.cover,
+            kind: mix.kind,
+            src: mix.src,
+            title: mix.title,
+            artist: mix.artist,
+            cover: mix.artwork.cover,
           }}
         >
           <HeaderProvider>{children}</HeaderProvider>

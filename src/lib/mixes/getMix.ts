@@ -8,6 +8,10 @@ export const getMix = cache((slug: string) => {
 
   return {
     ...mix,
+    kind: 'mixes' as const,
+    src: `/api/stream/mixes/${mix.slug}`,
+    // Normalize nullable fields to `undefined` for easier consumption in UI.
+    artist: mix.artist ?? undefined,
     artwork: {
       cover: ROUTES.mixes(mix.slug).art('cover'),
     },
