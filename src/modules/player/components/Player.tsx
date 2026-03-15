@@ -1,15 +1,17 @@
 'use client';
 
+import { useHydrated } from '@/lib/useHydrated';
 import { useCallback, useEffect, useRef } from 'react';
 import ReactPlayer from 'react-player';
-
+//
 import { usePlayer } from '../context/usePlayer';
 
 // ----------------------------------------------------------------------
 
 export const Player = () => {
+  const hydrated = useHydrated();
   const playerRef = useRef<HTMLVideoElement | null>(null);
-  const { track, playing, positionSeconds, setPlaying, setPositionSeconds, setDurationSeconds } = usePlayer();
+  const { track, playing, muted, volume, positionSeconds, setPlaying, setPositionSeconds, setDurationSeconds } = usePlayer();
   const hasRestoredRef = useRef(false);
 
   const restoreIfNeeded = useCallback(() => {
@@ -45,15 +47,22 @@ export const Player = () => {
     hasRestoredRef.current = false;
   }, [track?.src]);
 
+  // Early return if there's no track
   if (!track) return null;
 
+  // Keep SSR + initial hydration deterministic; render the real UI after hydration.
+  if (!hydrated) return null;
+  
   return (
     <ReactPlayer
       ref={playerRef}
       src={track.src}
       playing={playing}
-      controls={true}
+      controls={false}
+      muted={muted}
+      volume={volume}
       preload="metadata"
+      playsInline
       onPlay={() => setPlaying(true)}
       onPause={() => setPlaying(false)}
       onEnded={() => setPlaying(false)}
@@ -71,7 +80,6 @@ export const Player = () => {
         if (!hasRestoredRef.current && positionSeconds > 0 && t < 1) return;
         setPositionSeconds(t);
       }}
-      height="40px"
     />
   );
 };

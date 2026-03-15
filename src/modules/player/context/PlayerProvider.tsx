@@ -39,6 +39,8 @@ function persist(state: PlayerState) {
       JSON.stringify({
         track: state.track,
         playing: state.playing,
+        muted: state.muted,
+        volume: state.volume,
         positionSeconds: state.positionSeconds,
         durationSeconds: state.durationSeconds,
       } satisfies PlayerState),
@@ -56,25 +58,44 @@ export function PlayerProvider({
   defaultTrack?: PlayerTrack;
 }) {
   const tabId = useMemo(() => getTabId(), []);
-  const [state, setState] = useState<PlayerState>(() => {
-    if (typeof window === 'undefined') {
-      return {
-        track: defaultTrack ?? null,
-        playing: false,
-        positionSeconds: 0,
-        durationSeconds: 0,
-      };
+  // Important: keep the first client render identical to the server render to
+  // avoid hydration mismatches. Persisted state is loaded after mount.
+  const [state, setState] = useState<PlayerState>(() => ({
+    track: defaultTrack ?? null,
+    playing: false,
+    muted: false,
+    volume: 1,
+    positionSeconds: 0,
+    durationSeconds: 0,
+  }));
+  const [didLoadPersisted, setDidLoadPersisted] = useState(false);
+
+  useEffect(() => {
+    const persisted = loadPersisted();
+
+    if (persisted) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- hydrate from localStorage after mount to avoid SSR/client mismatch
+      setState((s) => ({
+        ...s,
+        track:
+          typeof persisted.track === 'undefined'
+            ? s.track
+            : persisted.track === null
+              ? null
+              : defaultTrack && persisted.track && persisted.track.src === defaultTrack.src
+                ? { ...defaultTrack, ...persisted.track }
+                : persisted.track,
+        // Restore "playing" state from persistence (browser may still block autoplay).
+        playing: typeof persisted.playing === 'boolean' ? persisted.playing : s.playing,
+        muted: typeof persisted.muted === 'boolean' ? persisted.muted : s.muted,
+        volume: typeof persisted.volume === 'number' ? persisted.volume : s.volume,
+        positionSeconds: typeof persisted.positionSeconds === 'number' ? persisted.positionSeconds : s.positionSeconds,
+        durationSeconds: typeof persisted.durationSeconds === 'number' ? persisted.durationSeconds : s.durationSeconds,
+      }));
     }
 
-    const persisted = loadPersisted();
-    return {
-      track: persisted?.track ?? defaultTrack ?? null,
-      // Don't auto-play on load; restore track + position and let the user hit play.
-      playing: false,
-      positionSeconds: persisted?.positionSeconds ?? 0,
-      durationSeconds: persisted?.durationSeconds ?? 0,
-    };
-  });
+    setDidLoadPersisted(true);
+  }, [defaultTrack]);
 
   const stateRef = useRef<PlayerState>(state);
   useEffect(() => {
@@ -83,12 +104,15 @@ export function PlayerProvider({
 
   const lastPersistMsRef = useRef<number>(0);
   useEffect(() => {
+    // Avoid overwriting storage with defaults before we've loaded persisted state.
+    if (!didLoadPersisted) return;
+
     // Throttle persistence to avoid spamming localStorage on progress events.
     const now = Date.now();
     if (now - lastPersistMsRef.current < 1000) return;
     lastPersistMsRef.current = now;
     persist(state);
-  }, [state]);
+  }, [didLoadPersisted, state]);
 
   useEffect(() => {
     const flush = () => {
@@ -159,6 +183,16 @@ export function PlayerProvider({
     }
   }, [tabId]);
 
+  const didBroadcastInitialPlayRef = useRef(false);
+  useEffect(() => {
+    if (!didLoadPersisted) return;
+    if (didBroadcastInitialPlayRef.current) return;
+    if (!state.playing) return;
+    if (!state.track) return;
+    broadcastPlay();
+    didBroadcastInitialPlayRef.current = true;
+  }, [broadcastPlay, didLoadPersisted, state.playing, state.track]);
+
   const play: PlayerActions['play'] = useCallback(
     (track, opts) => {
       setState((s) => ({
@@ -192,6 +226,15 @@ export function PlayerProvider({
     [broadcastPlay],
   );
 
+  const setMuted: PlayerActions['setMuted'] = useCallback((nextMuted) => {
+    setState((s) => ({ ...s, muted: nextMuted }));
+  }, []);
+
+  const setVolume: PlayerActions['setVolume'] = useCallback((nextVolume) => {
+    const v = Math.max(0, Math.min(1, nextVolume));
+    setState((s) => ({ ...s, volume: v }));
+  }, []);
+
   const seek: PlayerActions['seek'] = useCallback((seconds) => {
     setState((s) => ({ ...s, positionSeconds: Math.max(0, seconds) }));
   }, []);
@@ -207,18 +250,33 @@ export function PlayerProvider({
   const value: PlayerContextValue = useMemo(
     () => ({
       tabId,
+      ready: didLoadPersisted,
       ...state,
       play,
       pause,
       toggle,
       setPlaying,
+      setMuted,
+      setVolume,
       seek,
       setDurationSeconds,
       setPositionSeconds,
     }),
-    [tabId, state, play, pause, toggle, setPlaying, seek, setDurationSeconds, setPositionSeconds],
+    [
+      tabId,
+      didLoadPersisted,
+      state,
+      play,
+      pause,
+      toggle,
+      setPlaying,
+      setMuted,
+      setVolume,
+      seek,
+      setDurationSeconds,
+      setPositionSeconds,
+    ],
   );
 
   return <PlayerContext.Provider value={value}>{children}</PlayerContext.Provider>;
 }
-
