@@ -17,7 +17,7 @@ export function MenuButton() {
         <Button
           type="button"
           variant="ghost"
-          className="h-11 w-11 p-0 md:h-9 md:w-9"
+          className="h-11 w-11"
           aria-label="Navigate"
           onClick={() => setNavOpen(true)}
         >

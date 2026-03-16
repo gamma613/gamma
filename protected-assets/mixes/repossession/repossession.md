@@ -1,6 +1,7 @@
 ---
 artExt:
   cover: jpg
+artist: "gamma"
 audioExt: mp3
 bpm: 175
 date: "2024-03-04"

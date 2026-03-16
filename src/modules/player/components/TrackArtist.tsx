@@ -12,6 +12,7 @@ type TrackArtistProps<T extends React.ElementType = 'span'> = {
 
 export function TrackArtist<T extends React.ElementType = 'span'>({
   as,
+  prepend,
   ...props
 }: TrackArtistProps<T>) {
   const { track } = usePlayer();
