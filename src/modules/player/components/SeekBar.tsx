@@ -43,7 +43,7 @@ export function SeekBar({
             style={{ left: hoverX }}
           />
         </TooltipTrigger>
-        <TooltipContent side="top" sideOffset={8}>
+        <TooltipContent aria-hidden="true" side="top" sideOffset={8}>
           {`Jump to ${formatTrackTime(hoverSeconds)}`}
         </TooltipContent>
       </Tooltip>
@@ -51,6 +51,9 @@ export function SeekBar({
       <Slider
         aria-label="Playback position"
         aria-disabled={!isReady}
+        aria-valuemin={0}
+        aria-valuemax={durationSeconds}
+        aria-valuetext={formatTrackTime(displayPosition)}
         disabled={!isReady}
         value={value}
         max={isReady ? durationSeconds : 0}
