@@ -19,6 +19,8 @@ export function TrackPosition<T extends React.ElementType = 'span'>({
 
   if (!track) return null;
 
+  const formattedTime = formatTrackTime(positionSeconds);
+
   const Comp = (as ?? 'span') as React.ElementType;
-  return <Comp {...props}>{formatTrackTime(positionSeconds)}</Comp>;
+  return <Comp {...props} aria-label={`Track position: ${formattedTime}`}>{formattedTime}</Comp>;
 }

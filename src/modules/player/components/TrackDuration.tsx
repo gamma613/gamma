@@ -19,6 +19,8 @@ export function TrackDuration<T extends React.ElementType = 'span'>({
 
   if (!track) return null;
 
+  const formattedTime = formatTrackTime(durationSeconds);
+
   const Comp = (as ?? 'span') as React.ElementType;
-  return <Comp {...props}>{formatTrackTime(durationSeconds)}</Comp>;
+  return <Comp {...props} aria-label={`Track duration: ${formattedTime}`}>{formattedTime}</Comp>;
 }
