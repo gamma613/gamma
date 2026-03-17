@@ -33,7 +33,6 @@ export function NowPlaying() {
                 <span aria-hidden="true"> — </span>
                 <span className="sr-only"> by </span>
                 <TrackArtist />
-                and some extra long text to demo scrolling
               </span> 
             </PingPong>
           </div>
