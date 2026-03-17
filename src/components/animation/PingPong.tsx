@@ -5,79 +5,97 @@ import { useEffect, useRef, useState } from 'react';
 interface PingPongProps {
   children: React.ReactNode;
   className?: string;
-  /** pixels per second */
-  speed?: number;
-  /** milliseconds to pause at each end */
-  pause?: number;
+  speed?: number; // pixels per second
+  pause?: number; // ms to pause at each end
 }
 
-export function PingPong({ children, className, speed = 50, pause = 1000 }: PingPongProps) {
+export function PingPong({
+  children,
+  className,
+  speed = 50,
+  pause = 1000,
+}: PingPongProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
-  const [overflow, setOverflow] = useState(0);
 
-  const offsetRef = useRef(0);      // current scroll offset
-  const directionRef = useRef(1);   // 1 = left, -1 = right
-  const pauseTimerRef = useRef(0);  // time left to pause in ms
+  const [overflow, setOverflow] = useState(0);
+  const [hovered, setHovered] = useState(false);
+
+  const offsetRef = useRef(0);
+  const directionRef = useRef(1);
+  const pauseTimerRef = useRef(0);
   const lastTimeRef = useRef<number | null>(null);
 
-  // measure overflow dynamically
+  // measure overflow
   useEffect(() => {
-    const container = containerRef.current;
-    const text = textRef.current;
-    if (!container || !text) return;
+    const measure = () => {
+      const container = containerRef.current;
+      const text = textRef.current;
+      if (!container || !text) return;
 
-    const frame = requestAnimationFrame(() => {
       const o = text.scrollWidth - container.clientWidth;
       setOverflow(o > 0 ? o : 0);
+
       offsetRef.current = 0;
       directionRef.current = 1;
       pauseTimerRef.current = 0;
       lastTimeRef.current = null;
-      if (textRef.current) textRef.current.style.transform = 'translateX(0)';
-    });
+      text.style.transform = 'translateX(0)';
+    };
 
-    return () => cancelAnimationFrame(frame);
+    measure();
+    window.addEventListener('resize', measure);
+    return () => window.removeEventListener('resize', measure);
   }, [children]);
 
   // animation loop
   useEffect(() => {
     if (overflow <= 0) return;
 
+    let frameId: number;
+
     const step = (timestamp: number) => {
       if (lastTimeRef.current === null) lastTimeRef.current = timestamp;
-      const deltaMs = timestamp - lastTimeRef.current;
+      const delta = timestamp - lastTimeRef.current;
       lastTimeRef.current = timestamp;
 
-      if (pauseTimerRef.current > 0) {
-        pauseTimerRef.current -= deltaMs;
-      } else {
-        offsetRef.current += directionRef.current * speed * (deltaMs / 1000);
+      if (!hovered) {
+        // handle pause at ends
+        if (pauseTimerRef.current > 0) {
+          pauseTimerRef.current -= delta;
+        } else {
+          offsetRef.current += directionRef.current * speed * (delta / 1000);
 
-        if (offsetRef.current >= overflow) {
-          offsetRef.current = overflow;
-          directionRef.current = -1;
-          pauseTimerRef.current = pause;
-        } else if (offsetRef.current <= 0) {
-          offsetRef.current = 0;
-          directionRef.current = 1;
-          pauseTimerRef.current = pause;
+          if (offsetRef.current >= overflow) {
+            offsetRef.current = overflow;
+            directionRef.current = -1;
+            pauseTimerRef.current = pause;
+          } else if (offsetRef.current <= 0) {
+            offsetRef.current = 0;
+            directionRef.current = 1;
+            pauseTimerRef.current = pause;
+          }
+        }
+
+        if (textRef.current) {
+          textRef.current.style.transform = `translateX(-${offsetRef.current}px)`;
         }
       }
 
-      if (textRef.current) {
-        textRef.current.style.transform = `translateX(-${offsetRef.current}px)`;
-      }
-
-      requestAnimationFrame(step);
+      frameId = requestAnimationFrame(step);
     };
 
-    const frame = requestAnimationFrame(step);
-    return () => cancelAnimationFrame(frame);
-  }, [overflow, speed, pause]);
+    frameId = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(frameId);
+  }, [overflow, speed, pause, hovered]);
 
   return (
-    <div ref={containerRef} className={`relative overflow-hidden ${className}`}>
+    <div
+      ref={containerRef}
+      className={`overflow-hidden ${className ?? ''}`}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
       <div ref={textRef} className="inline-block whitespace-nowrap">
         {children}
       </div>
