@@ -1,4 +1,3 @@
-import { SeekBar } from '@/modules/player';
 import Image from 'next/image';
 import Link from 'next/link';
 //
@@ -14,7 +13,7 @@ export function Header() {
       <div className="mx-auto max-w-3xl h-full flex items-center">
         <MenuButton />
         {/* Stretches the full width, keeping remaining items pinned right */}
-        <div className="flex-1 flex-col items-start">
+        <div className="flex-1 min-w-0">
           <NowPlaying />
         </div>
         <Link href="/" className="inline-block">
