@@ -26,12 +26,12 @@ export function NowPlaying() {
       <div role="toolbar" aria-label="Media controls" className="flex flex-row items-center gap-4">
         {/* Play toggle */}
         <PlayToggleButton className="h-11 w-11" />
-        {/* Volume popover (md:up) */}
+        {/* Volume popover (sm:up) */}
         <VolumePopover
           buttonProps={{
             className: "h-11 w-11",
           }}
-          className="hidden md:block"
+          className="hidden sm:block"
         />
         {/* Art (sm:up) */}
         <TrackArt width={44} height={44} className="hidden sm:block" />
