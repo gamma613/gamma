@@ -19,7 +19,7 @@ type Props = ButtonProps & {
 };
 
 export function VolumeButton({ active, className, disabled: disabledProp, ...buttonProps }: Props) {
-  const { disabled: playerDisabled, gateClassName } = usePlayerControlsReady();
+  const { disabled: playerDisabled } = usePlayerControlsReady();
   const disabled = Boolean(disabledProp) || playerDisabled;
   const { muted, volume } = usePlayer();
 
@@ -48,7 +48,6 @@ export function VolumeButton({ active, className, disabled: disabledProp, ...but
           aria-disabled={disabled}
           disabled={disabled}
           className={cn(
-            gateClassName,
             "relative overflow-hidden",
             active && "bg-accent text-accent-foreground",
             className,
