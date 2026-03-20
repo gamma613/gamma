@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 import type React from 'react';
 import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { usePlayerControlsReady } from '../context/usePlayerControlsReady';
 import { VolumeButton } from './VolumeButton';
 import { VolumeSlider } from './VolumeSlider';
 
@@ -18,6 +19,7 @@ type Props = React.PropsWithChildren & {
 };
 
 export function VolumePopover({ anchor = 'bottom', buttonProps, className }: Props) {
+  const { isReady } = usePlayerControlsReady();
   const [open, setOpen] = useState(false);
   const contentId = useId();
   const triggerRef = useRef<HTMLDivElement | null>(null);
@@ -90,12 +92,17 @@ export function VolumePopover({ anchor = 'bottom', buttonProps, className }: Pro
           active={open}
           aria-controls={contentId}
           aria-expanded={open}
-          onClick={() => setOpen((v) => !v)}
+          disabled={!isReady || buttonProps?.disabled}
+          onClick={() => {
+            if (!isReady) return;
+            setOpen((v) => !v);
+          }}
           {...buttonProps}
         />
       </div>
 
-      {open &&
+      {isReady &&
+        open &&
         typeof document !== 'undefined' &&
         createPortal(
           <>

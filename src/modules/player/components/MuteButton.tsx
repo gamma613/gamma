@@ -2,16 +2,19 @@
 
 import { Button, ButtonProps } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { cn } from '@/lib/utils';
 import { faVolumeHigh, faVolumeXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect, useRef } from 'react';
+import { usePlayerControlsReady } from '../context/usePlayerControlsReady';
 import { usePlayer } from '../context/usePlayer';
 
 // ----------------------------------------------------------------------
 
 type MuteButtonProps = Pick<ButtonProps, 'className' | 'variant'>;
 
-export function MuteButton({ ...buttonProps }: MuteButtonProps) {
+export function MuteButton({ className, ...buttonProps }: MuteButtonProps) {
+  const { isReady, disabled, gateClassName } = usePlayerControlsReady();
   const { muted, volume, setMuted, setVolume } = usePlayer();
 
   const lastNonZeroVolumeRef = useRef(1);
@@ -28,8 +31,11 @@ export function MuteButton({ ...buttonProps }: MuteButtonProps) {
       <TooltipTrigger asChild>
         <Button
           aria-label={label}
+          aria-disabled={disabled}
           type="button"
+          disabled={disabled}
           onClick={() => {
+            if (!isReady) return;
             if (effectivelyMuted) {
               setMuted(false);
               if (volume === 0) {
@@ -42,6 +48,7 @@ export function MuteButton({ ...buttonProps }: MuteButtonProps) {
             setMuted(true);
           }}
           variant="outline"
+          className={cn(gateClassName, className)}
           {...buttonProps}
         >
           <FontAwesomeIcon icon={icon} />

@@ -3,8 +3,8 @@
 import { useRef, useState } from 'react';
 import { Slider, SliderProps } from '@/components/ui/slider';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { useHydrated } from '@/lib/useHydrated';
 import { cn } from '@/lib/utils';
+import { usePlayerControlsReady } from '../context/usePlayerControlsReady';
 import { usePlayer } from '../context/usePlayer';
 
 // ----------------------------------------------------------------------
@@ -20,8 +20,8 @@ export function VolumeSlider({
   orientation = 'horizontal',
   sliderProps,
 }: VolumeSliderProps) {
-  const hydrated = useHydrated();
-  const { ready, muted, volume, setMuted, setVolume } = usePlayer();
+  const { isReady, gateClassName } = usePlayerControlsReady();
+  const { muted, volume, setMuted, setVolume } = usePlayer();
 
   const [hoverOpen, setHoverOpen] = useState(false);
   const [hoverX, setHoverX] = useState(0);
@@ -29,14 +29,13 @@ export function VolumeSlider({
   const [hoverPercent, setHoverPercent] = useState(0);
   const rafRef = useRef<number | null>(null);
 
-  const isReady = hydrated && ready;
   const isVertical = orientation === 'vertical';
 
   const v = muted ? 0 : volume;
   const sliderValue = isReady ? [Number.isFinite(v) ? Math.max(0, Math.min(1, v)) : 0] : [0];
 
   return (
-    <div className={cn('relative', !isReady && 'invisible pointer-events-none', className)}>
+    <div className={cn('relative', gateClassName, className)}>
       <Tooltip open={isReady && hoverOpen}>
         <TooltipTrigger asChild>
           <span

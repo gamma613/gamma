@@ -3,16 +3,16 @@
 import { useRef, useState } from 'react';
 import { Slider } from '@/components/ui/slider';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { useHydrated } from '@/lib/useHydrated';
 import { cn } from '@/lib/utils';
+import { usePlayerControlsReady } from '../context/usePlayerControlsReady';
 import { usePlayer } from '../context/usePlayer';
 import { formatTrackTime } from '../utils';
 
 // ----------------------------------------------------------------------
 
 export function SeekBar({ className }: { className?: string }) {
-  const hydrated = useHydrated();
-  const { ready, track, positionSeconds, durationSeconds, seek } = usePlayer();
+  const { isReady: baseReady } = usePlayerControlsReady();
+  const { track, positionSeconds, durationSeconds, seek } = usePlayer();
 
   const rafRef = useRef<number | null>(null);
 
@@ -23,7 +23,7 @@ export function SeekBar({ className }: { className?: string }) {
 
   const displayPosition = isScrubbing ? scrubSeconds : positionSeconds;
 
-  const isReady = hydrated && ready && canSeek;
+  const isReady = baseReady && canSeek;
 
   const value = [isReady ? displayPosition : 0];
 
