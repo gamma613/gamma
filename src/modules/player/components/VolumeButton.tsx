@@ -19,11 +19,14 @@ type Props = ButtonProps & {
 };
 
 export function VolumeButton({ active, className, disabled: disabledProp, ...buttonProps }: Props) {
-  const { disabled: playerDisabled } = usePlayerControlsReady();
+  const { disabled: playerDisabled, gateClassName } = usePlayerControlsReady();
   const disabled = Boolean(disabledProp) || playerDisabled;
   const { muted, volume } = usePlayer();
 
   const label = "Adjust Volume";
+
+  const displayVolume = Math.max(0, Math.min(1, muted ? 0 : volume));
+  const fillHeight = `${displayVolume * 100}%`;
 
   let icon = faVolume;
   if (muted || volume === 0) {
@@ -44,10 +47,22 @@ export function VolumeButton({ active, className, disabled: disabledProp, ...but
           aria-expanded={active}
           aria-disabled={disabled}
           disabled={disabled}
-          className={cn(active && "bg-accent text-accent-foreground", className)}
+          className={cn(
+            gateClassName,
+            "relative overflow-hidden",
+            active && "bg-accent text-accent-foreground",
+            className,
+          )}
           {...buttonProps}
         >
-          <FontAwesomeIcon icon={icon} />
+          {!active && displayVolume > 0 && (
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-x-0 bottom-0 bg-accent transition-[height] duration-150"
+              style={{ height: fillHeight }}
+            />
+          )}
+          <FontAwesomeIcon icon={icon} className="relative z-10" />
         </Button>
       </TooltipTrigger>
       <TooltipContent side="top">{label}</TooltipContent>
