@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import type React from 'react';
-import { usePlayer } from '../context/usePlayer';
+import type React from "react";
+import { usePlayer } from "../context/usePlayer";
 
 // ----------------------------------------------------------------------
 
-type TrackArtistProps<T extends React.ElementType = 'span'> = {
+type TrackArtistProps<T extends React.ElementType = "span"> = {
   as?: T;
-} & Omit<React.ComponentPropsWithoutRef<T>, 'as' | 'children'>;
+} & Omit<React.ComponentPropsWithoutRef<T>, "as" | "children">;
 
-export function TrackArtist<T extends React.ElementType = 'span'>({
+export function TrackArtist<T extends React.ElementType = "span">({
   as,
   ...props
 }: TrackArtistProps<T>) {
@@ -17,6 +17,6 @@ export function TrackArtist<T extends React.ElementType = 'span'>({
 
   if (!track?.artist) return null;
 
-  const Comp = (as ?? 'span') as React.ElementType;
+  const Comp = (as ?? "span") as React.ElementType;
   return <Comp {...props}>{track.artist}</Comp>;
 }

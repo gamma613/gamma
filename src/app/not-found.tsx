@@ -1,13 +1,11 @@
 import { Metadata } from "next";
 
-export const NOT_FOUND_TITLE = 'Nope'
+export const NOT_FOUND_TITLE = "Nope";
 
 export const metadata: Metadata = {
   title: NOT_FOUND_TITLE,
 };
 
 export default function NotFound() {
-  return <>
-    now fack off
-  </>
+  return <>now fack off</>;
 }

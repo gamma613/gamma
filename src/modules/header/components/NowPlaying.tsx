@@ -1,4 +1,4 @@
-import { PingPong } from '@/components/animation/PingPong';
+import { PingPong } from "@/components/animation/PingPong";
 import {
   Player,
   PlayToggleButton,
@@ -8,9 +8,9 @@ import {
   TrackTitle,
   VolumePopover,
   VolumeSlider,
-} from '@/modules/player';
-import { TrackDuration } from '@/modules/player/components/TrackDuration';
-import { TrackPosition } from '@/modules/player/components/TrackPosition';
+} from "@/modules/player";
+import { TrackDuration } from "@/modules/player/components/TrackDuration";
+import { TrackPosition } from "@/modules/player/components/TrackPosition";
 
 // ----------------------------------------------------------------------
 
@@ -29,7 +29,7 @@ export function NowPlaying() {
         {/* Volume popover (md:up) */}
         <VolumePopover
           buttonProps={{
-            className: 'h-11 w-11',
+            className: "h-11 w-11",
           }}
           className="hidden md:block"
         />

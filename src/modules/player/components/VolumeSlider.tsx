@@ -1,23 +1,23 @@
-'use client';
+"use client";
 
-import { useRef, useState } from 'react';
-import { Slider, SliderProps } from '@/components/ui/slider';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { cn } from '@/lib/utils';
-import { usePlayerControlsReady } from '../context/usePlayerControlsReady';
-import { usePlayer } from '../context/usePlayer';
+import { useRef, useState } from "react";
+import { Slider, SliderProps } from "@/components/ui/slider";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
+import { usePlayerControlsReady } from "../context/usePlayerControlsReady";
+import { usePlayer } from "../context/usePlayer";
 
 // ----------------------------------------------------------------------
 
 type VolumeSliderProps = {
   className?: string;
-  orientation?: SliderProps['orientation'];
-  sliderProps?: Pick<SliderProps, 'className' | 'trackClassName'>;
+  orientation?: SliderProps["orientation"];
+  sliderProps?: Pick<SliderProps, "className" | "trackClassName">;
 };
 
 export function VolumeSlider({
   className,
-  orientation = 'horizontal',
+  orientation = "horizontal",
   sliderProps,
 }: VolumeSliderProps) {
   const { isReady, gateClassName } = usePlayerControlsReady();
@@ -29,13 +29,13 @@ export function VolumeSlider({
   const [hoverPercent, setHoverPercent] = useState(0);
   const rafRef = useRef<number | null>(null);
 
-  const isVertical = orientation === 'vertical';
+  const isVertical = orientation === "vertical";
 
   const v = muted ? 0 : volume;
   const sliderValue = isReady ? [Number.isFinite(v) ? Math.max(0, Math.min(1, v)) : 0] : [0];
 
   return (
-    <div className={cn('relative', gateClassName, className)}>
+    <div className={cn("relative", gateClassName, className)}>
       <Tooltip open={isReady && hoverOpen}>
         <TooltipTrigger asChild>
           <span
@@ -43,12 +43,12 @@ export function VolumeSlider({
             className="pointer-events-none absolute"
             style={
               isVertical
-                ? { left: '50%', top: hoverY, transform: 'translateX(-50%)' }
+                ? { left: "50%", top: hoverY, transform: "translateX(-50%)" }
                 : { left: hoverX, top: 0 }
             }
           />
         </TooltipTrigger>
-        <TooltipContent side={isVertical ? 'right' : 'top'} sideOffset={8}>
+        <TooltipContent side={isVertical ? "right" : "top"} sideOffset={8}>
           {/* {`Adjust volume to ${Math.round(hoverPercent)}%`} */}
           {`${Math.round(hoverPercent)}%`}
         </TooltipContent>
@@ -98,9 +98,9 @@ export function VolumeSlider({
         step={0.01}
         value={sliderValue}
         className={cn(
-          'w-full h-full',
-          '**:data-[slot=slider-thumb]:opacity-0',
-          isVertical && 'data-vertical:min-h-0',
+          "w-full h-full",
+          "**:data-[slot=slider-thumb]:opacity-0",
+          isVertical && "data-vertical:min-h-0",
           sliderProps?.className,
         )}
       />

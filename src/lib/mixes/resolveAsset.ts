@@ -1,8 +1,8 @@
-import fsp from 'fs/promises';
-import path from 'path';
+import fsp from "fs/promises";
+import path from "path";
 
-import type { MixArtType, MixAudioExt, MixArtExt } from './supported';
-import { MIX_ART_EXTS, MIX_AUDIO_EXTS } from './supported';
+import type { MixArtType, MixAudioExt, MixArtExt } from "./supported";
+import { MIX_ART_EXTS, MIX_AUDIO_EXTS } from "./supported";
 
 type ResolveOptions = {
   dir: string;
@@ -49,7 +49,7 @@ async function resolveBySuffix({
 }
 
 export async function resolveMixArtFile(slug: string, type: MixArtType): Promise<string | null> {
-  const dir = path.join(process.cwd(), 'protected-assets/mixes', slug);
+  const dir = path.join(process.cwd(), "protected-assets/mixes", slug);
   return resolveBySuffix({
     dir,
     suffix: type,
@@ -59,14 +59,13 @@ export async function resolveMixArtFile(slug: string, type: MixArtType): Promise
 }
 
 export async function resolveMixAudioFile(slug: string): Promise<string | null> {
-  const dir = path.join(process.cwd(), 'protected-assets/mixes', slug);
+  const dir = path.join(process.cwd(), "protected-assets/mixes", slug);
   return resolveBySuffix({
     dir,
-    suffix: 'audio',
-    preferredBases: ['audio', `${slug}-audio`],
+    suffix: "audio",
+    preferredBases: ["audio", `${slug}-audio`],
     preferredExts: MIX_AUDIO_EXTS,
   });
 }
 
 export type { MixAudioExt, MixArtExt };
-

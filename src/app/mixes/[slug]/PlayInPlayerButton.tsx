@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { usePlayer } from '@/modules/player';
+import { usePlayer } from "@/modules/player";
 
 export function PlayInPlayerButton({
   slug,
@@ -21,7 +21,7 @@ export function PlayInPlayerButton({
       className="shrink-0 rounded border px-3 py-1 text-sm hover:bg-black/5"
       onClick={() =>
         play({
-          kind: 'mixes',
+          kind: "mixes",
           src: `/api/stream/mixes/${slug}`,
           title,
           artist,

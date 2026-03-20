@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { createContext, useMemo, useState } from 'react';
+import { createContext, useMemo, useState } from "react";
 
-import type { HeaderContextValue } from './context/types';
+import type { HeaderContextValue } from "./context/types";
 
 export const HeaderContext = createContext<HeaderContextValue | null>(null);
 
@@ -18,4 +18,3 @@ export function HeaderProvider({ children }: { children: React.ReactNode }) {
 
   return <HeaderContext.Provider value={value}>{children}</HeaderContext.Provider>;
 }
-

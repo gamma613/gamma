@@ -1,17 +1,17 @@
-'use client';
+"use client";
 
-import { Button, ButtonProps } from '@/components/ui/button';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { cn } from '@/lib/utils';
+import { Button, ButtonProps } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 import {
   faVolume,
   faVolumeHigh,
   faVolumeLow,
   faVolumeXmark,
-} from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { usePlayerControlsReady } from '../context/usePlayerControlsReady';
-import { usePlayer } from '../context/usePlayer';
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { usePlayerControlsReady } from "../context/usePlayerControlsReady";
+import { usePlayer } from "../context/usePlayer";
 // ----------------------------------------------------------------------
 
 type Props = ButtonProps & {
@@ -23,7 +23,7 @@ export function VolumeButton({ active, className, disabled: disabledProp, ...but
   const disabled = Boolean(disabledProp) || playerDisabled;
   const { muted, volume } = usePlayer();
 
-  const label = 'Adjust Volume';
+  const label = "Adjust Volume";
 
   let icon = faVolume;
   if (muted || volume === 0) {
@@ -44,7 +44,7 @@ export function VolumeButton({ active, className, disabled: disabledProp, ...but
           aria-expanded={active}
           aria-disabled={disabled}
           disabled={disabled}
-          className={cn(active && 'bg-accent text-accent-foreground', className)}
+          className={cn(active && "bg-accent text-accent-foreground", className)}
           {...buttonProps}
         >
           <FontAwesomeIcon icon={icon} />

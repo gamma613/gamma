@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useHydrated } from '@/lib/useHydrated';
-import { usePlayer } from './usePlayer';
+import { useHydrated } from "@/lib/useHydrated";
+import { usePlayer } from "./usePlayer";
 
 export function usePlayerControlsReady() {
   const hydrated = useHydrated();
@@ -12,6 +12,6 @@ export function usePlayerControlsReady() {
   return {
     isReady,
     disabled: !isReady,
-    gateClassName: !isReady ? 'invisible pointer-events-none' : undefined,
+    gateClassName: !isReady ? "invisible pointer-events-none" : undefined,
   };
 }

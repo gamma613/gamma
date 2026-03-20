@@ -1,9 +1,9 @@
 export const ROUTES = {
   mixes: function (slug?: string) {
-    const root = `/mixes${slug ? `/${slug}` : ''}`;
+    const root = `/mixes${slug ? `/${slug}` : ""}`;
     return {
       root,
-      art: (type: string) => `${root}/art/${type.replace(/^\//, '')}`,
+      art: (type: string) => `${root}/art/${type.replace(/^\//, "")}`,
     };
   },
 };
