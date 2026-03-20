@@ -2,8 +2,8 @@
 
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { Menu } from 'lucide-react';
-//
+import { faBars } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useHeader } from '../context/useHeader';
 
 // ----------------------------------------------------------------------
@@ -21,7 +21,7 @@ export function MenuButton() {
           aria-label="Navigate"
           onClick={() => setNavOpen(true)}
         >
-          <Menu className="size-5" />
+          <FontAwesomeIcon icon={faBars} className="size-5" />
         </Button>
       </TooltipTrigger>
       <TooltipContent side="top">Navigate</TooltipContent>

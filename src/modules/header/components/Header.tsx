@@ -1,6 +1,5 @@
 import Image from 'next/image';
 import Link from 'next/link';
-//
 import { MenuButton } from './MenuButton';
 import { NowPlaying } from './NowPlaying';
 

@@ -3,6 +3,7 @@ import { PlayerProvider } from '@/modules/player';
 import { BokehBackground } from '@/components/ui/bokeh';
 import { HeaderProvider } from '@/modules/header';
 import { getMix } from '@/lib/mixes/getMix';
+import '@/app/fontawesome';
 import { TooltipProvider } from '@/components/ui/tooltip';
 
 export default function ClientProviders({ children }: { children: React.ReactNode }) {

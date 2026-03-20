@@ -3,7 +3,6 @@
 import { useHydrated } from '@/lib/useHydrated';
 import { useCallback, useEffect, useRef } from 'react';
 import ReactPlayer from 'react-player';
-//
 import { usePlayer } from '../context/usePlayer';
 
 // ----------------------------------------------------------------------
@@ -11,7 +10,16 @@ import { usePlayer } from '../context/usePlayer';
 export const Player = () => {
   const hydrated = useHydrated();
   const playerRef = useRef<HTMLVideoElement | null>(null);
-  const { track, playing, muted, volume, positionSeconds, setPlaying, setPositionSeconds, setDurationSeconds } = usePlayer();
+  const {
+    track,
+    playing,
+    muted,
+    volume,
+    positionSeconds,
+    setPlaying,
+    setPositionSeconds,
+    setDurationSeconds,
+  } = usePlayer();
   const hasRestoredRef = useRef(false);
 
   const restoreIfNeeded = useCallback(() => {
@@ -52,7 +60,7 @@ export const Player = () => {
 
   // Keep SSR + initial hydration deterministic; render the real UI after hydration.
   if (!hydrated) return null;
-  
+
   return (
     <ReactPlayer
       ref={playerRef}

@@ -1,7 +1,6 @@
 'use client';
 
 import type React from 'react';
-//
 import { usePlayer } from '../context/usePlayer';
 import { formatTrackTime } from '../utils';
 
@@ -22,5 +21,9 @@ export function TrackDuration<T extends React.ElementType = 'span'>({
   const formattedTime = formatTrackTime(durationSeconds);
 
   const Comp = (as ?? 'span') as React.ElementType;
-  return <Comp {...props} aria-label={`Track duration: ${formattedTime}`}>{formattedTime}</Comp>;
+  return (
+    <Comp {...props} aria-label={`Track duration: ${formattedTime}`}>
+      {formattedTime}
+    </Comp>
+  );
 }

@@ -5,7 +5,6 @@ import { Slider, SliderProps } from '@/components/ui/slider';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useHydrated } from '@/lib/useHydrated';
 import { cn } from '@/lib/utils';
-//
 import { usePlayer } from '../context/usePlayer';
 
 // ----------------------------------------------------------------------

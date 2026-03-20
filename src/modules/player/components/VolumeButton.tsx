@@ -3,8 +3,13 @@
 import { Button, ButtonProps } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
-import { VolumeHighIcon, VolumeLowIcon, VolumeMute02Icon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
+import {
+  faVolume,
+  faVolumeHigh,
+  faVolumeLow,
+  faVolumeXmark,
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { usePlayer } from '../context/usePlayer';
 // ----------------------------------------------------------------------
 
@@ -17,11 +22,13 @@ export function VolumeButton({ active, className, ...buttonProps }: Props) {
 
   const label = 'Adjust Volume';
 
-  let buttonIcon = VolumeHighIcon;
+  let icon = faVolume;
   if (muted || volume === 0) {
-    buttonIcon = VolumeMute02Icon;
-  } else if (volume < 0.5) {
-    buttonIcon = VolumeLowIcon;
+    icon = faVolumeXmark;
+  } else if (volume >= 0.66) {
+    icon = faVolumeHigh;
+  } else if (volume <= 0.33) {
+    icon = faVolumeLow;
   }
 
   return (
@@ -35,7 +42,7 @@ export function VolumeButton({ active, className, ...buttonProps }: Props) {
           className={cn(active && 'bg-accent text-accent-foreground', className)}
           {...buttonProps}
         >
-          <HugeiconsIcon icon={buttonIcon} size={22} color="currentColor" />
+          <FontAwesomeIcon icon={icon} />
         </Button>
       </TooltipTrigger>
       <TooltipContent side="top">{label}</TooltipContent>
