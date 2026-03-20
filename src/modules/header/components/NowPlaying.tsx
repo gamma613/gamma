@@ -24,13 +24,16 @@ export function NowPlaying() {
 
       {/* Toolbar */}
       <div role="toolbar" aria-label="Media controls" className="flex flex-row items-center gap-4">
+        {/* Play toggle */}
         <PlayToggleButton className="h-11 w-11" />
+        {/* Volume popover (md:up) */}
         <VolumePopover
           buttonProps={{
             className: 'h-11 w-11',
           }}
+          className="hidden md:block"
         />
-        {/* Art */}
+        {/* Art (sm:up) */}
         <TrackArt width={44} height={44} className="hidden sm:block" />
         {/* Track info: shrinkable container */}
         <div className="flex-1 min-w-0 flex flex-col">
