@@ -43,7 +43,7 @@ export function VolumeSlider({
             className="pointer-events-none absolute"
             style={
               isVertical
-                ? { left: "50%", top: hoverY, transform: "translateX(-50%)" }
+                ? { right: 0, marginLeft: "-10px", top: hoverY, transform: "translateX(-50%)" }
                 : { left: hoverX, top: 0 }
             }
           />
