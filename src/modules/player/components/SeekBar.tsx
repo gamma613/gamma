@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { Slider } from '@/components/ui/slider';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useHydrated } from '@/lib/useHydrated';
@@ -11,11 +11,7 @@ import { formatTrackTime } from '../utils';
 
 // ----------------------------------------------------------------------
 
-export function SeekBar({
-  className,
-}: {
-  className?: string;
-}) {
+export function SeekBar({ className }: { className?: string }) {
   const hydrated = useHydrated();
   const { ready, track, positionSeconds, durationSeconds, seek } = usePlayer();
 
@@ -24,8 +20,7 @@ export function SeekBar({
   const [isScrubbing, setIsScrubbing] = useState(false);
   const [scrubSeconds, setScrubSeconds] = useState(0);
 
-  const canSeek =
-    Boolean(track) && Number.isFinite(durationSeconds) && durationSeconds > 0;
+  const canSeek = Boolean(track) && Number.isFinite(durationSeconds) && durationSeconds > 0;
 
   const displayPosition = isScrubbing ? scrubSeconds : positionSeconds;
 
@@ -38,15 +33,13 @@ export function SeekBar({
   const [hoverSeconds, setHoverSeconds] = useState(0);
   const [hoverPct, setHoverPct] = useState(0);
 
-  const anchorPct = isScrubbing
-    ? scrubSeconds / durationSeconds
-    : hoverPct;
+  const anchorPct = isScrubbing ? scrubSeconds / durationSeconds : hoverPct;
 
   const tooltipLabel = isScrubbing
     ? `${formatTrackTime(scrubSeconds)} / ${formatTrackTime(durationSeconds)}`
     : `Jump to ${formatTrackTime(hoverSeconds)}`;
 
-  // Output 
+  // Output
   return (
     <div className={cn('relative w-full', className)}>
       <Tooltip open={isReady && hoverOpen} delayDuration={150}>

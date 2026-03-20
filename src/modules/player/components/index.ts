@@ -7,4 +7,6 @@ export * from './TrackPosition';
 export * from './TrackTitle';
 export * from './TrackArtist';
 export * from './TrackArt';
+export * from './VolumeButton';
+export * from './VolumePopover';
 export * from './VolumeSlider';

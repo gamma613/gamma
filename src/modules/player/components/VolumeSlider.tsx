@@ -1,16 +1,16 @@
 'use client';
 
+import { useRef, useState } from 'react';
 import { Slider, SliderProps } from '@/components/ui/slider';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useHydrated } from '@/lib/useHydrated';
 import { cn } from '@/lib/utils';
-import { useRef, useState } from 'react';
 //
 import { usePlayer } from '../context/usePlayer';
 
 // ----------------------------------------------------------------------
 
-type VolumeSliderProps = Pick<SliderProps, 'className' | 'orientation'>
+type VolumeSliderProps = Pick<SliderProps, 'className' | 'orientation'>;
 
 export function VolumeSlider({ className, orientation = 'horizontal' }: VolumeSliderProps) {
   const hydrated = useHydrated();
@@ -43,7 +43,7 @@ export function VolumeSlider({ className, orientation = 'horizontal' }: VolumeSl
           />
         </TooltipTrigger>
         <TooltipContent side={isVertical ? 'right' : 'top'} sideOffset={8}>
-          {`Volume ${Math.round(hoverPercent)}%`}
+          {`Adjust volume to ${Math.round(hoverPercent)}%`}
         </TooltipContent>
       </Tooltip>
 
@@ -89,7 +89,7 @@ export function VolumeSlider({ className, orientation = 'horizontal' }: VolumeSl
         }}
         step={0.01}
         value={sliderValue}
-        className="w-full"
+        className={cn('w-full h-full', isVertical && 'data-vertical:min-h-0')}
       />
     </div>
   );
