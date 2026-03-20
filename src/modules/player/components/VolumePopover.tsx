@@ -105,11 +105,17 @@ export function VolumePopover({ anchor = 'bottom', buttonProps, className }: Pro
               ref={panelRef}
               className={cn(
                 'z-50',
-                'rounded-lg border bg-background/80 p-2 text-popover-foreground shadow-md supports-[backdrop-filter]:backdrop-blur-md',
+                'rounded-lg border bg-background/80 py-4 text-popover-foreground shadow-md supports-[backdrop-filter]:backdrop-blur-md',
                 anchor === 'top' ? '' : '-translate-y-full',
               )}
             >
-              <VolumeSlider orientation="vertical" className="h-[100px]" />
+              <VolumeSlider
+                orientation="vertical"
+                className="h-[100px]"
+                sliderProps={{
+                  trackClassName: 'data-horizontal:h-4 data-vertical:w-4',
+                }}
+              />
             </div>
           </>,
           document.body,

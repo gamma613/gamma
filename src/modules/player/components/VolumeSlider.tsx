@@ -9,9 +9,17 @@ import { usePlayer } from '../context/usePlayer';
 
 // ----------------------------------------------------------------------
 
-type VolumeSliderProps = Pick<SliderProps, 'className' | 'orientation'>;
+type VolumeSliderProps = {
+  className?: string;
+  orientation?: SliderProps['orientation'];
+  sliderProps?: Pick<SliderProps, 'className' | 'trackClassName'>;
+};
 
-export function VolumeSlider({ className, orientation = 'horizontal' }: VolumeSliderProps) {
+export function VolumeSlider({
+  className,
+  orientation = 'horizontal',
+  sliderProps,
+}: VolumeSliderProps) {
   const hydrated = useHydrated();
   const { ready, muted, volume, setMuted, setVolume } = usePlayer();
 
@@ -42,7 +50,8 @@ export function VolumeSlider({ className, orientation = 'horizontal' }: VolumeSl
           />
         </TooltipTrigger>
         <TooltipContent side={isVertical ? 'right' : 'top'} sideOffset={8}>
-          {`Adjust volume to ${Math.round(hoverPercent)}%`}
+          {/* {`Adjust volume to ${Math.round(hoverPercent)}%`} */}
+          {`${Math.round(hoverPercent)}%`}
         </TooltipContent>
       </Tooltip>
 
@@ -52,6 +61,7 @@ export function VolumeSlider({ className, orientation = 'horizontal' }: VolumeSl
         max={1}
         disabled={!isReady}
         orientation={orientation}
+        trackClassName={sliderProps?.trackClassName}
         onPointerEnter={() => setHoverOpen(true)}
         onPointerLeave={() => setHoverOpen(false)}
         onPointerMove={(e) => {
@@ -88,7 +98,12 @@ export function VolumeSlider({ className, orientation = 'horizontal' }: VolumeSl
         }}
         step={0.01}
         value={sliderValue}
-        className={cn('w-full h-full', isVertical && 'data-vertical:min-h-0')}
+        className={cn(
+          'w-full h-full',
+          '**:data-[slot=slider-thumb]:opacity-0',
+          isVertical && 'data-vertical:min-h-0',
+          sliderProps?.className,
+        )}
       />
     </div>
   );
