@@ -1,0 +1,10 @@
+.next
+node_modules
+out
+build
+
+.content-collections/generated
+
+package-lock.json
+tsconfig.tsbuildinfo
+
