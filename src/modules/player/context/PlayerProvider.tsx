@@ -58,7 +58,7 @@ export function PlayerProvider({
     track: defaultTrack ?? null,
     playing: false,
     muted: false,
-    volume: 1,
+    volume: 0.8,
     positionSeconds: 0,
     durationSeconds: 0,
   }));
