@@ -29,16 +29,27 @@ export default async function MixPage({ params }: Props) {
   const mix = getMix(slug);
   if (!mix) notFound();
 
+  const released = mix.date ? mix.date.toISOString().slice(0, 10) : "—";
+
   return (
-    <div className="py-6 mx-auto max-w-sm sm:max-w-none">
-      <div className="flex items-center gap-3">
-        <h1 className="flex-1">{mix.title}</h1>
-        <PlayInPlayerButton
-          slug={slug}
-          title={mix.title ?? slug}
-          artist={mix.artist ?? undefined}
-          cover={mix.artwork?.cover}
-        />
+    <div className="py-6 mx-auto">
+      <div className="flex items-center gap-6">
+        <h1 className="order-2 flex-1 min-w-0 text-lg sm:text-sm lg:text-2xl">
+          {mix.title}
+          <span className="text-muted-foreground">
+            <span aria-hidden="true"> — </span>
+            <span className="sr-only"> by </span>
+            {mix.artist}
+          </span>
+        </h1>
+        <div className="order-1 shrink-0">
+          <PlayInPlayerButton
+            slug={slug}
+            title={mix.title}
+            artist={mix.artist}
+            cover={mix.artwork.cover}
+          />
+        </div>
       </div>
       <div className="flex flex-col sm:flex-row gap-4 items-start">
         <Image
@@ -46,20 +57,22 @@ export default async function MixPage({ params }: Props) {
           height={400}
           src={ROUTES.mixes(slug).art("cover")}
           alt={`Artwork for ${mix.title}`}
-          // the art route manages its own cache
           unoptimized
           className="w-full sm:max-w-1/2 max-w-[400px] h-auto"
         />
         <table className="w-full border-collapse">
           <tbody>
             <tr className="border-b">
-              <MetaTh>Artist</MetaTh>
-              <MetaTd>{mix.artist ?? "Gamma"}</MetaTd>
+              <MetaTh>BPM</MetaTh>
+              <MetaTh>
+                {mix.bpm}
+                {mix.bpm2 && ` — ${mix.bpm2}`}
+              </MetaTh>
             </tr>
 
             <tr className="border-b">
               <MetaTh>Released</MetaTh>
-              <MetaTd>2026</MetaTd>
+              <MetaTd>{released}</MetaTd>
             </tr>
 
             <tr>
