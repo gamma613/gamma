@@ -1,19 +1,13 @@
-'use client';
+"use client";
 
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
-import { STORAGE_KEY, CHANNEL_NAME, CLAIM_KEY } from '../config';
-import { PlayerContext } from './PlayerContext';
-import { PlayerActions, PlayerContextValue, PlayerState, PlayerTrack } from './types';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { STORAGE_KEY, CHANNEL_NAME, CLAIM_KEY } from "../config";
+import { PlayerContext } from "./PlayerContext";
+import { PlayerActions, PlayerContextValue, PlayerState, PlayerTrack } from "./types";
 
 function getTabId(): string {
-  if (typeof window === 'undefined') return 'ssr';
-  const key = 'gamma.player.tabId.v1';
+  if (typeof window === "undefined") return "ssr";
+  const key = "gamma.player.tabId.v1";
   const existing = window.sessionStorage.getItem(key);
   if (existing) return existing;
   const created = globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random()}`;
@@ -26,7 +20,7 @@ function loadPersisted(): Partial<PlayerState> | null {
     const raw = window.localStorage.getItem(STORAGE_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw) as Partial<PlayerState> | null;
-    return parsed && typeof parsed === 'object' ? parsed : null;
+    return parsed && typeof parsed === "object" ? parsed : null;
   } catch {
     return null;
   }
@@ -64,7 +58,7 @@ export function PlayerProvider({
     track: defaultTrack ?? null,
     playing: false,
     muted: false,
-    volume: 1,
+    volume: 0.8,
     positionSeconds: 0,
     durationSeconds: 0,
   }));
@@ -78,7 +72,7 @@ export function PlayerProvider({
       setState((s) => ({
         ...s,
         track:
-          typeof persisted.track === 'undefined'
+          typeof persisted.track === "undefined"
             ? s.track
             : persisted.track === null
               ? null
@@ -86,11 +80,17 @@ export function PlayerProvider({
                 ? { ...defaultTrack, ...persisted.track }
                 : persisted.track,
         // Restore "playing" state from persistence (browser may still block autoplay).
-        playing: typeof persisted.playing === 'boolean' ? persisted.playing : s.playing,
-        muted: typeof persisted.muted === 'boolean' ? persisted.muted : s.muted,
-        volume: typeof persisted.volume === 'number' ? persisted.volume : s.volume,
-        positionSeconds: typeof persisted.positionSeconds === 'number' ? persisted.positionSeconds : s.positionSeconds,
-        durationSeconds: typeof persisted.durationSeconds === 'number' ? persisted.durationSeconds : s.durationSeconds,
+        playing: typeof persisted.playing === "boolean" ? persisted.playing : s.playing,
+        muted: typeof persisted.muted === "boolean" ? persisted.muted : s.muted,
+        volume: typeof persisted.volume === "number" ? persisted.volume : s.volume,
+        positionSeconds:
+          typeof persisted.positionSeconds === "number"
+            ? persisted.positionSeconds
+            : s.positionSeconds,
+        durationSeconds:
+          typeof persisted.durationSeconds === "number"
+            ? persisted.durationSeconds
+            : s.durationSeconds,
       }));
     }
 
@@ -121,32 +121,32 @@ export function PlayerProvider({
 
     const onPageHide = () => flush();
     const onVisibilityChange = () => {
-      if (document.visibilityState === 'hidden') flush();
+      if (document.visibilityState === "hidden") flush();
     };
 
-    window.addEventListener('pagehide', onPageHide);
-    document.addEventListener('visibilitychange', onVisibilityChange);
+    window.addEventListener("pagehide", onPageHide);
+    document.addEventListener("visibilitychange", onVisibilityChange);
 
     return () => {
-      window.removeEventListener('pagehide', onPageHide);
-      document.removeEventListener('visibilitychange', onVisibilityChange);
+      window.removeEventListener("pagehide", onPageHide);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
     };
   }, []);
 
   useEffect(() => {
     // Best-effort: ensure only one tab plays at a time.
-    const channel = typeof window !== 'undefined' ? new BroadcastChannel(CHANNEL_NAME) : null;
+    const channel = typeof window !== "undefined" ? new BroadcastChannel(CHANNEL_NAME) : null;
     if (!channel) return;
 
     const onMessage = (event: MessageEvent) => {
       const msg = event.data as { type?: string; tabId?: string } | null;
       if (!msg || msg.tabId === tabId) return;
-      if (msg.type === 'PLAY') setState((s) => ({ ...s, playing: false }));
+      if (msg.type === "PLAY") setState((s) => ({ ...s, playing: false }));
     };
 
-    channel.addEventListener('message', onMessage);
+    channel.addEventListener("message", onMessage);
     return () => {
-      channel.removeEventListener('message', onMessage);
+      channel.removeEventListener("message", onMessage);
       channel.close();
     };
   }, [tabId]);
@@ -157,27 +157,30 @@ export function PlayerProvider({
       try {
         const msg = JSON.parse(event.newValue) as { type?: string; tabId?: string } | null;
         if (!msg || msg.tabId === tabId) return;
-        if (msg.type === 'PLAY') setState((s) => ({ ...s, playing: false }));
+        if (msg.type === "PLAY") setState((s) => ({ ...s, playing: false }));
       } catch {
         // Ignore invalid payloads.
       }
     };
 
-    window.addEventListener('storage', onStorage);
-    return () => window.removeEventListener('storage', onStorage);
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
   }, [tabId]);
 
   const broadcastPlay = useCallback(() => {
     try {
       const channel = new BroadcastChannel(CHANNEL_NAME);
-      channel.postMessage({ type: 'PLAY', tabId });
+      channel.postMessage({ type: "PLAY", tabId });
       channel.close();
     } catch {
       // Ignore (unsupported / blocked).
     }
 
     try {
-      window.localStorage.setItem(CLAIM_KEY, JSON.stringify({ type: 'PLAY', tabId, ts: Date.now() }));
+      window.localStorage.setItem(
+        CLAIM_KEY,
+        JSON.stringify({ type: "PLAY", tabId, ts: Date.now() }),
+      );
     } catch {
       // Ignore.
     }
@@ -193,24 +196,29 @@ export function PlayerProvider({
     didBroadcastInitialPlayRef.current = true;
   }, [broadcastPlay, didLoadPersisted, state.playing, state.track]);
 
-  const play: PlayerActions['play'] = useCallback(
+  const play: PlayerActions["play"] = useCallback(
     (track, opts) => {
       setState((s) => ({
         ...s,
         track,
         playing: true,
-        positionSeconds: typeof opts?.seekSeconds === 'number' ? opts.seekSeconds : track.src === s.track?.src ? s.positionSeconds : 0,
+        positionSeconds:
+          typeof opts?.seekSeconds === "number"
+            ? opts.seekSeconds
+            : track.src === s.track?.src
+              ? s.positionSeconds
+              : 0,
       }));
       broadcastPlay();
     },
     [broadcastPlay],
   );
 
-  const pause: PlayerActions['pause'] = useCallback(() => {
+  const pause: PlayerActions["pause"] = useCallback(() => {
     setState((s) => ({ ...s, playing: false }));
   }, []);
 
-  const toggle: PlayerActions['toggle'] = useCallback(() => {
+  const toggle: PlayerActions["toggle"] = useCallback(() => {
     setState((s) => {
       const nextPlaying = !s.playing;
       if (nextPlaying) broadcastPlay();
@@ -218,7 +226,7 @@ export function PlayerProvider({
     });
   }, [broadcastPlay]);
 
-  const setPlaying: PlayerActions['setPlaying'] = useCallback(
+  const setPlaying: PlayerActions["setPlaying"] = useCallback(
     (nextPlaying) => {
       setState((s) => ({ ...s, playing: nextPlaying }));
       if (nextPlaying) broadcastPlay();
@@ -226,25 +234,31 @@ export function PlayerProvider({
     [broadcastPlay],
   );
 
-  const setMuted: PlayerActions['setMuted'] = useCallback((nextMuted) => {
+  const setMuted: PlayerActions["setMuted"] = useCallback((nextMuted) => {
     setState((s) => ({ ...s, muted: nextMuted }));
   }, []);
 
-  const setVolume: PlayerActions['setVolume'] = useCallback((nextVolume) => {
+  const setVolume: PlayerActions["setVolume"] = useCallback((nextVolume) => {
     const v = Math.max(0, Math.min(1, nextVolume));
     setState((s) => ({ ...s, volume: v }));
   }, []);
 
-  const seek: PlayerActions['seek'] = useCallback((seconds) => {
+  const seek: PlayerActions["seek"] = useCallback((seconds) => {
     setState((s) => ({ ...s, positionSeconds: Math.max(0, seconds) }));
   }, []);
 
-  const setDurationSeconds: PlayerActions['setDurationSeconds'] = useCallback((seconds) => {
-    setState((s) => ({ ...s, durationSeconds: Number.isFinite(seconds) ? seconds : s.durationSeconds }));
+  const setDurationSeconds: PlayerActions["setDurationSeconds"] = useCallback((seconds) => {
+    setState((s) => ({
+      ...s,
+      durationSeconds: Number.isFinite(seconds) ? seconds : s.durationSeconds,
+    }));
   }, []);
 
-  const setPositionSeconds: PlayerActions['setPositionSeconds'] = useCallback((seconds) => {
-    setState((s) => ({ ...s, positionSeconds: Number.isFinite(seconds) ? seconds : s.positionSeconds }));
+  const setPositionSeconds: PlayerActions["setPositionSeconds"] = useCallback((seconds) => {
+    setState((s) => ({
+      ...s,
+      positionSeconds: Number.isFinite(seconds) ? seconds : s.positionSeconds,
+    }));
   }, []);
 
   const value: PlayerContextValue = useMemo(

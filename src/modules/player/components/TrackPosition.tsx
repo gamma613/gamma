@@ -1,17 +1,16 @@
-'use client';
+"use client";
 
-import type React from 'react';
-//
-import { usePlayer } from '../context/usePlayer';
-import { formatTrackTime } from '../utils';
+import type React from "react";
+import { usePlayer } from "../context/usePlayer";
+import { formatTrackTime } from "../utils";
 
 // ----------------------------------------------------------------------
 
-type TrackPositionProps<T extends React.ElementType = 'span'> = {
+type TrackPositionProps<T extends React.ElementType = "span"> = {
   as?: T;
-} & Omit<React.ComponentPropsWithoutRef<T>, 'as' | 'children'>;
+} & Omit<React.ComponentPropsWithoutRef<T>, "as" | "children">;
 
-export function TrackPosition<T extends React.ElementType = 'span'>({
+export function TrackPosition<T extends React.ElementType = "span">({
   as,
   ...props
 }: TrackPositionProps<T>) {
@@ -19,6 +18,12 @@ export function TrackPosition<T extends React.ElementType = 'span'>({
 
   if (!track) return null;
 
-  const Comp = (as ?? 'span') as React.ElementType;
-  return <Comp {...props}>{formatTrackTime(positionSeconds)}</Comp>;
+  const formattedTime = formatTrackTime(positionSeconds);
+
+  const Comp = (as ?? "span") as React.ElementType;
+  return (
+    <Comp {...props} aria-label={`Track position: ${formattedTime}`}>
+      {formattedTime}
+    </Comp>
+  );
 }

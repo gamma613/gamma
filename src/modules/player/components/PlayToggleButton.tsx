@@ -1,33 +1,41 @@
-'use client';
+"use client";
 
 import { Button, ButtonProps } from "@/components/ui/button";
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { PauseIcon, PlayIcon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
-//
-import { usePlayer } from '../context/usePlayer';
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { faPause, faPlay } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { usePlayerControlsReady } from "../context/usePlayerControlsReady";
+import { usePlayer } from "../context/usePlayer";
 
 // ----------------------------------------------------------------------
 
-type PlayButtonToggleProps = Pick<ButtonProps, 'className'| 'variant'>
+type PlayButtonToggleProps = Pick<ButtonProps, "className" | "variant">;
 
-export const PlayToggleButton = ({ ...buttonProps }: PlayButtonToggleProps) => {
+export const PlayToggleButton = ({ className, ...buttonProps }: PlayButtonToggleProps) => {
+  const { isReady, disabled } = usePlayerControlsReady();
   const { playing, toggle } = usePlayer();
-  const label = playing ? 'Pause' : 'Play';
+  const label = playing ? "Pause" : "Play";
+  const icon = playing ? faPause : faPlay;
 
   return (
     <Tooltip>
       <TooltipTrigger asChild>
         <Button
           aria-label={label}
+          aria-disabled={disabled}
           type="button"
-          onClick={() => toggle()}
+          disabled={disabled}
+          onClick={() => {
+            if (!isReady) return;
+            toggle();
+          }}
+          className={className}
           {...buttonProps}
         >
-          <HugeiconsIcon icon={playing ? PauseIcon : PlayIcon} size={22}  />
+          <FontAwesomeIcon icon={icon} />
         </Button>
       </TooltipTrigger>
       <TooltipContent side="top">{label}</TooltipContent>
     </Tooltip>
-  )
-} 
+  );
+};

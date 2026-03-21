@@ -63,7 +63,8 @@
   box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
   height: 100%;
   min-width: 320px;
 }
@@ -74,11 +75,20 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-input, button, textarea, select {
+input,
+button,
+textarea,
+select {
   font: inherit;
 }
 
-p, h1, h2, h3, h4, h5, h6 {
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   overflow-wrap: break-word;
 }
 /* ---break---*/
@@ -130,10 +140,10 @@ p, h1, h2, h3, h4, h5, h6 {
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.268 0.007 34.298);
   --muted-foreground: oklch(0.709 0.01 56.259);
-  --accent: oklch(0.268 0.007 34.298);
+  --accent: oklch(27.411% 0.01153 145.378);
   --accent-foreground: oklch(0.985 0.001 106.423);
   --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
+  --border: oklch(100% 0.00011 271.152 / 0.261);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.553 0.013 58.071);
   --chart-1: oklch(0.897 0.196 126.665);

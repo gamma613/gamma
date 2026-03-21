@@ -1,33 +1,33 @@
-"use client"
+"use client";
 
-import { useEffect, useRef } from "react"
-import { cn } from "@/lib/utils"
+import { useEffect, useRef } from "react";
+import { cn } from "@/lib/utils";
 
 export interface BokehBackgroundProps {
-  className?: string
-  children?: React.ReactNode
+  className?: string;
+  children?: React.ReactNode;
   /** Number of bokeh orbs */
-  count?: number
+  count?: number;
   /** Minimum orb size in pixels */
-  minSize?: number
+  minSize?: number;
   /** Maximum orb size in pixels */
-  maxSize?: number
+  maxSize?: number;
   /** Movement speed multiplier */
-  speed?: number
+  speed?: number;
   /** Colors for orbs */
-  colors?: string[]
+  colors?: string[];
 }
 
 interface Orb {
-  x: number
-  y: number
-  vx: number
-  vy: number
-  size: number
-  color: string
-  opacity: number
-  pulseOffset: number
-  pulseSpeed: number
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  size: number;
+  color: string;
+  opacity: number;
+  pulseOffset: number;
+  pulseSpeed: number;
 }
 
 const DEFAULT_COLORS = [
@@ -36,7 +36,7 @@ const DEFAULT_COLORS = [
   "rgba(255, 220, 150, 0.2)",
   "rgba(255, 160, 80, 0.25)",
   "rgba(255, 240, 200, 0.2)",
-]
+];
 
 export function BokehBackground({
   className,
@@ -47,29 +47,29 @@ export function BokehBackground({
   speed = 1,
   colors = DEFAULT_COLORS,
 }: BokehBackgroundProps) {
-  const canvasRef = useRef<HTMLCanvasElement>(null)
-  const containerRef = useRef<HTMLDivElement>(null)
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const canvas = canvasRef.current
-    const container = containerRef.current
-    if (!canvas || !container) return
+    const canvas = canvasRef.current;
+    const container = containerRef.current;
+    if (!canvas || !container) return;
 
-    const ctx = canvas.getContext("2d")
-    if (!ctx) return
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
 
-    const rect = container.getBoundingClientRect()
-    let width = rect.width
-    let height = rect.height
-    canvas.width = width
-    canvas.height = height
+    const rect = container.getBoundingClientRect();
+    let width = rect.width;
+    let height = rect.height;
+    canvas.width = width;
+    canvas.height = height;
 
-    let animationId: number
-    let tick = 0
+    let animationId: number;
+    let tick = 0;
 
     // Create orbs
     const createOrb = (): Orb => {
-      const size = minSize + Math.random() * (maxSize - minSize)
+      const size = minSize + Math.random() * (maxSize - minSize);
       return {
         x: Math.random() * width,
         y: Math.random() * height,
@@ -80,78 +80,78 @@ export function BokehBackground({
         opacity: 0.15 + Math.random() * 0.2,
         pulseOffset: Math.random() * Math.PI * 2,
         pulseSpeed: 0.005 + Math.random() * 0.01,
-      }
-    }
+      };
+    };
 
-    const orbs: Orb[] = Array.from({ length: count }, createOrb)
+    const orbs: Orb[] = Array.from({ length: count }, createOrb);
 
     // Sort by size for depth (smaller = further back, draw first)
-    orbs.sort((a, b) => a.size - b.size)
+    orbs.sort((a, b) => a.size - b.size);
 
     // Resize handler
     const handleResize = () => {
-      const rect = container.getBoundingClientRect()
-      width = rect.width
-      height = rect.height
-      canvas.width = width
-      canvas.height = height
-    }
+      const rect = container.getBoundingClientRect();
+      width = rect.width;
+      height = rect.height;
+      canvas.width = width;
+      canvas.height = height;
+    };
 
-    const ro = new ResizeObserver(handleResize)
-    ro.observe(container)
+    const ro = new ResizeObserver(handleResize);
+    ro.observe(container);
 
     // Animation
     const animate = () => {
-      tick++
-      ctx.clearRect(0, 0, width, height)
+      tick++;
+      ctx.clearRect(0, 0, width, height);
 
       for (const orb of orbs) {
         // Gentle movement
-        orb.x += orb.vx
-        orb.y += orb.vy
+        orb.x += orb.vx;
+        orb.y += orb.vy;
 
         // Soft bounce at edges
-        if (orb.x < -orb.size / 2) orb.x = width + orb.size / 2
-        if (orb.x > width + orb.size / 2) orb.x = -orb.size / 2
-        if (orb.y < -orb.size / 2) orb.y = height + orb.size / 2
-        if (orb.y > height + orb.size / 2) orb.y = -orb.size / 2
+        if (orb.x < -orb.size / 2) orb.x = width + orb.size / 2;
+        if (orb.x > width + orb.size / 2) orb.x = -orb.size / 2;
+        if (orb.y < -orb.size / 2) orb.y = height + orb.size / 2;
+        if (orb.y > height + orb.size / 2) orb.y = -orb.size / 2;
 
         // Subtle pulse
-        const pulse = Math.sin(tick * orb.pulseSpeed + orb.pulseOffset) * 0.1 + 1
-        const currentSize = orb.size * pulse
+        const pulse = Math.sin(tick * orb.pulseSpeed + orb.pulseOffset) * 0.1 + 1;
+        const currentSize = orb.size * pulse;
 
         // Draw soft bokeh circle
-        const gradient = ctx.createRadialGradient(orb.x, orb.y, 0, orb.x, orb.y, currentSize / 2)
+        const gradient = ctx.createRadialGradient(orb.x, orb.y, 0, orb.x, orb.y, currentSize / 2);
 
         // Parse color and adjust for gradient
-        gradient.addColorStop(0, orb.color.replace(/[\d.]+\)$/, `${orb.opacity * 1.2})`))
-        gradient.addColorStop(0.4, orb.color.replace(/[\d.]+\)$/, `${orb.opacity})`))
-        gradient.addColorStop(0.7, orb.color.replace(/[\d.]+\)$/, `${orb.opacity * 0.5})`))
-        gradient.addColorStop(1, orb.color.replace(/[\d.]+\)$/, "0)"))
+        gradient.addColorStop(0, orb.color.replace(/[\d.]+\)$/, `${orb.opacity * 1.2})`));
+        gradient.addColorStop(0.4, orb.color.replace(/[\d.]+\)$/, `${orb.opacity})`));
+        gradient.addColorStop(0.7, orb.color.replace(/[\d.]+\)$/, `${orb.opacity * 0.5})`));
+        gradient.addColorStop(1, orb.color.replace(/[\d.]+\)$/, "0)"));
 
-        ctx.beginPath()
-        ctx.arc(orb.x, orb.y, currentSize / 2, 0, Math.PI * 2)
-        ctx.fillStyle = gradient
-        ctx.fill()
+        ctx.beginPath();
+        ctx.arc(orb.x, orb.y, currentSize / 2, 0, Math.PI * 2);
+        ctx.fillStyle = gradient;
+        ctx.fill();
 
         // Subtle rim highlight
-        ctx.beginPath()
-        ctx.arc(orb.x, orb.y, currentSize / 2 - 2, 0, Math.PI * 2)
-        ctx.strokeStyle = orb.color.replace(/[\d.]+\)$/, `${orb.opacity * 0.3})`)
-        ctx.lineWidth = 1
-        ctx.stroke()
+        ctx.beginPath();
+        ctx.arc(orb.x, orb.y, currentSize / 2 - 2, 0, Math.PI * 2);
+        ctx.strokeStyle = orb.color.replace(/[\d.]+\)$/, `${orb.opacity * 0.3})`);
+        ctx.lineWidth = 1;
+        ctx.stroke();
       }
 
-      animationId = requestAnimationFrame(animate)
-    }
+      animationId = requestAnimationFrame(animate);
+    };
 
-    animationId = requestAnimationFrame(animate)
+    animationId = requestAnimationFrame(animate);
 
     return () => {
-      cancelAnimationFrame(animationId)
-      ro.disconnect()
-    }
-  }, [count, minSize, maxSize, speed, colors])
+      cancelAnimationFrame(animationId);
+      ro.disconnect();
+    };
+  }, [count, minSize, maxSize, speed, colors]);
 
   return (
     <div
@@ -184,9 +184,9 @@ export function BokehBackground({
       {/* Content layer */}
       {children && <div className="relative z-10 h-full w-full">{children}</div>}
     </div>
-  )
+  );
 }
 
 export default function BokehBackgroundDemo() {
-  return <BokehBackground />
+  return <BokehBackground />;
 }
