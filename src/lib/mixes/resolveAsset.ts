@@ -60,12 +60,21 @@ export async function resolveMixArtFile(slug: string, type: MixArtType): Promise
 
 export async function resolveMixAudioFile(slug: string): Promise<string | null> {
   const dir = path.join(process.cwd(), "protected-assets/mixes", slug);
-  return resolveBySuffix({
-    dir,
-    suffix: "audio",
-    preferredBases: ["audio", `${slug}-audio`],
-    preferredExts: MIX_AUDIO_EXTS,
-  });
+  let entries: string[];
+  try {
+    entries = await fsp.readdir(dir);
+  } catch {
+    return null;
+  }
+
+  const set = new Set(entries);
+
+  for (const ext of MIX_AUDIO_EXTS) {
+    const exact = `${slug}.${ext}`;
+    if (set.has(exact)) return path.join(dir, exact);
+  }
+
+  return null;
 }
 
 export type { MixAudioExt, MixArtExt };

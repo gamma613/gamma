@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { NOT_FOUND_TITLE } from "../not-found";
-import { PlayInPlayerButton } from "./PlayInPlayerButton";
+import { PlayInPlayerButton } from "@/modules/player";
 
 // ----------------------------------------------------------------------
 
@@ -43,12 +43,7 @@ export default async function MixPage({ params }: Props) {
           </span>
         </h1>
         <div className="order-1 shrink-0">
-          <PlayInPlayerButton
-            slug={slug}
-            title={mix.title}
-            artist={mix.artist}
-            cover={mix.artwork.cover}
-          />
+          <PlayInPlayerButton kind="mixes" slug={slug} />
         </div>
       </div>
       <div className="flex flex-col sm:flex-row gap-4 items-start">

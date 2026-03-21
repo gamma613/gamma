@@ -3,7 +3,15 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { STORAGE_KEY, CHANNEL_NAME, CLAIM_KEY } from "../config";
 import { PlayerContext } from "./PlayerContext";
-import { PlayerActions, PlayerContextValue, PlayerState, PlayerTrack } from "./types";
+import {
+  PlayerActions,
+  PlayerContextValue,
+  PlayerState,
+  PlayerTrack,
+  PlayerTrackId,
+} from "./types";
+import { resolveTrack } from "../resolveTrack";
+import { getRecentTrackIds } from "../library";
 
 function getTabId(): string {
   if (typeof window === "undefined") return "ssr";
@@ -44,18 +52,66 @@ function persist(state: PlayerState) {
   }
 }
 
+function slugFromSrc(src: string, kind: string): string | null {
+  const pathname = (() => {
+    try {
+      return new URL(src, "http://example.local").pathname;
+    } catch {
+      return src;
+    }
+  })();
+
+  const m = pathname.match(new RegExp(`^/api/stream/${kind}/([^/]+)/?$`));
+  return m?.[1] ? decodeURIComponent(m[1]) : null;
+}
+
+function normalizeTrack(track: PlayerTrack): PlayerTrack {
+  if (track.slug) return track;
+  const derived = slugFromSrc(track.src, track.kind);
+  return { ...track, slug: derived ?? track.src };
+}
+
+function resolveAndNormalize(trackId: PlayerTrackId): PlayerTrack {
+  const resolved = resolveTrack(trackId);
+  if (!resolved) {
+    return {
+      kind: trackId.kind,
+      slug: trackId.slug,
+      src: `/api/stream/${trackId.kind}/${trackId.slug}`,
+      title: trackId.slug,
+    };
+  }
+  return normalizeTrack(resolved);
+}
+
+function normalizePersistedTrack(track: PlayerTrack | null | undefined): PlayerTrack | null {
+  if (!track) return null;
+
+  if (track.slug) return normalizeTrack(track);
+  const derived = slugFromSrc(track.src, track.kind);
+  if (!derived) return normalizeTrack({ ...track, slug: track.src });
+  return normalizeTrack({ ...track, slug: derived });
+}
+
 export function PlayerProvider({
   children,
   defaultTrack,
 }: {
   children: React.ReactNode;
-  defaultTrack?: PlayerTrack;
+  defaultTrack?: PlayerTrack | PlayerTrackId;
 }) {
   const tabId = useMemo(() => getTabId(), []);
+  const recentTrackIds = useMemo(() => getRecentTrackIds(), []);
+  const resolvedDefaultTrack = useMemo(() => {
+    if (!defaultTrack) return null;
+    if ("src" in defaultTrack) return normalizeTrack(defaultTrack);
+    return resolveAndNormalize(defaultTrack);
+  }, [defaultTrack]);
+
   // Important: keep the first client render identical to the server render to
   // avoid hydration mismatches. Persisted state is loaded after mount.
   const [state, setState] = useState<PlayerState>(() => ({
-    track: defaultTrack ?? null,
+    track: null,
     playing: false,
     muted: false,
     volume: 0.8,
@@ -67,35 +123,50 @@ export function PlayerProvider({
   useEffect(() => {
     const persisted = loadPersisted();
 
-    if (persisted) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- hydrate from localStorage after mount to avoid SSR/client mismatch
-      setState((s) => ({
+    const fallbackTrack = (() => {
+      if (resolvedDefaultTrack) return resolvedDefaultTrack;
+      const mostRecent = recentTrackIds[0];
+      return mostRecent ? resolveAndNormalize(mostRecent) : null;
+    })();
+
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- hydrate from localStorage after mount to avoid SSR/client mismatch
+    setState((s) => {
+      const persistedTrack = persisted
+        ? normalizePersistedTrack(persisted.track as PlayerTrack | null | undefined)
+        : null;
+
+      const track = (() => {
+        if (persistedTrack) {
+          const d = resolvedDefaultTrack;
+          if (d && persistedTrack.kind === d.kind && persistedTrack.slug === d.slug) {
+            return { ...d, ...persistedTrack };
+          }
+          return persistedTrack;
+        }
+        return fallbackTrack;
+      })();
+
+      return {
         ...s,
-        track:
-          typeof persisted.track === "undefined"
-            ? s.track
-            : persisted.track === null
-              ? null
-              : defaultTrack && persisted.track && persisted.track.src === defaultTrack.src
-                ? { ...defaultTrack, ...persisted.track }
-                : persisted.track,
+        track,
         // Restore "playing" state from persistence (browser may still block autoplay).
-        playing: typeof persisted.playing === "boolean" ? persisted.playing : s.playing,
-        muted: typeof persisted.muted === "boolean" ? persisted.muted : s.muted,
-        volume: typeof persisted.volume === "number" ? persisted.volume : s.volume,
+        playing:
+          persisted && typeof persisted.playing === "boolean" ? persisted.playing : s.playing,
+        muted: persisted && typeof persisted.muted === "boolean" ? persisted.muted : s.muted,
+        volume: persisted && typeof persisted.volume === "number" ? persisted.volume : s.volume,
         positionSeconds:
-          typeof persisted.positionSeconds === "number"
+          persisted && typeof persisted.positionSeconds === "number"
             ? persisted.positionSeconds
             : s.positionSeconds,
         durationSeconds:
-          typeof persisted.durationSeconds === "number"
+          persisted && typeof persisted.durationSeconds === "number"
             ? persisted.durationSeconds
             : s.durationSeconds,
-      }));
-    }
+      };
+    });
 
     setDidLoadPersisted(true);
-  }, [defaultTrack]);
+  }, [recentTrackIds, resolvedDefaultTrack]);
 
   const stateRef = useRef<PlayerState>(state);
   useEffect(() => {
@@ -198,14 +269,19 @@ export function PlayerProvider({
 
   const play: PlayerActions["play"] = useCallback(
     (track, opts) => {
+      const normalized = normalizeTrack(track);
       setState((s) => ({
         ...s,
-        track,
+        track: normalized,
         playing: true,
+        durationSeconds:
+          normalized.kind === s.track?.kind && normalized.slug === s.track?.slug
+            ? s.durationSeconds
+            : 0,
         positionSeconds:
           typeof opts?.seekSeconds === "number"
             ? opts.seekSeconds
-            : track.src === s.track?.src
+            : normalized.kind === s.track?.kind && normalized.slug === s.track?.slug
               ? s.positionSeconds
               : 0,
       }));
@@ -213,6 +289,28 @@ export function PlayerProvider({
     },
     [broadcastPlay],
   );
+
+  const playId: PlayerActions["playId"] = useCallback(
+    (trackId, opts) => {
+      const resolved = resolveAndNormalize(trackId);
+      play(resolved, opts);
+    },
+    [play],
+  );
+
+  const playNext: PlayerActions["playNext"] = useCallback(() => {
+    if (recentTrackIds.length === 0) {
+      setState((s) => ({ ...s, playing: false }));
+      return;
+    }
+
+    const current = stateRef.current.track;
+    const currentIndex = current
+      ? recentTrackIds.findIndex((t) => t.kind === current.kind && t.slug === current.slug)
+      : -1;
+    const next = recentTrackIds[currentIndex >= 0 ? (currentIndex + 1) % recentTrackIds.length : 0];
+    playId(next);
+  }, [playId, recentTrackIds]);
 
   const pause: PlayerActions["pause"] = useCallback(() => {
     setState((s) => ({ ...s, playing: false }));
@@ -267,6 +365,8 @@ export function PlayerProvider({
       ready: didLoadPersisted,
       ...state,
       play,
+      playId,
+      playNext,
       pause,
       toggle,
       setPlaying,
@@ -281,6 +381,8 @@ export function PlayerProvider({
       didLoadPersisted,
       state,
       play,
+      playId,
+      playNext,
       pause,
       toggle,
       setPlaying,

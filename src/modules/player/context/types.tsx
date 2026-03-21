@@ -1,8 +1,14 @@
 export const PLAYER_TRACK_KINDS = ["mixes", "mashups", "tracks"] as const;
 export type PlayerTrackKind = (typeof PLAYER_TRACK_KINDS)[number];
 
+export type PlayerTrackId = {
+  kind: PlayerTrackKind;
+  slug: string;
+};
+
 export type PlayerTrack = {
   kind: PlayerTrackKind;
+  slug: string;
   src: string;
   title?: string;
   artist?: string;
@@ -20,6 +26,8 @@ export type PlayerState = {
 
 export type PlayerActions = {
   play: (track: PlayerTrack, opts?: { seekSeconds?: number }) => void;
+  playId: (track: PlayerTrackId, opts?: { seekSeconds?: number }) => void;
+  playNext: () => void;
   pause: () => void;
   toggle: () => void;
   setPlaying: (playing: boolean) => void;

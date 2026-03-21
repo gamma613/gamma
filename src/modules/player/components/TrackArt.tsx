@@ -7,20 +7,6 @@ import { usePlayer } from "../context/usePlayer";
 
 // ----------------------------------------------------------------------
 
-function slugFromTrackSrc(src: string, kind: string): string | null {
-  // Supports both relative and absolute URLs.
-  const pathname = (() => {
-    try {
-      return new URL(src, "http://example.local").pathname;
-    } catch {
-      return src;
-    }
-  })();
-
-  const m = pathname.match(new RegExp(`^/api/stream/${kind}/([^/]+)/?$`));
-  return m?.[1] ? decodeURIComponent(m[1]) : null;
-}
-
 export type TrackArtProps = Omit<ImageProps, "src" | "alt"> & {
   alt?: string;
   type?: string;
@@ -29,8 +15,8 @@ export type TrackArtProps = Omit<ImageProps, "src" | "alt"> & {
 export function TrackArt(props: TrackArtProps) {
   const { track } = usePlayer();
 
-  const trackSrc = track?.src;
   const trackKind = track?.kind;
+  const trackSlug = track?.slug;
   const trackCover = track?.cover;
   const { type: artType = "cover", alt, ...imageProps } = props;
 
@@ -38,13 +24,11 @@ export function TrackArt(props: TrackArtProps) {
     // Prefer explicit metadata over deriving URLs from the stream src.
     if (artType === "cover" && trackCover) return trackCover;
 
-    if (!trackSrc || !trackKind) return null;
-    const slug = slugFromTrackSrc(trackSrc, trackKind);
-    if (!slug) return null;
+    if (!trackSlug || !trackKind) return null;
     const routeFactory = ROUTES[trackKind as keyof typeof ROUTES];
     if (!routeFactory) return null;
-    return routeFactory(encodeURIComponent(slug)).art(artType);
-  }, [artType, trackCover, trackKind, trackSrc]);
+    return routeFactory(encodeURIComponent(trackSlug)).art(artType);
+  }, [artType, trackCover, trackKind, trackSlug]);
 
   if (!artSrc) return null;
 

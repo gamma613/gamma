@@ -1,4 +1,5 @@
 export * from "./Player";
+export * from "./PlayInPlayerButton";
 export * from "./PlayToggleButton";
 export * from "./MuteButton";
 export * from "./SeekBar";

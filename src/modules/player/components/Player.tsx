@@ -16,6 +16,7 @@ export const Player = () => {
     muted,
     volume,
     positionSeconds,
+    playNext,
     setPlaying,
     setPositionSeconds,
     setDurationSeconds,
@@ -73,7 +74,7 @@ export const Player = () => {
       playsInline
       onPlay={() => setPlaying(true)}
       onPause={() => setPlaying(false)}
-      onEnded={() => setPlaying(false)}
+      onEnded={() => playNext()}
       onLoadedMetadata={() => {
         restoreIfNeeded();
       }}

@@ -46,11 +46,7 @@ certificates
 
 
 # Large audio assets
-/protected-assets/mixes/*.mp3
-/protected-assets/mixes/**/*.mp3
-/protected-assets/mixes/*.wav
-/protected-assets/mixes/**/*.wav
-/protected-assets/mixes/*.m4a
-/protected-assets/mixes/**/*.m4a
-/protected-assets/mixes/*.flac
-/protected-assets/mixes/**/*.flac
+/protected-assets/**/*.mp3
+/protected-assets/**/*.m4a
+/protected-assets/**/*.flac
+/protected-assets/**/*.wav
