@@ -34,6 +34,11 @@ function loadPersisted(): Partial<PlayerState> | null {
   }
 }
 
+type PersistedPlayerState = Pick<
+  PlayerState,
+  "track" | "playing" | "muted" | "volume" | "positionSeconds" | "durationSeconds" | "queue"
+>;
+
 function persist(state: PlayerState) {
   try {
     window.localStorage.setItem(
@@ -45,7 +50,8 @@ function persist(state: PlayerState) {
         volume: state.volume,
         positionSeconds: state.positionSeconds,
         durationSeconds: state.durationSeconds,
-      } satisfies PlayerState),
+        queue: state.queue,
+      } satisfies PersistedPlayerState),
     );
   } catch {
     // Ignore storage failures (private mode, quota, etc.)
@@ -122,6 +128,8 @@ export function PlayerProvider({
     volume: 0.8,
     positionSeconds: 0,
     durationSeconds: 0,
+    queue: [],
+    playedThisCycle: [],
   }));
   const [didLoadPersisted, setDidLoadPersisted] = useState(false);
 
@@ -167,6 +175,12 @@ export function PlayerProvider({
           persisted && typeof persisted.durationSeconds === "number"
             ? persisted.durationSeconds
             : s.durationSeconds,
+        queue:
+          persisted && Array.isArray((persisted as { queue?: unknown }).queue)
+            ? ((persisted as { queue: unknown[] }).queue.filter(
+                (x) => typeof x === "string",
+              ) as string[])
+            : s.queue,
       };
     });
 
@@ -286,6 +300,9 @@ export function PlayerProvider({
             : normalized.slug === s.track?.slug
               ? s.positionSeconds
               : 0,
+        playedThisCycle: s.playedThisCycle.includes(normalized.slug)
+          ? s.playedThisCycle
+          : [...s.playedThisCycle, normalized.slug],
       }));
       broadcastPlay();
     },
@@ -301,16 +318,56 @@ export function PlayerProvider({
   );
 
   const playNext: PlayerActions["playNext"] = useCallback(() => {
+    const queued = stateRef.current.queue;
+    if (queued.length > 0) {
+      const [nextSlug, ...rest] = queued;
+      setState((s) => ({ ...s, queue: rest }));
+      playId(nextSlug);
+      return;
+    }
+
     if (recentTrackIds.length === 0) {
       setState((s) => ({ ...s, playing: false }));
       return;
     }
 
     const current = stateRef.current.track;
-    const currentIndex = current ? recentTrackIds.findIndex((t) => t === current.slug) : -1;
-    const next = recentTrackIds[currentIndex >= 0 ? (currentIndex + 1) % recentTrackIds.length : 0];
-    playId(next);
+    const played = new Set(stateRef.current.playedThisCycle);
+    const startIndex = current ? recentTrackIds.findIndex((t) => t === current.slug) : -1;
+
+    for (let step = 1; step <= recentTrackIds.length; step += 1) {
+      const idx = (Math.max(0, startIndex) + step) % recentTrackIds.length;
+      const candidate = recentTrackIds[idx]!;
+      if (played.has(candidate)) continue;
+      playId(candidate);
+      return;
+    }
+
+    setState((s) => ({ ...s, playedThisCycle: [] }));
+    playId(recentTrackIds[0]!);
   }, [playId, recentTrackIds]);
+
+  const queueNext: PlayerActions["queueNext"] = useCallback((trackId) => {
+    setState((s) => ({
+      ...s,
+      queue: [trackId, ...s.queue.filter((x) => x !== trackId)],
+    }));
+  }, []);
+
+  const enqueue: PlayerActions["enqueue"] = useCallback((trackId) => {
+    setState((s) => ({
+      ...s,
+      queue: [...s.queue.filter((x) => x !== trackId), trackId],
+    }));
+  }, []);
+
+  const removeFromQueue: PlayerActions["removeFromQueue"] = useCallback((trackId) => {
+    setState((s) => ({ ...s, queue: s.queue.filter((x) => x !== trackId) }));
+  }, []);
+
+  const clearQueue: PlayerActions["clearQueue"] = useCallback(() => {
+    setState((s) => ({ ...s, queue: [] }));
+  }, []);
 
   const pause: PlayerActions["pause"] = useCallback(() => {
     setState((s) => ({ ...s, playing: false }));
@@ -367,6 +424,10 @@ export function PlayerProvider({
       play,
       playId,
       playNext,
+      queueNext,
+      enqueue,
+      removeFromQueue,
+      clearQueue,
       pause,
       toggle,
       setPlaying,
@@ -383,6 +444,10 @@ export function PlayerProvider({
       play,
       playId,
       playNext,
+      queueNext,
+      enqueue,
+      removeFromQueue,
+      clearQueue,
       pause,
       toggle,
       setPlaying,

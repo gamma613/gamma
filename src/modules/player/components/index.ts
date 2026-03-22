@@ -2,6 +2,7 @@ export * from "./Player";
 export * from "./PlayInPlayerButton";
 export * from "./PlayToggleButton";
 export * from "./MuteButton";
+export * from "./UpNext";
 export * from "./SeekBar";
 export * from "./TrackDuration";
 export * from "./TrackPosition";

@@ -15,12 +15,18 @@ export type PlayerState = {
   volume: number; // 0..1
   positionSeconds: number;
   durationSeconds: number;
+  queue: PlayerTrackId[];
+  playedThisCycle: PlayerTrackId[];
 };
 
 export type PlayerActions = {
   play: (track: PlayerTrack, opts?: { seekSeconds?: number }) => void;
   playId: (track: PlayerTrackId, opts?: { seekSeconds?: number }) => void;
   playNext: () => void;
+  queueNext: (trackId: PlayerTrackId) => void;
+  enqueue: (trackId: PlayerTrackId) => void;
+  removeFromQueue: (trackId: PlayerTrackId) => void;
+  clearQueue: () => void;
   pause: () => void;
   toggle: () => void;
   setPlaying: (playing: boolean) => void;
