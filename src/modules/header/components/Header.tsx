@@ -7,7 +7,7 @@ import { NowPlaying } from "./NowPlaying";
 
 export function Header() {
   return (
-    <header className="fixed inset-x-0 bottom-0 z-30 bg-background/30 supports-backdrop-filter:backdrop-blur-md h-(--header-height)">
+    <header className="fixed inset-x-0 bottom-0 z-30 bg-background/75 supports-backdrop-filter:backdrop-blur-md h-(--header-height)">
       {/* Limits the content width */}
       <div className="mx-auto max-w-3xl h-full flex items-center">
         <MenuButton />
