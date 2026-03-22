@@ -12,6 +12,8 @@ import { TitleArtist } from "@/components/music";
 import { usePlayer } from "../context/usePlayer";
 import { getRecentTrackIds } from "../library";
 import { PlayInPlayerButton } from "./PlayInPlayerButton";
+import { EnqueueButton } from "./EnqueueButton";
+import { PlayNextButton } from "./PlayNextButton";
 
 // ----------------------------------------------------------------------
 
@@ -80,14 +82,17 @@ export function UpNext({ className, limit }: { className?: string; limit?: numbe
                     artist={item?.artist ?? undefined}
                     status="Queued"
                     rightAction={
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => removeFromQueue(slug)}
-                      >
-                        Remove
-                      </Button>
+                      <div className="flex items-center gap-1">
+                        <PlayNextButton trackId={slug} />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => removeFromQueue(slug)}
+                        >
+                          Remove
+                        </Button>
+                      </div>
                     }
                   />
                 </li>
@@ -113,6 +118,12 @@ export function UpNext({ className, limit }: { className?: string; limit?: numbe
                     slug={slug}
                     title={item?.title ?? slug}
                     artist={item?.artist ?? undefined}
+                    rightAction={
+                      <div className="flex items-center gap-1">
+                        <PlayNextButton trackId={slug} />
+                        <EnqueueButton trackId={slug} />
+                      </div>
+                    }
                   />
                 </li>
               );
@@ -127,6 +138,7 @@ export function UpNext({ className, limit }: { className?: string; limit?: numbe
           {defaultOrder.map((slug) => {
             const item = bySlug.get(slug);
             const status = slug === track?.slug ? "Now" : queue.includes(slug) ? "Queued" : null;
+            const isCurrent = slug === track?.slug;
             return (
               <li key={slug}>
                 <div className={cn(slug === track?.slug && "rounded-md ring-1 ring-primary/30")}>
@@ -135,6 +147,14 @@ export function UpNext({ className, limit }: { className?: string; limit?: numbe
                     title={item?.title ?? slug}
                     artist={item?.artist ?? undefined}
                     status={status}
+                    rightAction={
+                      isCurrent ? undefined : (
+                        <div className="flex items-center gap-1">
+                          <PlayNextButton trackId={slug} />
+                          <EnqueueButton trackId={slug} />
+                        </div>
+                      )
+                    }
                   />
                 </div>
               </li>
