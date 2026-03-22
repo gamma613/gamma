@@ -36,7 +36,15 @@ function loadPersisted(): Partial<PlayerState> | null {
 
 type PersistedPlayerState = Pick<
   PlayerState,
-  "track" | "playing" | "muted" | "volume" | "positionSeconds" | "durationSeconds" | "queue"
+  | "track"
+  | "playing"
+  | "muted"
+  | "volume"
+  | "positionSeconds"
+  | "durationSeconds"
+  | "queue"
+  | "playedThisCycle"
+  | "history"
 >;
 
 function persist(state: PlayerState) {
@@ -51,6 +59,8 @@ function persist(state: PlayerState) {
         positionSeconds: state.positionSeconds,
         durationSeconds: state.durationSeconds,
         queue: state.queue,
+        playedThisCycle: state.playedThisCycle,
+        history: state.history,
       } satisfies PersistedPlayerState),
     );
   } catch {
@@ -130,6 +140,7 @@ export function PlayerProvider({
     durationSeconds: 0,
     queue: [],
     playedThisCycle: [],
+    history: [],
   }));
   const [didLoadPersisted, setDidLoadPersisted] = useState(false);
 
@@ -181,6 +192,18 @@ export function PlayerProvider({
                 (x) => typeof x === "string",
               ) as string[])
             : s.queue,
+        playedThisCycle:
+          persisted && Array.isArray((persisted as { playedThisCycle?: unknown }).playedThisCycle)
+            ? ((persisted as { playedThisCycle: unknown[] }).playedThisCycle.filter(
+                (x) => typeof x === "string",
+              ) as string[])
+            : s.playedThisCycle,
+        history:
+          persisted && Array.isArray((persisted as { history?: unknown }).history)
+            ? ((persisted as { history: unknown[] }).history.filter(
+                (x) => typeof x === "string",
+              ) as string[])
+            : s.history,
       };
     });
 
@@ -289,22 +312,31 @@ export function PlayerProvider({
   const play: PlayerActions["play"] = useCallback(
     (track, opts) => {
       const normalized = normalizeTrack(track);
-      setState((s) => ({
-        ...s,
-        queue: s.queue.filter((x) => x !== normalized.slug),
-        track: normalized,
-        playing: true,
-        durationSeconds: normalized.slug === s.track?.slug ? s.durationSeconds : 0,
-        positionSeconds:
-          typeof opts?.seekSeconds === "number"
-            ? opts.seekSeconds
-            : normalized.slug === s.track?.slug
-              ? s.positionSeconds
-              : 0,
-        playedThisCycle: s.playedThisCycle.includes(normalized.slug)
-          ? s.playedThisCycle
-          : [...s.playedThisCycle, normalized.slug],
-      }));
+      setState((s) => {
+        const prevSlug = s.track?.slug ?? null;
+        const nextHistory =
+          prevSlug && prevSlug !== normalized.slug
+            ? [prevSlug, ...s.history.filter((x) => x !== prevSlug)].slice(0, 100)
+            : s.history;
+
+        return {
+          ...s,
+          history: nextHistory,
+          queue: s.queue.filter((x) => x !== normalized.slug),
+          track: normalized,
+          playing: true,
+          durationSeconds: normalized.slug === s.track?.slug ? s.durationSeconds : 0,
+          positionSeconds:
+            typeof opts?.seekSeconds === "number"
+              ? opts.seekSeconds
+              : normalized.slug === s.track?.slug
+                ? s.positionSeconds
+                : 0,
+          playedThisCycle: s.playedThisCycle.includes(normalized.slug)
+            ? s.playedThisCycle
+            : [...s.playedThisCycle, normalized.slug],
+        };
+      });
       broadcastPlay();
     },
     [broadcastPlay],
@@ -370,6 +402,18 @@ export function PlayerProvider({
     setState((s) => ({ ...s, queue: [] }));
   }, []);
 
+  const clearHistory: PlayerActions["clearHistory"] = useCallback(() => {
+    setState((s) => ({ ...s, history: [], playedThisCycle: [] }));
+  }, []);
+
+  const removeFromHistory: PlayerActions["removeFromHistory"] = useCallback((trackId) => {
+    setState((s) => ({
+      ...s,
+      history: s.history.filter((x) => x !== trackId),
+      playedThisCycle: s.playedThisCycle.filter((x) => x !== trackId),
+    }));
+  }, []);
+
   const pause: PlayerActions["pause"] = useCallback(() => {
     setState((s) => ({ ...s, playing: false }));
   }, []);
@@ -429,6 +473,8 @@ export function PlayerProvider({
       enqueue,
       removeFromQueue,
       clearQueue,
+      clearHistory,
+      removeFromHistory,
       pause,
       toggle,
       setPlaying,
@@ -449,6 +495,8 @@ export function PlayerProvider({
       enqueue,
       removeFromQueue,
       clearQueue,
+      clearHistory,
+      removeFromHistory,
       pause,
       toggle,
       setPlaying,

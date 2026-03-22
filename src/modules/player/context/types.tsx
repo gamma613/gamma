@@ -17,6 +17,7 @@ export type PlayerState = {
   durationSeconds: number;
   queue: PlayerTrackId[];
   playedThisCycle: PlayerTrackId[];
+  history: PlayerTrackId[];
 };
 
 export type PlayerActions = {
@@ -27,6 +28,8 @@ export type PlayerActions = {
   enqueue: (trackId: PlayerTrackId) => void;
   removeFromQueue: (trackId: PlayerTrackId) => void;
   clearQueue: () => void;
+  clearHistory: () => void;
+  removeFromHistory: (trackId: PlayerTrackId) => void;
   pause: () => void;
   toggle: () => void;
   setPlaying: (playing: boolean) => void;
