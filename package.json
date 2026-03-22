@@ -8,6 +8,7 @@
     "build:content": "content-collections build",
     "start": "next start",
     "lint": "eslint",
+    "tsc": "tsc",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "postinstall": "husky install"

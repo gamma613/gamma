@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components";
 import { usePlayer } from "../context/usePlayer";
 import type { PlayerTrackId } from "../context/types";
 

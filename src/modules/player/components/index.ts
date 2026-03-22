@@ -4,7 +4,6 @@ export * from "./Player";
 export * from "./PlayInPlayerButton";
 export * from "./PlayNextButton";
 export * from "./PlayToggleButton";
-export * from "./RemoveButton";
 export * from "./SeekBar";
 export * from "./TrackArt";
 export * from "./TrackArtist";

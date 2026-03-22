@@ -1,4 +1,4 @@
-import { PageControls } from "@/components/PageControls";
+import { PageControls } from "@/components";
 import { ROUTES } from "@/lib/routes";
 import { Playlist } from "@/modules/player";
 

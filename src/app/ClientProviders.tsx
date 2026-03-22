@@ -1,9 +1,9 @@
-import React from "react";
-import { PlayerProvider } from "@/modules/player";
-import { BokehBackground } from "@/components/ui/bokeh";
-import { HeaderProvider } from "@/modules/header";
 import "@/app/fontawesome";
-import { TooltipProvider } from "@/components/ui/tooltip";
+import { BokehBackground, TooltipProvider } from "@/components";
+import { HeaderProvider } from "@/modules/header";
+import { PlayerProvider } from "@/modules/player";
+
+// ----------------------------------------------------------------------
 
 export default function ClientProviders({ children }: { children: React.ReactNode }) {
   return (

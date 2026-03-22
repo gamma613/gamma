@@ -1,14 +1,14 @@
-import { PingPong } from "@/components/animation/PingPong";
+import { PingPong } from "@/components";
 import {
   Player,
   PlayToggleButton,
   SeekBar,
   TrackArt,
+  TrackDuration,
+  TrackPosition,
   TrackTitleArtist,
   VolumePopover,
 } from "@/modules/player";
-import { TrackDuration } from "@/modules/player/components/TrackDuration";
-import { TrackPosition } from "@/modules/player/components/TrackPosition";
 
 // ----------------------------------------------------------------------
 

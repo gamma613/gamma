@@ -1,13 +1,12 @@
+import { PageControls, TitleArtist } from "@/components";
+import { formatDateYmd } from "@/lib/formatDate";
 import { getMusicItem } from "@/lib/music/getMusicItem";
 import { ROUTES } from "@/lib/routes";
-import { formatDateYmd } from "@/lib/formatDate";
-import { PageControls } from "@/components/PageControls";
-import { TitleArtist } from "@/components/music";
+import { PlayInPlayerButton } from "@/modules/player";
 import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { NOT_FOUND_TITLE } from "../not-found";
-import { PlayInPlayerButton } from "@/modules/player";
 
 // ----------------------------------------------------------------------
 

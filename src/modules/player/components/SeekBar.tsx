@@ -1,11 +1,10 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { Slider } from "@/components/ui/slider";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { Slider, Tooltip, TooltipContent, TooltipTrigger } from "@/components";
 import { cn } from "@/lib/utils";
-import { usePlayerControlsReady } from "../context/usePlayerControlsReady";
+import { useRef, useState } from "react";
 import { usePlayer } from "../context/usePlayer";
+import { usePlayerControlsReady } from "../context/usePlayerControlsReady";
 import { formatTrackTime } from "../utils";
 
 // ----------------------------------------------------------------------

@@ -1,20 +1,18 @@
 "use client";
 
+import { Button, Card, CardAction, CardContent, RemoveButton, TitleArtist } from "@/components";
+import { formatDateYmd } from "@/lib/formatDate";
+import { ROUTES } from "@/lib/routes";
+import { cn } from "@/lib/utils";
+import { allMusic } from "content-collections";
 import Image from "next/image";
 import Link from "next/link";
-import { allMusic } from "content-collections";
 import { useMemo, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { ROUTES } from "@/lib/routes";
-import { formatDateYmd } from "@/lib/formatDate";
-import { TitleArtist } from "@/components/music";
 import { usePlayer } from "../context/usePlayer";
 import { getRecentTrackIds } from "../library";
-import { PlayInPlayerButton } from "./PlayInPlayerButton";
 import { EnqueueButton } from "./EnqueueButton";
+import { PlayInPlayerButton } from "./PlayInPlayerButton";
 import { PlayNextButton } from "./PlayNextButton";
-import { RemoveButton } from "./RemoveButton";
 
 // ----------------------------------------------------------------------
 
@@ -269,23 +267,28 @@ function MusicRow({
   rightAction?: React.ReactNode;
 }) {
   return (
-    <div className="flex items-center gap-3 bg-background/75 rounded-md border border-border/50 p-2">
-      <PlayInPlayerButton slug={slug} className="size-9" />
-      <MusicArtwork slug={slug} />
-      <div className="min-w-0 flex-1">
-        <Link href={ROUTES.music(slug).root} className="truncate hover:underline block">
-          <TitleArtist title={title} artist={artist} />
-        </Link>
-        <div className="flex items-center gap-2">
-          <MusicMetaLine slug={slug} />
-          {status && (
-            <span className="text-xs text-muted-foreground">
-              <span aria-hidden="true">•</span> {status}
-            </span>
-          )}
+    <Card className="py-2 bg-card/80">
+      <CardContent className="px-4">
+        {/* <div className="flex items-center gap-3 bg-background/75 rounded-md border border-border/50 p-2"> */}
+        <div className="flex items-center gap-3">
+          <PlayInPlayerButton slug={slug} className="size-9" />
+          <MusicArtwork slug={slug} />
+          <div className="min-w-0 flex-1">
+            <Link href={ROUTES.music(slug).root} className="truncate hover:underline block">
+              <TitleArtist title={title} artist={artist} />
+            </Link>
+            <div className="flex items-center gap-2">
+              <MusicMetaLine slug={slug} />
+              {status && (
+                <span className="text-xs text-muted-foreground">
+                  <span aria-hidden="true">•</span> {status}
+                </span>
+              )}
+            </div>
+          </div>
+          <CardAction>{rightAction}</CardAction>
         </div>
-      </div>
-      {rightAction}
-    </div>
+      </CardContent>
+    </Card>
   );
 }

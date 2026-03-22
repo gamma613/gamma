@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ROUTES } from "@/lib/routes";
 import { PlayInPlayerButton } from "@/modules/player";
-import { PageControls } from "@/components/PageControls";
+import { PageControls } from "@/components";
 
 export default function MusicIndexPage() {
   const items = [...allMusic].sort((a, b) => {

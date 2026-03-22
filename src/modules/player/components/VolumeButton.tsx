@@ -1,7 +1,6 @@
 "use client";
 
-import { Button, ButtonProps } from "@/components/ui/button";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { Button, ButtonProps, Tooltip, TooltipContent, TooltipTrigger } from "@/components";
 import { cn } from "@/lib/utils";
 import {
   faVolume,
@@ -10,8 +9,8 @@ import {
   faVolumeXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { usePlayerControlsReady } from "../context/usePlayerControlsReady";
 import { usePlayer } from "../context/usePlayer";
+import { usePlayerControlsReady } from "../context/usePlayerControlsReady";
 // ----------------------------------------------------------------------
 
 type Props = ButtonProps & {

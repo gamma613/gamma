@@ -1,6 +1,6 @@
 "use client";
 
-import { ButtonProps } from "@/components/ui/button";
+import { ButtonProps } from "@/components";
 import { cn } from "@/lib/utils";
 import type React from "react";
 import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from "react";

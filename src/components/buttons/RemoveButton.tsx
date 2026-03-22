@@ -1,10 +1,9 @@
 "use client";
 
+import { Button, Tooltip, TooltipContent, TooltipTrigger } from "@/components";
+import { cn } from "@/lib/utils";
 import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Button } from "@/components/ui/button";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
 
 // ----------------------------------------------------------------------
 

@@ -1,14 +1,13 @@
 "use client";
 
+import { Button, Tooltip, TooltipContent, TooltipTrigger } from "@/components";
+import { useHydrated } from "@/lib/useHydrated";
+import { cn } from "@/lib/utils";
+import { faArrowLeft, faCompress, faExpand } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft, faCompress, faExpand } from "@fortawesome/free-solid-svg-icons";
-import { useHydrated } from "@/lib/useHydrated";
 
 export type BackLink = {
   path: string;

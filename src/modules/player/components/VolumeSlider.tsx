@@ -1,8 +1,8 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { Slider, SliderProps } from "@/components/ui/slider";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { Slider, SliderProps } from "@/components";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components";
 import { cn } from "@/lib/utils";
 import { usePlayerControlsReady } from "../context/usePlayerControlsReady";
 import { usePlayer } from "../context/usePlayer";

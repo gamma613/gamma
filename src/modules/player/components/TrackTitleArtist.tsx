@@ -1,8 +1,7 @@
 "use client";
 
-import type React from "react";
 import { usePlayer } from "../context/usePlayer";
-import { TitleArtist, TitleArtistProps } from "@/components/music";
+import { TitleArtist, TitleArtistProps } from "@/components";
 
 // ----------------------------------------------------------------------
 
