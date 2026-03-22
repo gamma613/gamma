@@ -1,13 +1,6 @@
-export const PLAYER_TRACK_KINDS = ["mixes", "mashups", "tracks"] as const;
-export type PlayerTrackKind = (typeof PLAYER_TRACK_KINDS)[number];
-
-export type PlayerTrackId = {
-  kind: PlayerTrackKind;
-  slug: string;
-};
+export type PlayerTrackId = string;
 
 export type PlayerTrack = {
-  kind: PlayerTrackKind;
   slug: string;
   src: string;
   title?: string;

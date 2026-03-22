@@ -3,9 +3,9 @@ import fsp from "fs/promises";
 import fs from "fs";
 import path from "path";
 
-import { getMix } from "@/lib/mixes/getMix";
-import { resolveMixAudioFile } from "@/lib/mixes/resolveAsset";
-import { audioContentTypeFromExt } from "@/lib/mixes/supported";
+import { getMusicItem } from "@/lib/music/getMusicItem";
+import { resolveMusicAudioFile } from "@/lib/music/resolveAsset";
+import { audioContentTypeFromExt } from "@/lib/music/supported";
 
 // ----------------------------------------------------------------------
 
@@ -13,12 +13,10 @@ export async function GET(req: Request, { params }: { params: Promise<{ slug: st
   const { slug } = await params;
 
   try {
-    const mix = getMix(slug);
-    if (!mix) {
-      throw new Error(`Mix not found: ${slug}`);
-    }
+    const item = getMusicItem(slug);
+    if (!item) throw new Error(`Music item not found: ${slug}`);
 
-    const audioFile = await resolveMixAudioFile(slug);
+    const audioFile = await resolveMusicAudioFile(slug);
     if (!audioFile) {
       throw new Error(`Audio not found: ${slug}`);
     }

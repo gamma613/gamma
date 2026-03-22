@@ -7,23 +7,14 @@ import { faPause, faPlay } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { usePlayer } from "../context/usePlayer";
 import { usePlayerControlsReady } from "../context/usePlayerControlsReady";
-import type { PlayerTrackKind } from "../context/types";
 
 // ----------------------------------------------------------------------
 
-export function PlayInPlayerButton({
-  kind,
-  slug,
-  className,
-}: {
-  kind: PlayerTrackKind;
-  slug: string;
-  className?: string;
-}) {
+export function PlayInPlayerButton({ slug, className }: { slug: string; className?: string }) {
   const { disabled, gateClassName, isReady } = usePlayerControlsReady();
   const { playId, toggle, track, playing, positionSeconds, durationSeconds } = usePlayer();
 
-  const isCurrent = track?.kind === kind && track?.slug === slug;
+  const isCurrent = track?.slug === slug;
   const isCurrentAndPlaying = Boolean(isCurrent && playing);
 
   const progress =
@@ -55,7 +46,7 @@ export function PlayInPlayerButton({
               return;
             }
 
-            playId({ kind, slug });
+            playId(slug);
           }}
         >
           {progress !== null && (

@@ -52,7 +52,7 @@ function persist(state: PlayerState) {
   }
 }
 
-function slugFromSrc(src: string, kind: string): string | null {
+function slugFromSrc(src: string): string | null {
   const pathname = (() => {
     try {
       return new URL(src, "http://example.local").pathname;
@@ -61,13 +61,13 @@ function slugFromSrc(src: string, kind: string): string | null {
     }
   })();
 
-  const m = pathname.match(new RegExp(`^/api/stream/${kind}/([^/]+)/?$`));
+  const m = pathname.match(/^\/api\/stream\/(?:music|mixes)\/([^/]+)\/?$/);
   return m?.[1] ? decodeURIComponent(m[1]) : null;
 }
 
 function normalizeTrack(track: PlayerTrack): PlayerTrack {
   if (track.slug) return track;
-  const derived = slugFromSrc(track.src, track.kind);
+  const derived = slugFromSrc(track.src);
   return { ...track, slug: derived ?? track.src };
 }
 
@@ -75,22 +75,27 @@ function resolveAndNormalize(trackId: PlayerTrackId): PlayerTrack {
   const resolved = resolveTrack(trackId);
   if (!resolved) {
     return {
-      kind: trackId.kind,
-      slug: trackId.slug,
-      src: `/api/stream/${trackId.kind}/${trackId.slug}`,
-      title: trackId.slug,
+      slug: trackId,
+      src: `/api/stream/music/${trackId}`,
+      title: trackId,
     };
   }
   return normalizeTrack(resolved);
 }
 
-function normalizePersistedTrack(track: PlayerTrack | null | undefined): PlayerTrack | null {
+function normalizePersistedTrack(track: unknown): PlayerTrack | null {
   if (!track) return null;
+  if (typeof track !== "object") return null;
 
-  if (track.slug) return normalizeTrack(track);
-  const derived = slugFromSrc(track.src, track.kind);
-  if (!derived) return normalizeTrack({ ...track, slug: track.src });
-  return normalizeTrack({ ...track, slug: derived });
+  const src = (track as { src?: unknown }).src;
+  const slug = (track as { slug?: unknown }).slug;
+  if (typeof src !== "string") return null;
+
+  if (typeof slug === "string" && slug) return normalizeTrack({ ...(track as PlayerTrack), slug });
+
+  const derived = slugFromSrc(src);
+  if (!derived) return normalizeTrack({ ...(track as PlayerTrack), slug: src });
+  return normalizeTrack({ ...(track as PlayerTrack), slug: derived });
 }
 
 export function PlayerProvider({
@@ -104,8 +109,8 @@ export function PlayerProvider({
   const recentTrackIds = useMemo(() => getRecentTrackIds(), []);
   const resolvedDefaultTrack = useMemo(() => {
     if (!defaultTrack) return null;
-    if ("src" in defaultTrack) return normalizeTrack(defaultTrack);
-    return resolveAndNormalize(defaultTrack);
+    if (typeof defaultTrack === "string") return resolveAndNormalize(defaultTrack);
+    return normalizeTrack(defaultTrack);
   }, [defaultTrack]);
 
   // Important: keep the first client render identical to the server render to
@@ -132,13 +137,13 @@ export function PlayerProvider({
     // eslint-disable-next-line react-hooks/set-state-in-effect -- hydrate from localStorage after mount to avoid SSR/client mismatch
     setState((s) => {
       const persistedTrack = persisted
-        ? normalizePersistedTrack(persisted.track as PlayerTrack | null | undefined)
+        ? normalizePersistedTrack((persisted as { track?: unknown }).track)
         : null;
 
       const track = (() => {
         if (persistedTrack) {
           const d = resolvedDefaultTrack;
-          if (d && persistedTrack.kind === d.kind && persistedTrack.slug === d.slug) {
+          if (d && persistedTrack.slug === d.slug) {
             return { ...d, ...persistedTrack };
           }
           return persistedTrack;
@@ -274,14 +279,11 @@ export function PlayerProvider({
         ...s,
         track: normalized,
         playing: true,
-        durationSeconds:
-          normalized.kind === s.track?.kind && normalized.slug === s.track?.slug
-            ? s.durationSeconds
-            : 0,
+        durationSeconds: normalized.slug === s.track?.slug ? s.durationSeconds : 0,
         positionSeconds:
           typeof opts?.seekSeconds === "number"
             ? opts.seekSeconds
-            : normalized.kind === s.track?.kind && normalized.slug === s.track?.slug
+            : normalized.slug === s.track?.slug
               ? s.positionSeconds
               : 0,
       }));
@@ -305,9 +307,7 @@ export function PlayerProvider({
     }
 
     const current = stateRef.current.track;
-    const currentIndex = current
-      ? recentTrackIds.findIndex((t) => t.kind === current.kind && t.slug === current.slug)
-      : -1;
+    const currentIndex = current ? recentTrackIds.findIndex((t) => t === current.slug) : -1;
     const next = recentTrackIds[currentIndex >= 0 ? (currentIndex + 1) % recentTrackIds.length : 0];
     playId(next);
   }, [playId, recentTrackIds]);

@@ -4,10 +4,14 @@ import slugify from "slugify";
 
 // ----------------------------------------------------------------------
 
-// Mixes
+// Music
 
-/** Shape of a mix item data source */
-const mixSchema = z.object({
+export const MUSIC_TYPES = ["mix", "mashup", "track"] as const;
+export type MusicType = (typeof MUSIC_TYPES)[number];
+
+/** Shape of a music item data source */
+const musicSchema = z.object({
+  type: z.enum(MUSIC_TYPES),
   artist: z.string().min(1).optional().nullable(),
   bpm: z.number().positive().nullable().optional(),
   bpm2: z.number().positive().nullable().optional(),
@@ -21,20 +25,19 @@ const mixSchema = z.object({
 });
 
 /** Export the inferred type for use in UI components */
-export type Mix = z.infer<typeof mixSchema>;
+export type MusicItem = z.infer<typeof musicSchema>;
 
-/** parse */
-const mixes = defineCollection({
-  name: "mixes",
-  directory: "/protected-assets/mixes",
+const music = defineCollection({
+  name: "music",
+  directory: "/protected-assets/music",
   include: "**/*.md",
-  schema: mixSchema,
+  schema: musicSchema,
   transform: (document) => {
-    const { artist, slug, title } = document;
+    const { artist, slug, title, type } = document;
 
-    // overload substitutions in the return
     return {
       ...document,
+      type,
       artist: artist ?? "gamma",
       slug: slug ?? slugify(title),
     };
@@ -43,5 +46,5 @@ const mixes = defineCollection({
 
 /** Define the collections to be created and exported */
 export default defineConfig({
-  content: [mixes],
+  content: [music],
 });

@@ -15,7 +15,6 @@ export type TrackArtProps = Omit<ImageProps, "src" | "alt"> & {
 export function TrackArt(props: TrackArtProps) {
   const { track } = usePlayer();
 
-  const trackKind = track?.kind;
   const trackSlug = track?.slug;
   const trackCover = track?.cover;
   const { type: artType = "cover", alt, ...imageProps } = props;
@@ -24,11 +23,9 @@ export function TrackArt(props: TrackArtProps) {
     // Prefer explicit metadata over deriving URLs from the stream src.
     if (artType === "cover" && trackCover) return trackCover;
 
-    if (!trackSlug || !trackKind) return null;
-    const routeFactory = ROUTES[trackKind as keyof typeof ROUTES];
-    if (!routeFactory) return null;
-    return routeFactory(encodeURIComponent(trackSlug)).art(artType);
-  }, [artType, trackCover, trackKind, trackSlug]);
+    if (!trackSlug) return null;
+    return ROUTES.music(encodeURIComponent(trackSlug)).art(artType);
+  }, [artType, trackCover, trackSlug]);
 
   if (!artSrc) return null;
 
