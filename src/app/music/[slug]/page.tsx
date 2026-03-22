@@ -2,6 +2,7 @@ import { getMusicItem } from "@/lib/music/getMusicItem";
 import { ROUTES } from "@/lib/routes";
 import { formatDateYmd } from "@/lib/formatDate";
 import { PageControls } from "@/components/PageControls";
+import { TitleArtist } from "@/components/music";
 import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
@@ -37,12 +38,7 @@ export default async function MusicItemPage({ params }: Props) {
 
       <div className="flex items-center gap-6">
         <h1 className="order-2 flex-1 min-w-0 text-lg sm:text-sm lg:text-2xl">
-          {item.title}
-          <span className="text-muted-foreground">
-            <span aria-hidden="true"> — </span>
-            <span className="sr-only"> by </span>
-            {item.artist}
-          </span>
+          <TitleArtist title={item.title} artist={item.artist} />
         </h1>
         <div className="order-1 shrink-0">
           <PlayInPlayerButton slug={slug} />

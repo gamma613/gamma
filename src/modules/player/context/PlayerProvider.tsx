@@ -291,6 +291,7 @@ export function PlayerProvider({
       const normalized = normalizeTrack(track);
       setState((s) => ({
         ...s,
+        queue: s.queue.filter((x) => x !== normalized.slug),
         track: normalized,
         playing: true,
         durationSeconds: normalized.slug === s.track?.slug ? s.durationSeconds : 0,

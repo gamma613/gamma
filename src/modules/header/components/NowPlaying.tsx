@@ -4,10 +4,8 @@ import {
   PlayToggleButton,
   SeekBar,
   TrackArt,
-  TrackArtist,
-  TrackTitle,
+  TrackTitleArtist,
   VolumePopover,
-  VolumeSlider,
 } from "@/modules/player";
 import { TrackDuration } from "@/modules/player/components/TrackDuration";
 import { TrackPosition } from "@/modules/player/components/TrackPosition";
@@ -40,12 +38,7 @@ export function NowPlaying() {
           <div className="shrink min-w-0">
             {/* PingPong scrolls single line, constrained by parent width */}
             <PingPong speed={30} pause={1000} className="text-foreground text-xs sm:text-sm/4">
-              <TrackTitle />
-              <span className="text-muted-foreground">
-                <span aria-hidden="true"> — </span>
-                <span className="sr-only"> by </span>
-                <TrackArtist />
-              </span>
+              <TrackTitleArtist />
             </PingPong>
           </div>
 

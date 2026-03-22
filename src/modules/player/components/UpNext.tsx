@@ -1,20 +1,26 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { allMusic } from "content-collections";
 import { useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { ROUTES } from "@/lib/routes";
+import { formatDateYmd } from "@/lib/formatDate";
+import { TitleArtist } from "@/components/music";
 import { usePlayer } from "../context/usePlayer";
 import { getRecentTrackIds } from "../library";
 import { PlayInPlayerButton } from "./PlayInPlayerButton";
 
-export function UpNext({ className, limit = 10 }: { className?: string; limit?: number }) {
+// ----------------------------------------------------------------------
+
+export function UpNext({ className, limit }: { className?: string; limit?: number }) {
   const { track, queue, playedThisCycle, clearQueue, removeFromQueue } = usePlayer();
 
   const bySlug = useMemo(() => new Map(allMusic.map((x) => [x.slug, x])), []);
   const defaultOrder = useMemo(() => getRecentTrackIds(), []);
+  const effectiveLimit = limit ?? defaultOrder.length;
 
   const upcomingFromDefault = useMemo(() => {
     const queued = new Set(queue);
@@ -24,7 +30,7 @@ export function UpNext({ className, limit = 10 }: { className?: string; limit?: 
     const startIndex = currentSlug ? defaultOrder.findIndex((x) => x === currentSlug) : -1;
     const out: string[] = [];
 
-    for (let step = 1; step <= defaultOrder.length && out.length < limit; step += 1) {
+    for (let step = 1; step <= defaultOrder.length && out.length < effectiveLimit; step += 1) {
       const idx = (Math.max(0, startIndex) + step) % defaultOrder.length;
       const candidate = defaultOrder[idx]!;
       if (candidate === currentSlug) continue;
@@ -34,10 +40,22 @@ export function UpNext({ className, limit = 10 }: { className?: string; limit?: 
     }
 
     return out;
-  }, [defaultOrder, limit, playedThisCycle, queue, track?.slug]);
+  }, [defaultOrder, effectiveLimit, playedThisCycle, queue, track?.slug]);
 
   return (
     <div className={cn("space-y-6", className)}>
+      {track?.slug && (
+        <section className="space-y-3">
+          <h2 className="text-lg font-semibold">Now playing</h2>
+          <MusicRow
+            slug={track.slug}
+            title={track.title ?? track.slug}
+            artist={track.artist}
+            status="Now"
+          />
+        </section>
+      )}
+
       <section className="space-y-3">
         <div className="flex items-center justify-between gap-3">
           <h2 className="text-lg font-semibold">Up next</h2>
@@ -55,25 +73,23 @@ export function UpNext({ className, limit = 10 }: { className?: string; limit?: 
             {queue.map((slug) => {
               const item = bySlug.get(slug);
               return (
-                <li
-                  key={slug}
-                  className="flex items-center gap-3 rounded-md border border-border/50 p-2"
-                >
-                  <PlayInPlayerButton slug={slug} className="size-9" />
-                  <div className="min-w-0 flex-1">
-                    <Link href={ROUTES.music(slug).root} className="truncate hover:underline block">
-                      {item?.title ?? slug}
-                    </Link>
-                    {item?.type && <div className="text-xs text-muted-foreground">{item.type}</div>}
-                  </div>
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => removeFromQueue(slug)}
-                  >
-                    Remove
-                  </Button>
+                <li key={slug}>
+                  <MusicRow
+                    slug={slug}
+                    title={item?.title ?? slug}
+                    artist={item?.artist ?? undefined}
+                    status="Queued"
+                    rightAction={
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => removeFromQueue(slug)}
+                      >
+                        Remove
+                      </Button>
+                    }
+                  />
                 </li>
               );
             })}
@@ -92,23 +108,106 @@ export function UpNext({ className, limit = 10 }: { className?: string; limit?: 
             {upcomingFromDefault.map((slug) => {
               const item = bySlug.get(slug);
               return (
-                <li
-                  key={slug}
-                  className="flex items-center gap-3 rounded-md border border-border/50 p-2"
-                >
-                  <PlayInPlayerButton slug={slug} className="size-9" />
-                  <div className="min-w-0 flex-1">
-                    <Link href={ROUTES.music(slug).root} className="truncate hover:underline block">
-                      {item?.title ?? slug}
-                    </Link>
-                    {item?.type && <div className="text-xs text-muted-foreground">{item.type}</div>}
-                  </div>
+                <li key={slug}>
+                  <MusicRow
+                    slug={slug}
+                    title={item?.title ?? slug}
+                    artist={item?.artist ?? undefined}
+                  />
                 </li>
               );
             })}
           </ul>
         )}
       </section>
+
+      <section className="space-y-3">
+        <h2 className="text-lg font-semibold">All music</h2>
+        <ul className="space-y-2">
+          {defaultOrder.map((slug) => {
+            const item = bySlug.get(slug);
+            const status = slug === track?.slug ? "Now" : queue.includes(slug) ? "Queued" : null;
+            return (
+              <li key={slug}>
+                <div className={cn(slug === track?.slug && "rounded-md ring-1 ring-primary/30")}>
+                  <MusicRow
+                    slug={slug}
+                    title={item?.title ?? slug}
+                    artist={item?.artist ?? undefined}
+                    status={status}
+                  />
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      </section>
+    </div>
+  );
+}
+
+// ----------------------------------------------------------------------
+
+// Helpers
+
+function MusicMetaLine({ slug }: { slug: string }) {
+  const item = allMusic.find((x) => x.slug === slug);
+  if (!item) return null;
+  return (
+    <div className="text-xs text-muted-foreground">
+      {formatDateYmd(item.date)} <span aria-hidden="true">|</span> {item.type}
+    </div>
+  );
+}
+
+function MusicArtwork({ slug }: { slug: string }) {
+  const href = ROUTES.music(slug).root;
+  return (
+    <Link href={href} className="shrink-0">
+      <Image
+        width={48}
+        height={48}
+        src={ROUTES.music(slug).art("cover")}
+        alt=""
+        aria-hidden="true"
+        unoptimized
+        className="size-10 rounded-md object-cover border border-border/50"
+      />
+    </Link>
+  );
+}
+
+function MusicRow({
+  slug,
+  title,
+  artist,
+  status,
+  rightAction,
+}: {
+  slug: string;
+  title: string;
+  artist?: string;
+  status?: string | null;
+  rightAction?: React.ReactNode;
+}) {
+  return (
+    <div className="flex items-center gap-3 bg-background/75 rounded-md border border-border/50 p-2">
+      <PlayInPlayerButton slug={slug} className="size-9" />
+      <MusicArtwork slug={slug} />
+      <div className="min-w-0 flex-1">
+        <Link href={ROUTES.music(slug).root} className="truncate hover:underline block">
+          <TitleArtist title={title} artist={artist} />
+        </Link>
+        <div className="flex items-center gap-2">
+          <MusicMetaLine slug={slug} />
+          {status && (
+            <span className="text-xs text-muted-foreground">
+              <span aria-hidden="true">•</span> {status}
+            </span>
+          )}
+        </div>
+      </div>
+      {rightAction}
     </div>
   );
 }
