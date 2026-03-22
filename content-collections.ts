@@ -12,7 +12,7 @@ const mixSchema = z.object({
   bpm: z.number().positive().nullable().optional(),
   bpm2: z.number().positive().nullable().optional(),
   content: z.string().optional().nullable(),
-  date: z.coerce.date().nullable().optional(),
+  date: z.coerce.date(),
   description: z.string().optional(),
   genres: z.array(z.string()).optional().nullable(),
   tags: z.array(z.string()).optional().nullable(),

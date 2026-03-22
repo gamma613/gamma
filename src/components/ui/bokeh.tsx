@@ -154,35 +154,36 @@ export function BokehBackground({
   }, [count, minSize, maxSize, speed, colors]);
 
   return (
-    <div
-      ref={containerRef}
-      className={cn("fixed inset-0 overflow-hidden", className)}
-      style={{
-        background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f1a 100%)",
-      }}
-    >
-      <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" />
-
-      {/* Subtle warm overlay */}
+    <div className="relative min-h-screen">
       <div
-        className="pointer-events-none absolute inset-0 opacity-20"
+        ref={containerRef}
+        className={cn("fixed inset-0 overflow-hidden", className)}
         style={{
-          background:
-            "radial-gradient(ellipse at 30% 30%, rgba(255, 180, 100, 0.15) 0%, transparent 50%)",
+          background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f1a 100%)",
         }}
-      />
+      >
+        <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" />
 
-      {/* Vignette */}
-      <div
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(ellipse at center, transparent 0%, transparent 40%, rgba(10,10,20,0.8) 100%)",
-        }}
-      />
+        {/* Subtle warm overlay */}
+        <div
+          className="pointer-events-none absolute inset-0 opacity-20"
+          style={{
+            background:
+              "radial-gradient(ellipse at 30% 30%, rgba(255, 180, 100, 0.15) 0%, transparent 50%)",
+          }}
+        />
 
-      {/* Content layer */}
-      {children && <div className="relative z-10 h-full w-full">{children}</div>}
+        {/* Vignette */}
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(ellipse at center, transparent 0%, transparent 40%, rgba(10,10,20,0.8) 100%)",
+          }}
+        />
+      </div>
+
+      {children && <div className="relative z-10">{children}</div>}
     </div>
   );
 }

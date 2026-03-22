@@ -6,8 +6,8 @@ import { PlayInPlayerButton } from "@/modules/player";
 
 export default function MixesIndexPage() {
   const mixes = [...allMixes].sort((a, b) => {
-    const at = a.date?.getTime?.() ?? 0;
-    const bt = b.date?.getTime?.() ?? 0;
+    const at = a.date.getTime();
+    const bt = b.date.getTime();
     return bt - at || a.title.localeCompare(b.title);
   });
 

@@ -1,5 +1,6 @@
 import { getMix } from "@/lib/mixes/getMix";
 import { ROUTES } from "@/lib/routes";
+import { formatDateYmd } from "@/lib/formatDate";
 import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
@@ -29,7 +30,7 @@ export default async function MixPage({ params }: Props) {
   const mix = getMix(slug);
   if (!mix) notFound();
 
-  const released = mix.date ? mix.date.toISOString().slice(0, 10) : "—";
+  const released = formatDateYmd(mix.date);
 
   return (
     <div className="py-6 mx-auto">
