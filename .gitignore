@@ -44,9 +44,9 @@ next-env.d.ts
 certificates
 .content-collections
 
-
-# Large audio assets
-/protected-assets/**/*.mp3
+# large assets
 /protected-assets/**/*.m4a
 /protected-assets/**/*.flac
+/protected-assets/**/*.mp3
+/protected-assets/**/*.mp4
 /protected-assets/**/*.wav
