@@ -32,7 +32,7 @@ export default function RootLayout({
         <ClientProviders>
           <Header />
 
-          <div className="mx-auto px-6 flex flex-col max-w-md sm:max-w-3xl pb-[--header-height]">
+          <div className="mx-auto px-6 flex flex-col max-w-md sm:max-w-3xl pb-(--header-height)">
             <main className="flex-1">{children}</main>
           </div>
         </ClientProviders>
