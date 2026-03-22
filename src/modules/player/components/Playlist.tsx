@@ -63,6 +63,18 @@ export function Playlist({ className, limit }: { className?: string; limit?: num
 
   return (
     <div className={cn("space-y-6", className)}>
+      {track?.slug && (
+        <div className="space-y-2">
+          <h2 className="text-lg font-semibold">Now playing</h2>
+          <MusicRow
+            slug={track.slug}
+            title={track.title ?? track.slug}
+            artist={track.artist}
+            status="Now"
+          />
+        </div>
+      )}
+
       <div className="flex items-center gap-2">
         <Button
           type="button"
@@ -159,18 +171,6 @@ export function Playlist({ className, limit }: { className?: string; limit?: num
         </div>
       ) : (
         <section className="space-y-3">
-          {track?.slug && (
-            <div className="space-y-2">
-              <h2 className="text-lg font-semibold">Now playing</h2>
-              <MusicRow
-                slug={track.slug}
-                title={track.title ?? track.slug}
-                artist={track.artist}
-                status="Now"
-              />
-            </div>
-          )}
-
           <div className="flex items-center justify-between gap-3">
             <h2 className="text-lg font-semibold">History</h2>
             <Button
