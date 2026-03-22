@@ -1,6 +1,7 @@
 import { getMix } from "@/lib/mixes/getMix";
 import { ROUTES } from "@/lib/routes";
 import { formatDateYmd } from "@/lib/formatDate";
+import { PageControls } from "@/components/PageControls";
 import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
@@ -34,6 +35,7 @@ export default async function MixPage({ params }: Props) {
 
   return (
     <div className="py-6 mx-auto">
+      <PageControls backLink={{ path: ROUTES.mixes().root, title: "Mixes" }} />
       <div className="flex items-center gap-6">
         <h1 className="order-2 flex-1 min-w-0 text-lg sm:text-sm lg:text-2xl">
           {mix.title}

@@ -75,6 +75,22 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+main {
+  transition:
+    opacity 250ms ease,
+    transform 250ms ease;
+}
+
+html[data-page-collapsed="true"] body {
+  overflow: hidden;
+}
+
+html[data-page-collapsed="true"] main {
+  opacity: 0;
+  transform: translateY(12px) scale(0.98);
+  pointer-events: none;
+}
+
 input,
 button,
 textarea,

@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ROUTES } from "@/lib/routes";
 import { PlayInPlayerButton } from "@/modules/player";
+import { PageControls } from "@/components/PageControls";
 
 export default function MixesIndexPage() {
   const mixes = [...allMixes].sort((a, b) => {
@@ -13,6 +14,7 @@ export default function MixesIndexPage() {
 
   return (
     <div className="py-6 mx-auto">
+      <PageControls backLink={{ path: "/", title: "Home" }} />
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {mixes.map((mix) => {
           const href = ROUTES.mixes(mix.slug).root;
