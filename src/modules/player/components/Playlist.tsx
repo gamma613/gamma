@@ -129,7 +129,7 @@ export function Playlist({ className, limit }: { className?: string; limit?: num
           </section>
 
           <section className="space-y-3">
-            <h2 className="text-lg font-semibold">Followed by</h2>
+            <h2 className="text-lg font-semibold">Coming up</h2>
             {upcomingFromDefault.length === 0 ? (
               <p className="text-sm text-muted-foreground">
                 No upcoming items (cycle may be complete).
@@ -219,7 +219,13 @@ function MusicMetaLine({ slug }: { slug: string }) {
   if (!item) return null;
   return (
     <div className="text-xs text-muted-foreground">
-      {formatDateYmd(item.date)} <span aria-hidden="true">|</span> {item.type}
+      {item.type}
+      {item.genres && (
+        <>
+          <span aria-hidden="true"> | </span>
+          {item.genres.join(", ")}
+        </>
+      )}
     </div>
   );
 }
