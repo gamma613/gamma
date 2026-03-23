@@ -224,10 +224,10 @@ function MusicMetaLine({ slug }: { slug: string }) {
   );
 }
 
-function MusicArtwork({ slug }: { slug: string }) {
+function MusicArtwork({ slug, className }: { slug: string; className?: string }) {
   const href = ROUTES.music(slug).root;
   return (
-    <Link href={href} className="shrink-0">
+    <Link href={href} className={cn("shrink-0", className)}>
       <Image
         width={48}
         height={48}
@@ -255,11 +255,15 @@ function MusicRow({
   return (
     <Card className="py-2 bg-card/80">
       <CardContent className="px-4">
-        {/* <div className="flex items-center gap-3 bg-background/75 rounded-md border border-border/50 p-2"> */}
-        <div className="flex items-center gap-3">
-          <PlayInPlayerButton slug={slug} className="size-9" />
-          <MusicArtwork slug={slug} />
-          <div className="min-w-0 flex-1">
+        <div className="flex flex-wrap items-center gap-3">
+          <PlayInPlayerButton slug={slug} className="size-9 order-1" />
+          <MusicArtwork slug={slug} className="order-2" />
+          {actions && (
+            <CardAction className="order-3 ml-auto xs:order-4 xs:ml-auto flex items-center gap-1 self-center">
+              {actions}
+            </CardAction>
+          )}
+          <div className="order-4 basis-full min-w-0 xs:order-3 xs:basis-auto xs:flex-1">
             <Link href={ROUTES.music(slug).root} className="truncate hover:underline block">
               <TitleArtist title={title} artist={artist} />
             </Link>
@@ -267,7 +271,6 @@ function MusicRow({
               <MusicMetaLine slug={slug} />
             </div>
           </div>
-          <CardAction>{actions}</CardAction>
         </div>
       </CardContent>
     </Card>
