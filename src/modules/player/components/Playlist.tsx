@@ -64,12 +64,7 @@ export function Playlist({ className, limit }: { className?: string; limit?: num
       {track?.slug && (
         <div className="space-y-2">
           <h2 className="text-lg font-semibold">Now playing</h2>
-          <MusicRow
-            slug={track.slug}
-            title={track.title ?? track.slug}
-            artist={track.artist}
-            status="Now"
-          />
+          <MusicRow slug={track.slug} title={track.title ?? track.slug} artist={track.artist} />
         </div>
       )}
 
@@ -119,8 +114,7 @@ export function Playlist({ className, limit }: { className?: string; limit?: num
                         slug={slug}
                         title={item?.title ?? slug}
                         artist={item?.artist ?? undefined}
-                        status={slug === track?.slug ? "Now" : "Queued"}
-                        rightAction={
+                        actions={
                           <div className="flex items-center gap-1">
                             {!isFirstInQueue && <PlayNextButton trackId={slug} />}
                             <RemoveButton onClick={() => removeFromQueue(slug)} />
@@ -144,16 +138,13 @@ export function Playlist({ className, limit }: { className?: string; limit?: num
               <ul className="space-y-2">
                 {upcomingFromDefault.map((slug) => {
                   const item = bySlug.get(slug);
-                  const status =
-                    slug === track?.slug ? "Now" : queue.includes(slug) ? "Queued" : null;
                   return (
                     <li key={slug}>
                       <MusicRow
                         slug={slug}
                         title={item?.title ?? slug}
                         artist={item?.artist ?? undefined}
-                        status={status}
-                        rightAction={
+                        actions={
                           <div className="flex items-center gap-1">
                             <PlayNextButton trackId={slug} />
                             <EnqueueButton trackId={slug} />
@@ -190,8 +181,6 @@ export function Playlist({ className, limit }: { className?: string; limit?: num
             <ul className="space-y-2">
               {historyItems.map((slug) => {
                 const item = bySlug.get(slug);
-                const status =
-                  slug === track?.slug ? "Now" : queue.includes(slug) ? "Queued" : null;
                 return (
                   <li key={slug}>
                     <div
@@ -201,8 +190,7 @@ export function Playlist({ className, limit }: { className?: string; limit?: num
                         slug={slug}
                         title={item?.title ?? slug}
                         artist={item?.artist ?? undefined}
-                        status={status}
-                        rightAction={
+                        actions={
                           <div className="flex items-center gap-1">
                             <PlayNextButton trackId={slug} />
                             <EnqueueButton trackId={slug} />
@@ -257,14 +245,12 @@ function MusicRow({
   slug,
   title,
   artist,
-  status,
-  rightAction,
+  actions,
 }: {
   slug: string;
   title: string;
   artist?: string;
-  status?: string | null;
-  rightAction?: React.ReactNode;
+  actions?: React.ReactNode;
 }) {
   return (
     <Card className="py-2 bg-card/80">
@@ -279,14 +265,9 @@ function MusicRow({
             </Link>
             <div className="flex items-center gap-2">
               <MusicMetaLine slug={slug} />
-              {status && (
-                <span className="text-xs text-muted-foreground">
-                  <span aria-hidden="true">•</span> {status}
-                </span>
-              )}
             </div>
           </div>
-          <CardAction>{rightAction}</CardAction>
+          <CardAction>{actions}</CardAction>
         </div>
       </CardContent>
     </Card>
