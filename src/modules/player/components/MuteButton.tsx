@@ -1,9 +1,9 @@
 "use client";
 
-import { Button, ButtonProps, Tooltip, TooltipContent, TooltipTrigger } from "@/components";
+import { ButtonProps } from "@/components";
+import { IconButton } from "@/components/buttons/IconButton";
 import { cn } from "@/lib/utils";
 import { faVolumeHigh, faVolumeXmark } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useRef } from "react";
 import { usePlayer } from "../context/usePlayer";
 import { usePlayerControlsReady } from "../context/usePlayerControlsReady";
@@ -12,7 +12,7 @@ import { usePlayerControlsReady } from "../context/usePlayerControlsReady";
 
 type MuteButtonProps = Pick<ButtonProps, "className" | "variant">;
 
-export function MuteButton({ className, ...buttonProps }: MuteButtonProps) {
+export function MuteButton({ className, variant = "outline", ...buttonProps }: MuteButtonProps) {
   const { isReady, disabled, gateClassName } = usePlayerControlsReady();
   const { muted, volume, setMuted, setVolume } = usePlayer();
 
@@ -26,34 +26,27 @@ export function MuteButton({ className, ...buttonProps }: MuteButtonProps) {
   const icon = effectivelyMuted ? faVolumeXmark : faVolumeHigh;
 
   return (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <Button
-          aria-label={label}
-          aria-disabled={disabled}
-          type="button"
-          disabled={disabled}
-          onClick={() => {
-            if (!isReady) return;
-            if (effectivelyMuted) {
-              setMuted(false);
-              if (volume === 0) {
-                const nextVol =
-                  lastNonZeroVolumeRef.current > 0 ? lastNonZeroVolumeRef.current : 0.5;
-                setVolume(nextVol);
-              }
-              return;
-            }
-            setMuted(true);
-          }}
-          variant="outline"
-          className={cn(gateClassName, className)}
-          {...buttonProps}
-        >
-          <FontAwesomeIcon icon={icon} />
-        </Button>
-      </TooltipTrigger>
-      <TooltipContent side="top">{label}</TooltipContent>
-    </Tooltip>
+    <IconButton
+      className={cn(gateClassName, className)}
+      disabled={disabled}
+      label={label}
+      icon={icon}
+      onClick={() => {
+        if (!isReady) return;
+        if (effectivelyMuted) {
+          setMuted(false);
+          if (volume === 0) {
+            const nextVol = lastNonZeroVolumeRef.current > 0 ? lastNonZeroVolumeRef.current : 0.5;
+            setVolume(nextVol);
+          }
+          return;
+        }
+        setMuted(true);
+      }}
+      size="default"
+      type="button"
+      variant={variant}
+      {...buttonProps}
+    />
   );
 }

@@ -1,41 +1,29 @@
 "use client";
 
-import { Button, Tooltip, TooltipContent, TooltipTrigger } from "@/components";
-import { cn } from "@/lib/utils";
 import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { IconButton, IconButtonProps } from "./IconButton";
+import { cn } from "@/lib/utils";
 
 // ----------------------------------------------------------------------
 
+type Props = Omit<IconButtonProps, "icon" | "label"> & {
+  label?: string;
+};
+
 export function RemoveButton({
-  onClick,
-  disabled,
   className,
   label = "Remove",
-}: {
-  onClick: () => void;
-  disabled?: boolean;
-  className?: string;
-  label?: string;
-}) {
+  variant = "ghost",
+  ...buttonProps
+}: Props) {
   return (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon-sm"
-          disabled={disabled}
-          aria-disabled={disabled}
-          aria-label={label}
-          onClick={onClick}
-          className={cn("text-muted-foreground hover:text-foreground", className)}
-        >
-          <FontAwesomeIcon icon={faCircleXmark} className="size-4" />
-          <span className="sr-only">{label}</span>
-        </Button>
-      </TooltipTrigger>
-      <TooltipContent>{label}</TooltipContent>
-    </Tooltip>
+    <IconButton
+      type="button"
+      variant={variant}
+      className={cn("text-muted-foreground hover:text-foreground", className)}
+      label={label}
+      icon={faCircleXmark}
+      {...buttonProps}
+    />
   );
 }

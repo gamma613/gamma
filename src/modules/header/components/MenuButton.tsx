@@ -1,8 +1,7 @@
 "use client";
 
-import { Button, Tooltip, TooltipContent, TooltipTrigger } from "@/components";
+import { IconButton } from "@/components/buttons/IconButton";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useHeader } from "../context/useHeader";
 
 // ----------------------------------------------------------------------
@@ -11,19 +10,14 @@ export function MenuButton() {
   const { setNavOpen } = useHeader();
 
   return (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <Button
-          type="button"
-          variant="ghost"
-          className="h-11 w-11"
-          aria-label="Navigate"
-          onClick={() => setNavOpen(true)}
-        >
-          <FontAwesomeIcon icon={faBars} className="size-5" />
-        </Button>
-      </TooltipTrigger>
-      <TooltipContent side="top">Navigate</TooltipContent>
-    </Tooltip>
+    <IconButton
+      className="h-11 w-11"
+      icon={faBars}
+      iconClassName="size-5"
+      label="Navigate"
+      onClick={() => setNavOpen(true)}
+      type="button"
+      variant="ghost"
+    />
   );
 }

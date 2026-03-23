@@ -1,32 +1,36 @@
 "use client";
 
-import { Button } from "@/components";
 import { usePlayer } from "../context/usePlayer";
 import type { PlayerTrackId } from "../context/types";
+import { faForwardStep } from "@fortawesome/free-solid-svg-icons";
+import { IconButton, IconButtonProps } from "@/components/buttons/IconButton";
 
 // ----------------------------------------------------------------------
 
-export function PlayNextButton({
-  trackId,
-  className,
-}: {
+type Props = Omit<IconButtonProps, "onClick" | "icon" | "label"> & {
+  label?: string;
   trackId: PlayerTrackId;
-  className?: string;
-}) {
+};
+
+export function PlayNextButton({
+  disabled,
+  label = "Play next",
+  trackId,
+  variant = "ghost",
+  ...buttonProps
+}: Props) {
   const { queue, queueNext } = usePlayer();
   const isAlreadyNext = queue[0] === trackId;
 
   return (
-    <Button
-      type="button"
-      variant="ghost"
-      size="sm"
-      disabled={isAlreadyNext}
-      aria-disabled={isAlreadyNext}
+    <IconButton
+      disabled={disabled || isAlreadyNext}
+      icon={faForwardStep}
+      label={label}
       onClick={() => queueNext(trackId)}
-      className={className}
-    >
-      Play next
-    </Button>
+      type="button"
+      variant={variant}
+      {...buttonProps}
+    />
   );
 }

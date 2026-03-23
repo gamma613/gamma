@@ -1,32 +1,36 @@
 "use client";
 
-import { Button } from "@/components";
-import { usePlayer } from "../context/usePlayer";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { IconButton, IconButtonProps } from "@/components/buttons/IconButton";
 import type { PlayerTrackId } from "../context/types";
+import { usePlayer } from "../context/usePlayer";
 
 // ----------------------------------------------------------------------
 
-export function EnqueueButton({
-  trackId,
-  className,
-}: {
+type Props = Omit<IconButtonProps, "onClick" | "icon" | "label"> & {
+  label?: string;
   trackId: PlayerTrackId;
-  className?: string;
-}) {
+};
+
+export function EnqueueButton({
+  disabled,
+  label = "Enqueue",
+  trackId,
+  variant = "ghost",
+  ...buttonProps
+}: Props) {
   const { queue, enqueue } = usePlayer();
   const isAlreadyQueued = queue.includes(trackId);
 
   return (
-    <Button
-      type="button"
-      variant="ghost"
-      size="sm"
-      disabled={isAlreadyQueued}
-      aria-disabled={isAlreadyQueued}
+    <IconButton
+      disabled={disabled || isAlreadyQueued}
+      icon={faPlus}
+      label={label}
       onClick={() => enqueue(trackId)}
-      className={className}
-    >
-      Enqueue
-    </Button>
+      type="button"
+      variant={variant}
+      {...buttonProps}
+    />
   );
 }
