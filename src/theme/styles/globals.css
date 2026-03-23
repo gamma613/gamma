@@ -6,6 +6,10 @@
 
 /* Vars **/
 
+@theme {
+  --breakpoint-xs: 29.6875rem; /* 475px */
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
