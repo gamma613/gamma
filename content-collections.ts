@@ -24,9 +24,6 @@ const musicSchema = z.object({
   slug: z.string().optional().nullable(),
 });
 
-/** Export the inferred type for use in UI components */
-export type MusicItem = z.infer<typeof musicSchema>;
-
 const music = defineCollection({
   name: "music",
   directory: "/protected-assets/music",
