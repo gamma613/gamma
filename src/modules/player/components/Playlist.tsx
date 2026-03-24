@@ -1,7 +1,6 @@
 "use client";
 
 import { Button, Card, CardAction, CardContent, RemoveButton, TitleArtist } from "@/components";
-import { formatDateYmd } from "@/lib/formatDate";
 import { ROUTES } from "@/lib/routes";
 import { cn } from "@/lib/utils";
 import { allMusic } from "content-collections";
@@ -13,6 +12,7 @@ import { getRecentTrackIds } from "../library";
 import { EnqueueButton } from "./EnqueueButton";
 import { PlayInPlayerButton } from "./PlayInPlayerButton";
 import { PlayNextButton } from "./PlayNextButton";
+import { formatDateYmd } from "@/lib/formatDate";
 
 // ----------------------------------------------------------------------
 
@@ -214,36 +214,25 @@ export function Playlist({ className, limit }: { className?: string; limit?: num
 
 // Helpers
 
-function MusicMetaLine({ slug }: { slug: string }) {
+function MetaSeparator() {
+  return <span aria-hidden="true"> | </span>;
+}
+
+function MusicMetaData({ slug }: { slug: string }) {
   const item = allMusic.find((x) => x.slug === slug);
   if (!item) return null;
+
   return (
-    <div className="text-xs text-muted-foreground">
+    <>
       {item.type}
+      <MetaSeparator />
       {item.genres && (
         <>
-          <span aria-hidden="true"> | </span>
+          <MetaSeparator />
           {item.genres.join(", ")}
         </>
       )}
-    </div>
-  );
-}
-
-function MusicArtwork({ slug, className }: { slug: string; className?: string }) {
-  const href = ROUTES.music(slug).root;
-  return (
-    <Link href={href} className={cn("shrink-0", className)}>
-      <Image
-        width={48}
-        height={48}
-        src={ROUTES.music(slug).art("cover")}
-        alt=""
-        aria-hidden="true"
-        unoptimized
-        className="size-10 rounded-md object-cover border border-border/50"
-      />
-    </Link>
+    </>
   );
 }
 
@@ -260,23 +249,35 @@ function MusicRow({
 }) {
   return (
     <Card className="py-2 bg-card/80">
-      <CardContent className="px-4">
-        <div className="flex flex-wrap items-center gap-3">
-          <PlayInPlayerButton slug={slug} className="size-9 order-1" />
-          <MusicArtwork slug={slug} className="order-2" />
-          {actions && (
-            <CardAction className="order-3 ml-auto xs:order-4 xs:ml-auto flex items-center gap-1 self-center">
-              {actions}
-            </CardAction>
-          )}
-          <div className="order-4 basis-full min-w-0 xs:order-3 xs:basis-auto xs:flex-1">
+      <CardContent className="px-2 xs:px-4">
+        <div className="flex items-start gap-2 xs:gap-3">
+          <PlayInPlayerButton slug={slug} className="size-9 shrink-0 self-center" />
+          <Link href={ROUTES.music(slug).root} className="shrink-0">
+            <Image
+              src={ROUTES.music(slug).art("cover")}
+              alt=""
+              aria-hidden="true"
+              width={128}
+              height={128}
+              sizes="(min-width: 1024px) 64px, 40px"
+              className="size-10 lg:size-16 rounded-md object-cover border border-border/50"
+            />
+          </Link>
+          <div className="min-w-0 flex-1">
             <Link href={ROUTES.music(slug).root} className="truncate hover:underline block">
-              <TitleArtist title={title} artist={artist} />
+              <TitleArtist
+                artist={artist}
+                title={title}
+                className="text-xs xs:text-sm sm:text-md md:text-lg"
+              />
             </Link>
-            <div className="flex items-center gap-2">
-              <MusicMetaLine slug={slug} />
+            <div className="min-w-0 text-muted-foreground truncate text-xs md:text-sm lg:text-md">
+              <MusicMetaData slug={slug} />
             </div>
           </div>
+          {actions && (
+            <CardAction className="ml-auto flex items-center gap-1 shrink-0">{actions}</CardAction>
+          )}
         </div>
       </CardContent>
     </Card>
