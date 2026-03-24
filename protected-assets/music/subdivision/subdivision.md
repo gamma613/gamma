@@ -1,4 +1,5 @@
 ---
+artist: snug & gamma
 type: mix
 bpm: 70
 bpm2: 174
