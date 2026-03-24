@@ -68,16 +68,17 @@ export function Playlist({ className, limit }: { className?: string; limit?: num
         </div>
       )}
 
-      <div className="flex items-center gap-2">
-        <Button
-          type="button"
-          variant={activeTabId === "next" ? "secondary" : "ghost"}
-          size="sm"
-          onClick={() => setTabId("next")}
-        >
-          Playing next
-        </Button>
-        {displayHistory.length > 0 && (
+      {displayHistory.length > 0 && (
+        <div className="flex items-center gap-2">
+          <Button
+            type="button"
+            variant={activeTabId === "next" ? "secondary" : "ghost"}
+            size="sm"
+            onClick={() => setTabId("next")}
+          >
+            Up next
+          </Button>
+
           <Button
             type="button"
             variant={activeTabId === "history" ? "secondary" : "ghost"}
@@ -86,8 +87,8 @@ export function Playlist({ className, limit }: { className?: string; limit?: num
           >
             History
           </Button>
-        )}
-      </div>
+        </div>
+      )}
 
       {activeTabId === "next" ? (
         <div className="space-y-6">
@@ -102,7 +103,9 @@ export function Playlist({ className, limit }: { className?: string; limit?: num
             </div>
 
             {queue.length === 0 ? (
-              <p className="text-sm text-muted-foreground">Nothing queued.</p>
+              <Card>
+                <CardContent>Nothing queued yet.</CardContent>
+              </Card>
             ) : (
               <ul className="space-y-2">
                 {queue.map((slug, index) => {
@@ -128,13 +131,9 @@ export function Playlist({ className, limit }: { className?: string; limit?: num
             )}
           </section>
 
-          <section className="space-y-3">
-            <h2 className="text-lg font-semibold">Coming up</h2>
-            {upcomingFromDefault.length === 0 ? (
-              <p className="text-sm text-muted-foreground">
-                No upcoming items (cycle may be complete).
-              </p>
-            ) : (
+          {upcomingFromDefault.length > 0 && (
+            <section className="space-y-3">
+              <h2 className="text-lg font-semibold">On deck</h2>
               <ul className="space-y-2">
                 {upcomingFromDefault.map((slug) => {
                   const item = bySlug.get(slug);
@@ -155,8 +154,8 @@ export function Playlist({ className, limit }: { className?: string; limit?: num
                   );
                 })}
               </ul>
-            )}
-          </section>
+            </section>
+          )}
         </div>
       ) : (
         <section className="space-y-3">
@@ -225,7 +224,6 @@ function MusicMetaData({ slug }: { slug: string }) {
   return (
     <>
       {item.type}
-      <MetaSeparator />
       {item.genres && (
         <>
           <MetaSeparator />
