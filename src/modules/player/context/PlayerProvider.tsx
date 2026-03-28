@@ -449,27 +449,75 @@ export function PlayerProvider({
     playId(nextSlug);
   }, [playId, recentTrackIds]);
 
-  const queueNext: PlayerActions["queueNext"] = useCallback((trackId) => {
-    setState((s) => ({
-      ...s,
-      queue: [trackId, ...s.queue.filter((x) => x !== trackId)],
-    }));
-  }, []);
+  const queueNext: PlayerActions["queueNext"] = useCallback(
+    (trackId) => {
+      setState((s) => {
+        const nextQueue = [trackId, ...s.queue.filter((x) => x !== trackId)];
+        return {
+          ...s,
+          queue: nextQueue,
+          onDeck: computeOnDeck({
+            libraryIds: recentTrackIds,
+            queue: nextQueue,
+            history: s.history,
+            currentSlug: s.track?.slug ?? null,
+          }),
+        };
+      });
+    },
+    [recentTrackIds],
+  );
 
-  const enqueue: PlayerActions["enqueue"] = useCallback((trackId) => {
-    setState((s) => ({
-      ...s,
-      queue: [...s.queue.filter((x) => x !== trackId), trackId],
-    }));
-  }, []);
+  const enqueue: PlayerActions["enqueue"] = useCallback(
+    (trackId) => {
+      setState((s) => {
+        const nextQueue = [...s.queue.filter((x) => x !== trackId), trackId];
+        return {
+          ...s,
+          queue: nextQueue,
+          onDeck: computeOnDeck({
+            libraryIds: recentTrackIds,
+            queue: nextQueue,
+            history: s.history,
+            currentSlug: s.track?.slug ?? null,
+          }),
+        };
+      });
+    },
+    [recentTrackIds],
+  );
 
-  const removeFromQueue: PlayerActions["removeFromQueue"] = useCallback((trackId) => {
-    setState((s) => ({ ...s, queue: s.queue.filter((x) => x !== trackId) }));
-  }, []);
+  const removeFromQueue: PlayerActions["removeFromQueue"] = useCallback(
+    (trackId) => {
+      setState((s) => {
+        const nextQueue = s.queue.filter((x) => x !== trackId);
+        return {
+          ...s,
+          queue: nextQueue,
+          onDeck: computeOnDeck({
+            libraryIds: recentTrackIds,
+            queue: nextQueue,
+            history: s.history,
+            currentSlug: s.track?.slug ?? null,
+          }),
+        };
+      });
+    },
+    [recentTrackIds],
+  );
 
   const clearQueue: PlayerActions["clearQueue"] = useCallback(() => {
-    setState((s) => ({ ...s, queue: [] }));
-  }, []);
+    setState((s) => ({
+      ...s,
+      queue: [],
+      onDeck: computeOnDeck({
+        libraryIds: recentTrackIds,
+        queue: [],
+        history: s.history,
+        currentSlug: s.track?.slug ?? null,
+      }),
+    }));
+  }, [recentTrackIds]);
 
   const clearHistory: PlayerActions["clearHistory"] = useCallback(() => {
     setState((s) => ({

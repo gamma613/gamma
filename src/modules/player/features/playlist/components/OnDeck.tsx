@@ -28,7 +28,8 @@ export function OnDeck({ itemsPerPage = 10 }: { itemsPerPage?: number }) {
 }
 
 function OnDeckPaged({ itemsPerPage }: { itemsPerPage: number }) {
-  const { onDeck } = usePlayer();
+  const { onDeck, track } = usePlayer();
+  const currentSlug = track?.slug ?? null;
 
   const bySlug = useMemo(() => new Map(allMusic.map((x) => [x.slug, x])), []);
   const { page, pageCount, setPage, startIndex, endIndexExclusive } = usePagination({
@@ -58,6 +59,7 @@ function OnDeckPaged({ itemsPerPage }: { itemsPerPage: number }) {
             {pageItems.map((trackId, indexOnPage) => {
               const item = bySlug.get(trackId) ?? null;
               const absoluteIndex = startIndex + indexOnPage;
+              const isCurrent = Boolean(currentSlug && trackId === currentSlug);
 
               return (
                 <li key={`${trackId}-${absoluteIndex}`}>
@@ -77,8 +79,8 @@ function OnDeckPaged({ itemsPerPage }: { itemsPerPage: number }) {
                     left={<PlayInPlayerButton slug={trackId} className="size-9 shrink-0" />}
                     actions={
                       <div className="flex items-center gap-1">
-                        <PlayNextButton trackId={trackId} />
-                        <EnqueueButton trackId={trackId} />
+                        <PlayNextButton trackId={trackId} disabled={isCurrent} />
+                        <EnqueueButton trackId={trackId} disabled={isCurrent} />
                       </div>
                     }
                   />

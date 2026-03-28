@@ -6,7 +6,7 @@ import { PlayInPlayerButton } from "@/modules/player";
 import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { NOT_FOUND_TITLE } from "../not-found";
+import { NOT_FOUND_TITLE } from "../../not-found";
 
 // ----------------------------------------------------------------------
 
