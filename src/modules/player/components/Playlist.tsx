@@ -12,7 +12,6 @@ import { getRecentTrackIds } from "../library";
 import { EnqueueButton } from "./EnqueueButton";
 import { PlayInPlayerButton } from "./PlayInPlayerButton";
 import { PlayNextButton } from "./PlayNextButton";
-import { formatDateYmd } from "@/lib/formatDate";
 
 // ----------------------------------------------------------------------
 
@@ -104,7 +103,13 @@ export function Playlist({ className, limit }: { className?: string; limit?: num
 
             {queue.length === 0 ? (
               <Card>
-                <CardContent>Nothing queued yet.</CardContent>
+                <CardContent>
+                  <h3>Nothing here yet.</h3>
+                  <p>
+                    Curate your listening experience using the &quot;Play Next&quot; and
+                    &quot;Enqueue&quot; buttons.
+                  </p>
+                </CardContent>
               </Card>
             ) : (
               <ul className="space-y-2">
@@ -248,8 +253,10 @@ function MusicRow({
   return (
     <Card className="py-2 bg-card/80">
       <CardContent className="px-2 xs:px-4">
-        <div className="flex items-start gap-2 xs:gap-3">
-          <PlayInPlayerButton slug={slug} className="size-9 shrink-0 self-center" />
+        <div className="flex items-center gap-2 xs:gap-3">
+          {/* Play button */}
+          <PlayInPlayerButton slug={slug} className="size-9 shrink-0" />
+          {/* Artwork */}
           <Link href={ROUTES.music(slug).root} className="shrink-0">
             <Image
               src={ROUTES.music(slug).art("cover")}
@@ -257,10 +264,11 @@ function MusicRow({
               aria-hidden="true"
               width={128}
               height={128}
-              sizes="(min-width: 1024px) 64px, 40px"
-              className="size-10 lg:size-16 rounded-md object-cover border border-border/50"
+              sizes="40px, (min-width: 768px) 52px, (min-width: 1024px) 64px"
+              className="size-10 md:13 lg:size-16 rounded-md object-cover border border-border/50"
             />
           </Link>
+          {/* Info */}
           <div className="min-w-0 flex-1">
             <Link href={ROUTES.music(slug).root} className="truncate hover:underline block">
               <TitleArtist
@@ -273,8 +281,11 @@ function MusicRow({
               <MusicMetaData slug={slug} />
             </div>
           </div>
+          {/* Actions */}
           {actions && (
-            <CardAction className="ml-auto flex items-center gap-1 shrink-0">{actions}</CardAction>
+            <CardAction className="ml-auto flex items-center self-center gap-1 shrink-0">
+              {actions}
+            </CardAction>
           )}
         </div>
       </CardContent>
