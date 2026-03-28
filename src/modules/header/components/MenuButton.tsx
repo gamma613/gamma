@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { IconButton } from "@/components/buttons/IconButton";
-import { faBars } from "@fortawesome/free-solid-svg-icons";
-import { useHeader } from "../context/useHeader";
+import { IconButton } from '@/components/buttons/IconButton';
+import { faBars } from '@fortawesome/free-solid-svg-icons';
+import { useHeader } from '../context/useHeader';
 
 // ----------------------------------------------------------------------
 

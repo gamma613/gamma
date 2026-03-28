@@ -1,18 +1,18 @@
-"use client";
+'use client';
 
-import { ButtonProps } from "@/components";
-import { IconButton } from "@/components/buttons/IconButton";
-import { cn } from "@/lib/utils";
-import { faVolumeHigh, faVolumeXmark } from "@fortawesome/free-solid-svg-icons";
-import { useEffect, useRef } from "react";
-import { usePlayer } from "../context/usePlayer";
-import { usePlayerControlsReady } from "../context/usePlayerControlsReady";
+import { ButtonProps } from '@/components';
+import { IconButton } from '@/components/buttons/IconButton';
+import { cn } from '@/lib/utils';
+import { faVolumeHigh, faVolumeXmark } from '@fortawesome/free-solid-svg-icons';
+import { useEffect, useRef } from 'react';
+import { usePlayer } from '../context/usePlayer';
+import { usePlayerControlsReady } from '../context/usePlayerControlsReady';
 
 // ----------------------------------------------------------------------
 
-type MuteButtonProps = Pick<ButtonProps, "className" | "variant">;
+type MuteButtonProps = Pick<ButtonProps, 'className' | 'variant'>;
 
-export function MuteButton({ className, variant = "outline", ...buttonProps }: MuteButtonProps) {
+export function MuteButton({ className, variant = 'outline', ...buttonProps }: MuteButtonProps) {
   const { isReady, disabled, gateClassName } = usePlayerControlsReady();
   const { muted, volume, setMuted, setVolume } = usePlayer();
 
@@ -22,7 +22,7 @@ export function MuteButton({ className, variant = "outline", ...buttonProps }: M
   }, [volume]);
 
   const effectivelyMuted = muted || volume === 0;
-  const label = effectivelyMuted ? "Unmute" : "Mute";
+  const label = effectivelyMuted ? 'Unmute' : 'Mute';
   const icon = effectivelyMuted ? faVolumeXmark : faVolumeHigh;
 
   return (

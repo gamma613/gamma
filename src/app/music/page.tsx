@@ -1,9 +1,9 @@
-import { allMusic } from "content-collections";
-import Image from "next/image";
-import Link from "next/link";
-import { ROUTES } from "@/lib/routes";
-import { PlayInPlayerButton } from "@/modules/player";
-import { PageWrapper } from "@/components";
+import { PageWrapper } from '@/components';
+import { ROUTES } from '@/lib/routes';
+import { PlayInPlayerButton } from '@/modules/player';
+import { allMusic } from 'content-collections';
+import Image from 'next/image';
+import Link from 'next/link';
 
 // ----------------------------------------------------------------------
 
@@ -19,7 +19,7 @@ export default function MusicIndexPage() {
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {items.map((item) => {
           const href = ROUTES.music(item.slug).root;
-          const coverSrc = ROUTES.music(item.slug).art("cover");
+          const coverSrc = ROUTES.music(item.slug).art('cover');
 
           return (
             <article key={item.slug} className="flex flex-col gap-3">

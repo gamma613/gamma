@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { allMusic } from "content-collections";
-import { useMemo } from "react";
-import { usePlayer } from "../../../context/usePlayer";
-import { MusicRow } from "./MusicRow";
-import { PlayInPlayerButton } from "../../../components/PlayInPlayerButton";
-import { EnqueueButton } from "../../../components/EnqueueButton";
-import { PlayNextButton } from "../../../components/PlayNextButton";
-import { PaginationControls, usePagination } from "./Pagination";
+import { allMusic } from 'content-collections';
+import { useMemo } from 'react';
+import { EnqueueButton } from '../../../components/EnqueueButton';
+import { PlayInPlayerButton } from '../../../components/PlayInPlayerButton';
+import { PlayNextButton } from '../../../components/PlayNextButton';
+import { usePlayer } from '../../../context/usePlayer';
+import { MusicRow } from './MusicRow';
+import { PaginationControls, usePagination } from './Pagination';
 
 // ----------------------------------------------------------------------
 
@@ -35,7 +35,7 @@ function OnDeckPaged({ itemsPerPage }: { itemsPerPage: number }) {
   const { page, pageCount, setPage, startIndex, endIndexExclusive } = usePagination({
     itemCount: onDeck.length,
     itemsPerPage,
-    itemKey: "on-deck",
+    itemKey: 'on-deck',
   });
 
   const pageItems = onDeck.slice(startIndex, endIndexExclusive);

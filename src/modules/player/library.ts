@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { allMusic } from "content-collections";
-import type { PlayerTrackId } from "./context/types";
+import { allMusic } from 'content-collections';
+import type { PlayerTrackId } from './context/types';
 
 export function getRecentTrackIds(): PlayerTrackId[] {
   const items = allMusic

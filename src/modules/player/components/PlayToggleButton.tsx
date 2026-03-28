@@ -1,19 +1,19 @@
-"use client";
+'use client';
 
-import { Button, ButtonProps, Tooltip, TooltipContent, TooltipTrigger } from "@/components";
-import { faPause, faPlay } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { usePlayer } from "../context/usePlayer";
-import { usePlayerControlsReady } from "../context/usePlayerControlsReady";
+import { Button, ButtonProps, Tooltip, TooltipContent, TooltipTrigger } from '@/components';
+import { faPause, faPlay } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { usePlayer } from '../context/usePlayer';
+import { usePlayerControlsReady } from '../context/usePlayerControlsReady';
 
 // ----------------------------------------------------------------------
 
-type PlayButtonToggleProps = Pick<ButtonProps, "className" | "variant">;
+type PlayButtonToggleProps = Pick<ButtonProps, 'className' | 'variant'>;
 
 export const PlayToggleButton = ({ className, ...buttonProps }: PlayButtonToggleProps) => {
   const { isReady, disabled } = usePlayerControlsReady();
   const { playing, toggle } = usePlayer();
-  const label = playing ? "Pause" : "Play";
+  const label = playing ? 'Pause' : 'Play';
   const icon = playing ? faPause : faPlay;
 
   return (

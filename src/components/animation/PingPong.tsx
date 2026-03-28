@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from 'react';
 
 interface PingPongProps {
   children: React.ReactNode;
@@ -23,6 +23,8 @@ export function PingPong({ children, className, speed = 50, pause = 1000 }: Ping
 
   // measure overflow
   useEffect(() => {
+    void children;
+
     const measure = () => {
       const container = containerRef.current;
       const text = textRef.current;
@@ -35,12 +37,12 @@ export function PingPong({ children, className, speed = 50, pause = 1000 }: Ping
       directionRef.current = 1;
       pauseTimerRef.current = 0;
       lastTimeRef.current = null;
-      text.style.transform = "translateX(0)";
+      text.style.transform = 'translateX(0)';
     };
 
     measure();
-    window.addEventListener("resize", measure);
-    return () => window.removeEventListener("resize", measure);
+    window.addEventListener('resize', measure);
+    return () => window.removeEventListener('resize', measure);
   }, [children]);
 
   // animation loop
@@ -87,7 +89,7 @@ export function PingPong({ children, className, speed = 50, pause = 1000 }: Ping
   return (
     <div
       ref={containerRef}
-      className={`overflow-hidden ${className ?? ""}`}
+      className={`overflow-hidden ${className ?? ''}`}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >

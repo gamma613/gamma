@@ -1,16 +1,17 @@
-"use client";
+'use client';
 
-import { Button, ButtonProps, Tooltip, TooltipContent, TooltipTrigger } from "@/components";
-import { cn } from "@/lib/utils";
+import { Button, ButtonProps, Tooltip, TooltipContent, TooltipTrigger } from '@/components';
+import { cn } from '@/lib/utils';
 import {
   faVolume,
   faVolumeHigh,
   faVolumeLow,
   faVolumeXmark,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { usePlayer } from "../context/usePlayer";
-import { usePlayerControlsReady } from "../context/usePlayerControlsReady";
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { usePlayer } from '../context/usePlayer';
+import { usePlayerControlsReady } from '../context/usePlayerControlsReady';
+
 // ----------------------------------------------------------------------
 
 type Props = ButtonProps & {
@@ -22,7 +23,7 @@ export function VolumeButton({ active, className, disabled: disabledProp, ...but
   const disabled = Boolean(disabledProp) || playerDisabled;
   const { muted, volume } = usePlayer();
 
-  const label = "Adjust Volume";
+  const label = 'Adjust Volume';
 
   const displayVolume = Math.max(0, Math.min(1, muted ? 0 : volume));
   const fillHeight = `${displayVolume * 100}%`;
@@ -47,9 +48,9 @@ export function VolumeButton({ active, className, disabled: disabledProp, ...but
           aria-disabled={disabled}
           disabled={disabled}
           className={cn(
-            "relative overflow-hidden",
-            active && "bg-accent text-accent-foreground",
-            className,
+            'relative overflow-hidden',
+            active && 'bg-accent text-accent-foreground',
+            className
           )}
           {...buttonProps}
         >

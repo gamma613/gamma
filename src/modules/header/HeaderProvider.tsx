@@ -1,8 +1,7 @@
-"use client";
+'use client';
 
-import { createContext, useMemo, useState } from "react";
-
-import type { HeaderContextValue } from "./context/types";
+import { createContext, useMemo, useState } from 'react';
+import type { HeaderContextValue } from './context/types';
 
 export const HeaderContext = createContext<HeaderContextValue | null>(null);
 

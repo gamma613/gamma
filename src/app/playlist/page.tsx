@@ -1,5 +1,5 @@
-import { PageWrapper } from "@/components";
-import { Playlist } from "@/modules/player";
+import { PageWrapper } from '@/components';
+import { Playlist } from '@/modules/player';
 
 // ----------------------------------------------------------------------
 

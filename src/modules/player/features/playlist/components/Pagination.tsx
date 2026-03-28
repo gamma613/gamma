@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Button } from "@/components";
-import { cn } from "@/lib/utils";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import { Button } from '@/components';
+import { cn } from '@/lib/utils';
+import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useState } from 'react';
 
 // ----------------------------------------------------------------------
 
@@ -20,7 +20,7 @@ export function usePagination({
   const pageCount = Math.max(1, Math.ceil(itemCount / itemsPerPage));
   const storageKey = `gamma.playlist.pagination.${itemKey}.v1`;
   const [pageRaw, setPageRaw] = useState(() => {
-    if (typeof window === "undefined") return 1;
+    if (typeof window === 'undefined') return 1;
     try {
       const raw = window.localStorage.getItem(storageKey);
       const n = raw ? Number(raw) : NaN;
@@ -34,7 +34,7 @@ export function usePagination({
   const setPage = (next: number) => {
     const p = clampPage(next);
     setPageRaw(p);
-    if (typeof window === "undefined") return;
+    if (typeof window === 'undefined') return;
     try {
       window.localStorage.setItem(storageKey, String(p));
     } catch {
@@ -63,7 +63,7 @@ export function PaginationControls({
 
   return (
     <div
-      className={cn("flex items-center gap-2", className)}
+      className={cn('flex items-center gap-2', className)}
       aria-label="Pagination"
       role="navigation"
     >

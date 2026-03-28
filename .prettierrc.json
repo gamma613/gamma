@@ -1,7 +1,11 @@
 {
+  "plugins": ["@ianvs/prettier-plugin-sort-imports"],
+  "importOrder": ["<BUILTIN_MODULES>", "<THIRD_PARTY_MODULES>", "^src/.+", "^[./]"],
+  "importOrderCaseSensitive": false,
+  "importOrderParserPlugins": ["typescript", "jsx"],
+  "importOrderTypeScriptVersion": "5.9.0",
   "printWidth": 100,
-  "tabWidth": 2,
-  "semi": true,
-  "trailingComma": "all",
-  "arrowParens": "always"
+  "singleQuote": true,
+  "trailingComma": "es5",
+  "tabWidth": 2
 }

@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useEffect, useRef } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from '@/lib/utils';
+import { useEffect, useRef } from 'react';
 
 export interface BokehBackgroundProps {
   className?: string;
@@ -31,11 +31,11 @@ interface Orb {
 }
 
 const DEFAULT_COLORS = [
-  "rgba(255, 200, 120, 0.3)",
-  "rgba(255, 180, 100, 0.25)",
-  "rgba(255, 220, 150, 0.2)",
-  "rgba(255, 160, 80, 0.25)",
-  "rgba(255, 240, 200, 0.2)",
+  'rgba(255, 200, 120, 0.3)',
+  'rgba(255, 180, 100, 0.25)',
+  'rgba(255, 220, 150, 0.2)',
+  'rgba(255, 160, 80, 0.25)',
+  'rgba(255, 240, 200, 0.2)',
 ];
 
 export function BokehBackground({
@@ -55,12 +55,12 @@ export function BokehBackground({
     const container = containerRef.current;
     if (!canvas || !container) return;
 
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const rect = container.getBoundingClientRect();
-    let width = rect.width;
-    let height = rect.height;
+    const { width: initialWidth, height: initialHeight } = container.getBoundingClientRect();
+    let width = initialWidth;
+    let height = initialHeight;
     canvas.width = width;
     canvas.height = height;
 
@@ -91,8 +91,9 @@ export function BokehBackground({
     // Resize handler
     const handleResize = () => {
       const rect = container.getBoundingClientRect();
-      width = rect.width;
-      height = rect.height;
+      const { width: nextWidth, height: nextHeight } = rect;
+      width = nextWidth;
+      height = nextHeight;
       canvas.width = width;
       canvas.height = height;
     };
@@ -127,7 +128,7 @@ export function BokehBackground({
         gradient.addColorStop(0, orb.color.replace(/[\d.]+\)$/, `${orb.opacity * 1.2})`));
         gradient.addColorStop(0.4, orb.color.replace(/[\d.]+\)$/, `${orb.opacity})`));
         gradient.addColorStop(0.7, orb.color.replace(/[\d.]+\)$/, `${orb.opacity * 0.5})`));
-        gradient.addColorStop(1, orb.color.replace(/[\d.]+\)$/, "0)"));
+        gradient.addColorStop(1, orb.color.replace(/[\d.]+\)$/, '0)'));
 
         ctx.beginPath();
         ctx.arc(orb.x, orb.y, currentSize / 2, 0, Math.PI * 2);
@@ -157,9 +158,9 @@ export function BokehBackground({
     <div className="relative min-h-screen">
       <div
         ref={containerRef}
-        className={cn("fixed inset-0 overflow-hidden", className)}
+        className={cn('fixed inset-0 overflow-hidden', className)}
         style={{
-          background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f1a 100%)",
+          background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f1a 100%)',
         }}
       >
         <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" />
@@ -169,7 +170,7 @@ export function BokehBackground({
           className="pointer-events-none absolute inset-0 opacity-20"
           style={{
             background:
-              "radial-gradient(ellipse at 30% 30%, rgba(255, 180, 100, 0.15) 0%, transparent 50%)",
+              'radial-gradient(ellipse at 30% 30%, rgba(255, 180, 100, 0.15) 0%, transparent 50%)',
           }}
         />
 
@@ -178,7 +179,7 @@ export function BokehBackground({
           className="pointer-events-none absolute inset-0"
           style={{
             background:
-              "radial-gradient(ellipse at center, transparent 0%, transparent 40%, rgba(10,10,20,0.8) 100%)",
+              'radial-gradient(ellipse at center, transparent 0%, transparent 40%, rgba(10,10,20,0.8) 100%)',
           }}
         />
       </div>

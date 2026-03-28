@@ -1,7 +1,7 @@
 ---
 type: mix
 bpm: 175
-date: "2024-03-04"
+date: '2024-03-04'
 genres:
   - Drum & Bass
 tags:
@@ -9,7 +9,7 @@ tags:
   - Studio Mix
   - Atmospheric
   - Deep Listening
-title: "repossession"
+title: 'repossession'
 ---
 
 Can i just put shit here?

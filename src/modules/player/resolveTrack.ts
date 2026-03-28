@@ -1,9 +1,8 @@
-"use client";
+'use client';
 
-import { ROUTES } from "@/lib/routes";
-import { allMusic } from "content-collections";
-
-import type { PlayerTrack, PlayerTrackId } from "./context/types";
+import { ROUTES } from '@/lib/routes';
+import { allMusic } from 'content-collections';
+import type { PlayerTrack, PlayerTrackId } from './context/types';
 
 export function resolveTrack(trackId: PlayerTrackId): PlayerTrack | null {
   const item = allMusic.find((doc) => doc.slug === trackId);
@@ -13,7 +12,7 @@ export function resolveTrack(trackId: PlayerTrackId): PlayerTrack | null {
       src: `/api/stream/music/${trackId}`,
       title: item.title ?? trackId,
       artist: item.artist ?? undefined,
-      cover: ROUTES.music(trackId).art("cover"),
+      cover: ROUTES.music(trackId).art('cover'),
     };
   }
 

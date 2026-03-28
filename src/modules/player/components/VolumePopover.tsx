@@ -1,24 +1,24 @@
-"use client";
+'use client';
 
-import { ButtonProps } from "@/components";
-import { cn } from "@/lib/utils";
-import type React from "react";
-import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { createPortal } from "react-dom";
-import { usePlayerControlsReady } from "../context/usePlayerControlsReady";
-import { VolumeButton } from "./VolumeButton";
-import { VolumeSlider } from "./VolumeSlider";
+import { ButtonProps } from '@/components';
+import { cn } from '@/lib/utils';
+import type React from 'react';
+import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
+import { usePlayerControlsReady } from '../context/usePlayerControlsReady';
+import { VolumeButton } from './VolumeButton';
+import { VolumeSlider } from './VolumeSlider';
 
 // ----------------------------------------------------------------------
 
-export type VolumePopoverAnchor = "top" | "bottom";
+export type VolumePopoverAnchor = 'top' | 'bottom';
 type Props = React.PropsWithChildren & {
   anchor?: VolumePopoverAnchor;
-  buttonProps?: Omit<ButtonProps, "onClick">;
+  buttonProps?: Omit<ButtonProps, 'onClick'>;
   className?: string;
 };
 
-export function VolumePopover({ anchor = "bottom", buttonProps, className }: Props) {
+export function VolumePopover({ anchor = 'bottom', buttonProps, className }: Props) {
   const { isReady } = usePlayerControlsReady();
   const [open, setOpen] = useState(false);
   const contentId = useId();
@@ -34,21 +34,21 @@ export function VolumePopover({ anchor = "bottom", buttonProps, className }: Pro
 
     const left = Math.max(
       8,
-      Math.min(window.innerWidth - width - 8, triggerRect.left + triggerRect.width / 2 - width / 2),
+      Math.min(window.innerWidth - width - 8, triggerRect.left + triggerRect.width / 2 - width / 2)
     );
 
-    const top = anchor === "top" ? triggerRect.bottom + gap : triggerRect.top - gap; // we'll translateY with CSS for bottom anchor
+    const top = anchor === 'top' ? triggerRect.bottom + gap : triggerRect.top - gap; // we'll translateY with CSS for bottom anchor
 
-    return { left, top, width, position: "fixed" };
+    return { left, top, width, position: 'fixed' };
   }, [anchor, triggerRect]);
 
   useEffect(() => {
     if (!open) return;
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
+      if (e.key === 'Escape') setOpen(false);
     };
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
   }, [open]);
 
   useEffect(() => {
@@ -63,8 +63,8 @@ export function VolumePopover({ anchor = "bottom", buttonProps, className }: Pro
       setOpen(false);
     };
 
-    document.addEventListener("pointerdown", onPointerDown, true);
-    return () => document.removeEventListener("pointerdown", onPointerDown, true);
+    document.addEventListener('pointerdown', onPointerDown, true);
+    return () => document.removeEventListener('pointerdown', onPointerDown, true);
   }, [open]);
 
   useLayoutEffect(() => {
@@ -77,16 +77,16 @@ export function VolumePopover({ anchor = "bottom", buttonProps, className }: Pro
     };
 
     measure();
-    window.addEventListener("resize", measure);
-    window.addEventListener("scroll", measure, true);
+    window.addEventListener('resize', measure);
+    window.addEventListener('scroll', measure, true);
     return () => {
-      window.removeEventListener("resize", measure);
-      window.removeEventListener("scroll", measure, true);
+      window.removeEventListener('resize', measure);
+      window.removeEventListener('scroll', measure, true);
     };
   }, [open]);
 
   return (
-    <div className={cn("relative", className)}>
+    <div className={cn('relative', className)}>
       <div ref={triggerRef} className="inline-flex">
         <VolumeButton
           active={open}
@@ -103,29 +103,27 @@ export function VolumePopover({ anchor = "bottom", buttonProps, className }: Pro
 
       {isReady &&
         open &&
-        typeof document !== "undefined" &&
+        typeof document !== 'undefined' &&
         createPortal(
-          <>
-            <div
-              id={contentId}
-              style={popoverStyle}
-              ref={panelRef}
-              className={cn(
-                "z-50",
-                "rounded-lg border bg-background/80 py-4 text-popover-foreground shadow-md supports-[backdrop-filter]:backdrop-blur-md",
-                anchor === "top" ? "" : "-translate-y-full",
-              )}
-            >
-              <VolumeSlider
-                orientation="vertical"
-                className="h-[100px]"
-                sliderProps={{
-                  trackClassName: "data-horizontal:h-4 data-vertical:w-4",
-                }}
-              />
-            </div>
-          </>,
-          document.body,
+          <div
+            id={contentId}
+            style={popoverStyle}
+            ref={panelRef}
+            className={cn(
+              'z-50',
+              'rounded-lg border bg-background/80 py-4 text-popover-foreground shadow-md supports-[backdrop-filter]:backdrop-blur-md',
+              anchor === 'top' ? '' : '-translate-y-full'
+            )}
+          >
+            <VolumeSlider
+              orientation="vertical"
+              className="h-[100px]"
+              sliderProps={{
+                trackClassName: 'data-horizontal:h-4 data-vertical:w-4',
+              }}
+            />
+          </div>,
+          document.body
         )}
     </div>
   );

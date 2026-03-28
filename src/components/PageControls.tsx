@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { Button, Tooltip, TooltipContent, TooltipTrigger } from "@/components";
-import { useHydrated } from "@/lib/useHydrated";
-import { cn } from "@/lib/utils";
-import { faCompress, faExpand } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useEffect, useState } from "react";
-import { createPortal } from "react-dom";
+import { Button, Tooltip, TooltipContent, TooltipTrigger } from '@/components';
+import { useHydrated } from '@/lib/useHydrated';
+import { cn } from '@/lib/utils';
+import { faCompress, faExpand } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 
 // ----------------------------------------------------------------------
 
@@ -16,42 +16,40 @@ export function PageControls() {
 
   useEffect(() => {
     const el = document.documentElement;
-    if (collapsed) el.dataset.pageCollapsed = "true";
+    if (collapsed) el.dataset.pageCollapsed = 'true';
     else delete el.dataset.pageCollapsed;
     return () => {
       delete el.dataset.pageCollapsed;
     };
   }, [collapsed]);
 
-  const collapseLabel = collapsed ? "Expand page" : "Collapse page";
+  const collapseLabel = collapsed ? 'Expand page' : 'Collapse page';
 
   if (!hydrated) return null;
 
   return createPortal(
-    <>
-      <div
-        className={cn(
-          "fixed right-3 top-3 z-40 transition-[top,opacity] duration-300",
-          collapsed && "top-[calc(100dvh-var(--header-height)-3rem)] opacity-90",
-        )}
-      >
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              aria-label={collapseLabel}
-              className="active:translate-y-0"
-              onClick={() => setCollapsed((v) => !v)}
-            >
-              <FontAwesomeIcon icon={collapsed ? faExpand : faCompress} className="size-4" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent side="left">{collapseLabel}</TooltipContent>
-        </Tooltip>
-      </div>
-    </>,
-    document.body,
+    <div
+      className={cn(
+        'fixed right-3 top-3 z-40 transition-[top,opacity] duration-300',
+        collapsed && 'top-[calc(100dvh-var(--header-height)-3rem)] opacity-90'
+      )}
+    >
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            aria-label={collapseLabel}
+            className="active:translate-y-0"
+            onClick={() => setCollapsed((v) => !v)}
+          >
+            <FontAwesomeIcon icon={collapsed ? faExpand : faCompress} className="size-4" />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent side="left">{collapseLabel}</TooltipContent>
+      </Tooltip>
+    </div>,
+    document.body
   );
 }

@@ -1,22 +1,22 @@
-"use client";
+'use client';
 
-import { usePlayer } from "../context/usePlayer";
-import type { PlayerTrackId } from "../context/types";
-import { faForwardStep } from "@fortawesome/free-solid-svg-icons";
-import { IconButton, IconButtonProps } from "@/components/buttons/IconButton";
+import { IconButton, IconButtonProps } from '@/components/buttons/IconButton';
+import { faForwardStep } from '@fortawesome/free-solid-svg-icons';
+import type { PlayerTrackId } from '../context/types';
+import { usePlayer } from '../context/usePlayer';
 
 // ----------------------------------------------------------------------
 
-type Props = Omit<IconButtonProps, "onClick" | "icon" | "label"> & {
+type Props = Omit<IconButtonProps, 'onClick' | 'icon' | 'label'> & {
   label?: string;
   trackId: PlayerTrackId;
 };
 
 export function PlayNextButton({
   disabled,
-  label = "Play next",
+  label = 'Play next',
   trackId,
-  variant = "ghost",
+  variant = 'ghost',
   ...buttonProps
 }: Props) {
   const { queue, queueNext } = usePlayer();

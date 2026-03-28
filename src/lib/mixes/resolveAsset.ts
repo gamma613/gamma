@@ -1,6 +1,6 @@
 export {
   resolveMusicArtFile as resolveMixArtFile,
   resolveMusicAudioFile as resolveMixAudioFile,
-} from "@/lib/music/resolveAsset";
+} from '@/lib/music/resolveAsset';
 
-export type { MixAudioExt, MixArtExt } from "./supported";
+export type { MixAudioExt, MixArtExt } from './supported';

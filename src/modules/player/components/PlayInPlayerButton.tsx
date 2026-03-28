@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { Button, Tooltip, TooltipContent, TooltipTrigger } from "@/components";
-import { cn } from "@/lib/utils";
-import { faPause, faPlay } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { usePlayer } from "../context/usePlayer";
-import { usePlayerControlsReady } from "../context/usePlayerControlsReady";
+import { Button, Tooltip, TooltipContent, TooltipTrigger } from '@/components';
+import { cn } from '@/lib/utils';
+import { faPause, faPlay } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { usePlayer } from '../context/usePlayer';
+import { usePlayerControlsReady } from '../context/usePlayerControlsReady';
 
 // ----------------------------------------------------------------------
 
@@ -24,7 +24,7 @@ export function PlayInPlayerButton({ slug, className }: { slug: string; classNam
       ? Math.max(0, Math.min(1, positionSeconds / durationSeconds))
       : null;
 
-  const label = isCurrentAndPlaying ? "Pause" : "Play";
+  const label = isCurrentAndPlaying ? 'Pause' : 'Play';
   const icon = isCurrentAndPlaying ? faPause : faPlay;
 
   return (
@@ -36,7 +36,7 @@ export function PlayInPlayerButton({ slug, className }: { slug: string; classNam
           aria-label={label}
           aria-disabled={disabled}
           disabled={disabled}
-          className={cn(gateClassName, "relative rounded-full p-0", className ?? "size-10")}
+          className={cn(gateClassName, 'relative rounded-full p-0', className ?? 'size-10')}
           onClick={() => {
             if (!isReady) return;
 

@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { Slider, Tooltip, TooltipContent, TooltipTrigger } from "@/components";
-import { cn } from "@/lib/utils";
-import { useRef, useState } from "react";
-import { usePlayer } from "../context/usePlayer";
-import { usePlayerControlsReady } from "../context/usePlayerControlsReady";
-import { formatTrackTime } from "../utils";
+import { Slider, Tooltip, TooltipContent, TooltipTrigger } from '@/components';
+import { cn } from '@/lib/utils';
+import { useRef, useState } from 'react';
+import { usePlayer } from '../context/usePlayer';
+import { usePlayerControlsReady } from '../context/usePlayerControlsReady';
+import { formatTrackTime } from '../utils';
 
 // ----------------------------------------------------------------------
 
@@ -39,7 +39,7 @@ export function SeekBar({ className }: { className?: string }) {
 
   // Output
   return (
-    <div className={cn("relative w-full", className)}>
+    <div className={cn('relative w-full', className)}>
       <Tooltip open={isReady && hoverOpen} delayDuration={150}>
         <TooltipTrigger asChild>
           <span
@@ -100,10 +100,10 @@ export function SeekBar({ className }: { className?: string }) {
         step={0.25}
         value={value}
         className={cn(
-          "w-full",
-          !isReady && "invisible pointer-events-none",
+          'w-full',
+          !isReady && 'invisible pointer-events-none',
           // Rectangular seekbar (no radius).
-          "[&_[data-slot=slider-track]]:rounded-none",
+          '[&_[data-slot=slider-track]]:rounded-none'
         )}
       />
     </div>

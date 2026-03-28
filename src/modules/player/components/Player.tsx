@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useHydrated } from "@/lib/useHydrated";
-import { useCallback, useEffect, useRef } from "react";
-import ReactPlayer from "react-player";
-import { usePlayer } from "../context/usePlayer";
+import { useHydrated } from '@/lib/useHydrated';
+import { useCallback, useEffect, useRef } from 'react';
+import ReactPlayer from 'react-player';
+import { usePlayer } from '../context/usePlayer';
 
 // ----------------------------------------------------------------------
 

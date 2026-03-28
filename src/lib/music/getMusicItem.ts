@@ -1,6 +1,6 @@
-import { cache } from "react";
-import { allMusic } from "content-collections";
-import { ROUTES } from "@/lib/routes";
+import { ROUTES } from '@/lib/routes';
+import { allMusic } from 'content-collections';
+import { cache } from 'react';
 
 export const getMusicItem = cache((slug: string) => {
   const item = allMusic.find((doc) => doc.slug === slug);
@@ -12,7 +12,7 @@ export const getMusicItem = cache((slug: string) => {
     // Normalize nullable fields to `undefined` for easier consumption in UI.
     artist: item.artist ?? undefined,
     artwork: {
-      cover: ROUTES.music(item.slug).art("cover"),
+      cover: ROUTES.music(item.slug).art('cover'),
     },
   };
 });

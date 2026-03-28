@@ -1,14 +1,14 @@
 ---
 type: mix
 bpm: 175
-date: "2024-03-04"
+date: '2024-03-04'
 genres:
   - Drum & Bass
-slug: "based"
+slug: 'based'
 tags:
   - DJ Mix
   - Studio Mix
-title: "based"
+title: 'based'
 ---
 
 Mixcloud: https://www.mixcloud.com/dj-gamma/based/

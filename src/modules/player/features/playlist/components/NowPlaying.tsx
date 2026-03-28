@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { allMusic } from "content-collections";
-import { useMemo } from "react";
-import { usePlayer } from "../../../context/usePlayer";
-import { MusicRow } from "./MusicRow";
-import { PlayInPlayerButton } from "../../../components/PlayInPlayerButton";
+import { allMusic } from 'content-collections';
+import { useMemo } from 'react';
+import { PlayInPlayerButton } from '../../../components/PlayInPlayerButton';
+import { usePlayer } from '../../../context/usePlayer';
+import { MusicRow } from './MusicRow';
 
 // ----------------------------------------------------------------------
 

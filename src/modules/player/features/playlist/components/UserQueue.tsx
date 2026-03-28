@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { allMusic } from "content-collections";
-import { useMemo, useRef } from "react";
-import { Button, RemoveButton } from "@/components";
-import { usePlayer } from "../../../context/usePlayer";
-import { MusicRow } from "./MusicRow";
-import { PlayInPlayerButton } from "../../../components/PlayInPlayerButton";
-import { PlayNextButton } from "../../../components/PlayNextButton";
-import { PaginationControls, usePagination } from "./Pagination";
+import { Button, RemoveButton } from '@/components';
+import { allMusic } from 'content-collections';
+import { useMemo } from 'react';
+import { PlayInPlayerButton } from '../../../components/PlayInPlayerButton';
+import { PlayNextButton } from '../../../components/PlayNextButton';
+import { usePlayer } from '../../../context/usePlayer';
+import { MusicRow } from './MusicRow';
+import { PaginationControls, usePagination } from './Pagination';
 
 // ----------------------------------------------------------------------
 
@@ -34,7 +34,7 @@ function UserQueuePaged({ itemsPerPage }: { itemsPerPage: number }) {
   const { page, pageCount, setPage, startIndex, endIndexExclusive } = usePagination({
     itemCount: queue.length,
     itemsPerPage,
-    itemKey: "user-queue",
+    itemKey: 'user-queue',
   });
 
   const pageItems = queue.slice(startIndex, endIndexExclusive);
@@ -58,7 +58,7 @@ function UserQueuePaged({ itemsPerPage }: { itemsPerPage: number }) {
       </div>
 
       {queue.length === 0 ? (
-        <p className="text-sm text-muted-foreground">
+        <p className="rf-sm text-muted-foreground">
           {`Curate your listening experience using the "Play Next" and "Enqueue" buttons.`}
         </p>
       ) : (

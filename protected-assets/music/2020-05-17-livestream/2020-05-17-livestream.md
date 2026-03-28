@@ -1,10 +1,10 @@
 ---
 type: mix
-date: "2020-05-17"
+date: '2020-05-17'
 genres: []
-slug: "2020-05-17-livestream"
+slug: '2020-05-17-livestream'
 tags:
   - DJ Mix
   - Live Mix
-title: "2020-05-17 livestream"
+title: '2020-05-17 livestream'
 ---

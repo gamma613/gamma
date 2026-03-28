@@ -1,12 +1,12 @@
-import { defineCollection, defineConfig } from "@content-collections/core";
-import { z } from "zod";
-import slugify from "slugify";
+import { defineCollection, defineConfig } from '@content-collections/core';
+import slugify from 'slugify';
+import { z } from 'zod';
 
 // ----------------------------------------------------------------------
 
 // Music
 
-export const MUSIC_TYPES = ["mix", "mashup", "track"] as const;
+export const MUSIC_TYPES = ['mix', 'mashup', 'track'] as const;
 export type MusicType = (typeof MUSIC_TYPES)[number];
 
 /** Shape of a music item data source */
@@ -25,9 +25,9 @@ const musicSchema = z.object({
 });
 
 const music = defineCollection({
-  name: "music",
-  directory: "/protected-assets/music",
-  include: "**/*.md",
+  name: 'music',
+  directory: '/protected-assets/music',
+  include: '**/*.md',
   schema: musicSchema,
   transform: (document) => {
     const { artist, slug, title, type } = document;
@@ -35,7 +35,7 @@ const music = defineCollection({
     return {
       ...document,
       type,
-      artist: artist ?? "gamma",
+      artist: artist ?? 'gamma',
       slug: slug ?? slugify(title),
     };
   },

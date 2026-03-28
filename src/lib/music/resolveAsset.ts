@@ -1,9 +1,13 @@
-import fsp from "fs/promises";
-import path from "path";
-
-import type { MusicArtType, MusicAudioExt, MusicArtExt } from "./supported";
-import { MUSIC_ART_EXTS, MUSIC_AUDIO_EXTS } from "./supported";
-import { getMusicItem } from "./getMusicItem";
+import fsp from 'fs/promises';
+import path from 'path';
+import { getMusicItem } from './getMusicItem';
+import {
+  MUSIC_ART_EXTS,
+  MUSIC_AUDIO_EXTS,
+  type MusicArtExt,
+  type MusicArtType,
+  type MusicAudioExt,
+} from './supported';
 
 type ResolveOptions = {
   dir: string;
@@ -47,12 +51,12 @@ async function resolveBySuffix({
 function musicDirForSlug(slug: string): string | null {
   const item = getMusicItem(slug);
   if (!item) return null;
-  return path.join(process.cwd(), "protected-assets/music", slug);
+  return path.join(process.cwd(), 'protected-assets/music', slug);
 }
 
 export async function resolveMusicArtFile(
   slug: string,
-  type: MusicArtType,
+  type: MusicArtType
 ): Promise<string | null> {
   const dir = musicDirForSlug(slug);
   if (!dir) return null;

@@ -1,5 +1,5 @@
-import { createContext } from "react";
-import { PlayerContextValue } from "./types";
+import { createContext } from 'react';
+import { PlayerContextValue } from './types';
 
 // ----------------------------------------------------------------------
 

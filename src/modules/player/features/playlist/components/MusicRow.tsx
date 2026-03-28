@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import type React from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { Card, CardAction, CardContent, TitleArtist } from "@/components";
-import { ROUTES } from "@/lib/routes";
-import { cn } from "@/lib/utils";
-import type { PlayerTrackId } from "../../../context/types";
+import { Card, CardAction, CardContent, TitleArtist } from '@/components';
+import { ROUTES } from '@/lib/routes';
+import { cn } from '@/lib/utils';
+import Image from 'next/image';
+import Link from 'next/link';
+import type React from 'react';
+import type { PlayerTrackId } from '../../../context/types';
 
 // ----------------------------------------------------------------------
 
@@ -44,7 +44,7 @@ export function MusicRow({
           {/* Artwork */}
           <Link href={href} className="shrink-0">
             <Image
-              src={ROUTES.music(slug).art("cover")}
+              src={ROUTES.music(slug).art('cover')}
               alt=""
               aria-hidden="true"
               unoptimized
@@ -71,7 +71,7 @@ export function MusicRow({
 
           {/* Actions */}
           {actions && (
-            <CardAction className={cn("ml-auto flex items-center gap-1 self-center shrink-0")}>
+            <CardAction className={cn('ml-auto flex items-center gap-1 self-center shrink-0')}>
               {actions}
             </CardAction>
           )}
@@ -87,11 +87,11 @@ function MetaData({ item }: { item: PlaylistMusicItem | null }) {
 
   return (
     <>
-      {item.type ?? "music"}
+      {item.type ?? 'music'}
       {genres.length > 0 && (
         <>
           <span aria-hidden="true"> | </span>
-          {genres.join(", ")}
+          {genres.join(', ')}
         </>
       )}
     </>

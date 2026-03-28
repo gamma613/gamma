@@ -1,7 +1,7 @@
 ---
 type: mashup
 bpm: 128
-date: "2007-12-28"
+date: '2007-12-28'
 genres:
   - Electro House
   - Tech funk
@@ -11,5 +11,5 @@ slug: used-something-about-you
 tags:
   - Mashup
 timestamp: 1198883289
-file: "used-something-about-you.mp3"
+file: 'used-something-about-you.mp3'
 ---

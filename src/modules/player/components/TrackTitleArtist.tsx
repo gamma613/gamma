@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { usePlayer } from "../context/usePlayer";
-import { TitleArtist, TitleArtistProps } from "@/components";
+import { TitleArtist, TitleArtistProps } from '@/components';
+import { usePlayer } from '../context/usePlayer';
 
 // ----------------------------------------------------------------------
 
-type TrackTitleArtistProps = Omit<TitleArtistProps, "artist" | "title">;
+type TrackTitleArtistProps = Omit<TitleArtistProps, 'artist' | 'title'>;
 
 export function TrackTitleArtist({ ...props }: TrackTitleArtistProps) {
   const { track } = usePlayer();

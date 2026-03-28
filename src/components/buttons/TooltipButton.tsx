@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import { Button, type ButtonProps, Tooltip, TooltipContent, TooltipTrigger } from "@/components";
+import { Button, Tooltip, TooltipContent, TooltipTrigger, type ButtonProps } from '@/components';
+import * as React from 'react';
 
 // ----------------------------------------------------------------------
 

@@ -1,4 +1,4 @@
-import { PingPong } from "@/components";
+import { PingPong } from '@/components';
 import {
   Player,
   PlayToggleButton,
@@ -8,7 +8,7 @@ import {
   TrackPosition,
   TrackTitleArtist,
   VolumePopover,
-} from "@/modules/player";
+} from '@/modules/player';
 
 // ----------------------------------------------------------------------
 
@@ -27,7 +27,7 @@ export function NowPlaying() {
         {/* Volume popover (sm:up) */}
         <VolumePopover
           buttonProps={{
-            className: "h-11 w-11",
+            className: 'h-11 w-11',
           }}
           className="hidden sm:block"
         />

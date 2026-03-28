@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import { allMusic } from "content-collections";
-import { useMemo, useRef } from "react";
-import { Button, RemoveButton } from "@/components";
-import { usePlayer } from "../../../context/usePlayer";
-import { MusicRow } from "./MusicRow";
-import { PlayInPlayerButton } from "../../../components/PlayInPlayerButton";
-import { EnqueueButton } from "../../../components/EnqueueButton";
-import { PlayNextButton } from "../../../components/PlayNextButton";
-import { PaginationControls, usePagination } from "./Pagination";
+import { Button, RemoveButton } from '@/components';
+import { allMusic } from 'content-collections';
+import { useMemo } from 'react';
+import { EnqueueButton } from '../../../components/EnqueueButton';
+import { PlayInPlayerButton } from '../../../components/PlayInPlayerButton';
+import { PlayNextButton } from '../../../components/PlayNextButton';
+import { usePlayer } from '../../../context/usePlayer';
+import { MusicRow } from './MusicRow';
+import { PaginationControls, usePagination } from './Pagination';
 
 // ----------------------------------------------------------------------
 
@@ -40,7 +40,7 @@ function HistoryPaged({ itemsPerPage }: { itemsPerPage: number }) {
   const { page, pageCount, setPage, startIndex, endIndexExclusive } = usePagination({
     itemCount: entries.length,
     itemsPerPage,
-    itemKey: "history",
+    itemKey: 'history',
   });
 
   const pageItems = entries.slice(startIndex, endIndexExclusive);

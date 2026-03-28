@@ -1,7 +1,7 @@
-import "@/app/fontawesome";
-import { BokehBackground, TooltipProvider } from "@/components";
-import { HeaderProvider } from "@/modules/header";
-import { PlayerProvider } from "@/modules/player";
+import '@/app/fontawesome';
+import { BokehBackground, TooltipProvider } from '@/components';
+import { HeaderProvider } from '@/modules/header';
+import { PlayerProvider } from '@/modules/player';
 
 // ----------------------------------------------------------------------
 

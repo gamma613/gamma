@@ -1,4 +1,4 @@
-import { PageControls } from "../PageControls";
+import { PageControls } from '../PageControls';
 
 // ----------------------------------------------------------------------
 

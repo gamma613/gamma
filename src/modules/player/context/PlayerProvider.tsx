@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { STORAGE_KEY, CHANNEL_NAME, CLAIM_KEY } from "../config";
-import { PlayerContext } from "./PlayerContext";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { CHANNEL_NAME, CLAIM_KEY, STORAGE_KEY } from '../config';
+import { getRecentTrackIds } from '../library';
+import { resolveTrack } from '../resolveTrack';
+import { PlayerContext } from './PlayerContext';
 import {
   PlayerActions,
   PlayerContextValue,
   PlayerState,
   PlayerTrack,
   PlayerTrackId,
-} from "./types";
-import { resolveTrack } from "../resolveTrack";
-import { getRecentTrackIds } from "../library";
+} from './types';
 
 function computeOnDeck({
   libraryIds,
@@ -68,8 +68,8 @@ function computeOnDeck({
 }
 
 function getTabId(): string {
-  if (typeof window === "undefined") return "ssr";
-  const key = "gamma.player.tabId.v1";
+  if (typeof window === 'undefined') return 'ssr';
+  const key = 'gamma.player.tabId.v1';
   const existing = window.sessionStorage.getItem(key);
   if (existing) return existing;
   const created = globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random()}`;
@@ -82,7 +82,7 @@ function loadPersisted(): Partial<PlayerState> | null {
     const raw = window.localStorage.getItem(STORAGE_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw) as Partial<PlayerState> | null;
-    return parsed && typeof parsed === "object" ? parsed : null;
+    return parsed && typeof parsed === 'object' ? parsed : null;
   } catch {
     return null;
   }
@@ -90,15 +90,15 @@ function loadPersisted(): Partial<PlayerState> | null {
 
 type PersistedPlayerState = Pick<
   PlayerState,
-  | "track"
-  | "playing"
-  | "muted"
-  | "volume"
-  | "positionSeconds"
-  | "durationSeconds"
-  | "queue"
-  | "onDeck"
-  | "history"
+  | 'track'
+  | 'playing'
+  | 'muted'
+  | 'volume'
+  | 'positionSeconds'
+  | 'durationSeconds'
+  | 'queue'
+  | 'onDeck'
+  | 'history'
 >;
 
 function persist(state: PlayerState) {
@@ -115,7 +115,7 @@ function persist(state: PlayerState) {
         queue: state.queue,
         onDeck: state.onDeck,
         history: state.history,
-      } satisfies PersistedPlayerState),
+      } satisfies PersistedPlayerState)
     );
   } catch {
     // Ignore storage failures (private mode, quota, etc.)
@@ -125,7 +125,7 @@ function persist(state: PlayerState) {
 function slugFromSrc(src: string): string | null {
   const pathname = (() => {
     try {
-      return new URL(src, "http://example.local").pathname;
+      return new URL(src, 'http://example.local').pathname;
     } catch {
       return src;
     }
@@ -155,13 +155,13 @@ function resolveAndNormalize(trackId: PlayerTrackId): PlayerTrack {
 
 function normalizePersistedTrack(track: unknown): PlayerTrack | null {
   if (!track) return null;
-  if (typeof track !== "object") return null;
+  if (typeof track !== 'object') return null;
 
-  const src = (track as { src?: unknown }).src;
-  const slug = (track as { slug?: unknown }).slug;
-  if (typeof src !== "string") return null;
+  const { src } = track as { src?: unknown };
+  const { slug } = track as { slug?: unknown };
+  if (typeof src !== 'string') return null;
 
-  if (typeof slug === "string" && slug) return normalizeTrack({ ...(track as PlayerTrack), slug });
+  if (typeof slug === 'string' && slug) return normalizeTrack({ ...(track as PlayerTrack), slug });
 
   const derived = slugFromSrc(src);
   if (!derived) return normalizeTrack({ ...(track as PlayerTrack), slug: src });
@@ -179,7 +179,7 @@ export function PlayerProvider({
   const recentTrackIds = useMemo(() => getRecentTrackIds(), []);
   const resolvedDefaultTrack = useMemo(() => {
     if (!defaultTrack) return null;
-    if (typeof defaultTrack === "string") return resolveAndNormalize(defaultTrack);
+    if (typeof defaultTrack === 'string') return resolveAndNormalize(defaultTrack);
     return normalizeTrack(defaultTrack);
   }, [defaultTrack]);
 
@@ -207,7 +207,6 @@ export function PlayerProvider({
       return mostRecent ? resolveAndNormalize(mostRecent) : null;
     })();
 
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- hydrate from localStorage after mount to avoid SSR/client mismatch
     setState((s) => {
       const persistedTrack = persisted
         ? normalizePersistedTrack((persisted as { track?: unknown }).track)
@@ -227,14 +226,14 @@ export function PlayerProvider({
       const queue =
         persisted && Array.isArray((persisted as { queue?: unknown }).queue)
           ? ((persisted as { queue: unknown[] }).queue.filter(
-              (x) => typeof x === "string",
+              (x) => typeof x === 'string'
             ) as string[])
           : s.queue;
 
       const history =
         persisted && Array.isArray((persisted as { history?: unknown }).history)
           ? ((persisted as { history: unknown[] }).history.filter(
-              (x) => typeof x === "string",
+              (x) => typeof x === 'string'
             ) as string[])
           : s.history;
 
@@ -243,15 +242,15 @@ export function PlayerProvider({
         track,
         // Restore "playing" state from persistence (browser may still block autoplay).
         playing:
-          persisted && typeof persisted.playing === "boolean" ? persisted.playing : s.playing,
-        muted: persisted && typeof persisted.muted === "boolean" ? persisted.muted : s.muted,
-        volume: persisted && typeof persisted.volume === "number" ? persisted.volume : s.volume,
+          persisted && typeof persisted.playing === 'boolean' ? persisted.playing : s.playing,
+        muted: persisted && typeof persisted.muted === 'boolean' ? persisted.muted : s.muted,
+        volume: persisted && typeof persisted.volume === 'number' ? persisted.volume : s.volume,
         positionSeconds:
-          persisted && typeof persisted.positionSeconds === "number"
+          persisted && typeof persisted.positionSeconds === 'number'
             ? persisted.positionSeconds
             : s.positionSeconds,
         durationSeconds:
-          persisted && typeof persisted.durationSeconds === "number"
+          persisted && typeof persisted.durationSeconds === 'number'
             ? persisted.durationSeconds
             : s.durationSeconds,
         queue,
@@ -292,32 +291,32 @@ export function PlayerProvider({
 
     const onPageHide = () => flush();
     const onVisibilityChange = () => {
-      if (document.visibilityState === "hidden") flush();
+      if (document.visibilityState === 'hidden') flush();
     };
 
-    window.addEventListener("pagehide", onPageHide);
-    document.addEventListener("visibilitychange", onVisibilityChange);
+    window.addEventListener('pagehide', onPageHide);
+    document.addEventListener('visibilitychange', onVisibilityChange);
 
     return () => {
-      window.removeEventListener("pagehide", onPageHide);
-      document.removeEventListener("visibilitychange", onVisibilityChange);
+      window.removeEventListener('pagehide', onPageHide);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
     };
   }, []);
 
   useEffect(() => {
     // Best-effort: ensure only one tab plays at a time.
-    const channel = typeof window !== "undefined" ? new BroadcastChannel(CHANNEL_NAME) : null;
+    const channel = typeof window !== 'undefined' ? new BroadcastChannel(CHANNEL_NAME) : null;
     if (!channel) return;
 
     const onMessage = (event: MessageEvent) => {
       const msg = event.data as { type?: string; tabId?: string } | null;
       if (!msg || msg.tabId === tabId) return;
-      if (msg.type === "PLAY") setState((s) => ({ ...s, playing: false }));
+      if (msg.type === 'PLAY') setState((s) => ({ ...s, playing: false }));
     };
 
-    channel.addEventListener("message", onMessage);
+    channel.addEventListener('message', onMessage);
     return () => {
-      channel.removeEventListener("message", onMessage);
+      channel.removeEventListener('message', onMessage);
       channel.close();
     };
   }, [tabId]);
@@ -328,20 +327,20 @@ export function PlayerProvider({
       try {
         const msg = JSON.parse(event.newValue) as { type?: string; tabId?: string } | null;
         if (!msg || msg.tabId === tabId) return;
-        if (msg.type === "PLAY") setState((s) => ({ ...s, playing: false }));
+        if (msg.type === 'PLAY') setState((s) => ({ ...s, playing: false }));
       } catch {
         // Ignore invalid payloads.
       }
     };
 
-    window.addEventListener("storage", onStorage);
-    return () => window.removeEventListener("storage", onStorage);
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
   }, [tabId]);
 
   const broadcastPlay = useCallback(() => {
     try {
       const channel = new BroadcastChannel(CHANNEL_NAME);
-      channel.postMessage({ type: "PLAY", tabId });
+      channel.postMessage({ type: 'PLAY', tabId });
       channel.close();
     } catch {
       // Ignore (unsupported / blocked).
@@ -350,7 +349,7 @@ export function PlayerProvider({
     try {
       window.localStorage.setItem(
         CLAIM_KEY,
-        JSON.stringify({ type: "PLAY", tabId, ts: Date.now() }),
+        JSON.stringify({ type: 'PLAY', tabId, ts: Date.now() })
       );
     } catch {
       // Ignore.
@@ -367,7 +366,7 @@ export function PlayerProvider({
     didBroadcastInitialPlayRef.current = true;
   }, [broadcastPlay, didLoadPersisted, state.playing, state.track]);
 
-  const play: PlayerActions["play"] = useCallback(
+  const play: PlayerActions['play'] = useCallback(
     (track, opts) => {
       const normalized = normalizeTrack(track);
       setState((s) => {
@@ -393,28 +392,27 @@ export function PlayerProvider({
           track: normalized,
           playing: true,
           durationSeconds: normalized.slug === s.track?.slug ? s.durationSeconds : 0,
-          positionSeconds:
-            typeof opts?.seekSeconds === "number"
-              ? opts.seekSeconds
-              : normalized.slug === s.track?.slug
-                ? s.positionSeconds
-                : 0,
+          positionSeconds: (() => {
+            if (typeof opts?.seekSeconds === 'number') return opts.seekSeconds;
+            if (normalized.slug === s.track?.slug) return s.positionSeconds;
+            return 0;
+          })(),
         };
       });
       broadcastPlay();
     },
-    [broadcastPlay, recentTrackIds],
+    [broadcastPlay, recentTrackIds]
   );
 
-  const playId: PlayerActions["playId"] = useCallback(
+  const playId: PlayerActions['playId'] = useCallback(
     (trackId, opts) => {
       const resolved = resolveAndNormalize(trackId);
       play(resolved, opts);
     },
-    [play],
+    [play]
   );
 
-  const playNext: PlayerActions["playNext"] = useCallback(() => {
+  const playNext: PlayerActions['playNext'] = useCallback(() => {
     const queued = stateRef.current.queue;
     if (queued.length > 0) {
       const [nextSlug, ...rest] = queued;
@@ -423,7 +421,7 @@ export function PlayerProvider({
       return;
     }
 
-    const onDeck = stateRef.current.onDeck;
+    const { onDeck } = stateRef.current;
     if (onDeck.length > 0) {
       playId(onDeck[0]!);
       return;
@@ -449,7 +447,7 @@ export function PlayerProvider({
     playId(nextSlug);
   }, [playId, recentTrackIds]);
 
-  const queueNext: PlayerActions["queueNext"] = useCallback(
+  const queueNext: PlayerActions['queueNext'] = useCallback(
     (trackId) => {
       setState((s) => {
         const nextQueue = [trackId, ...s.queue.filter((x) => x !== trackId)];
@@ -465,10 +463,10 @@ export function PlayerProvider({
         };
       });
     },
-    [recentTrackIds],
+    [recentTrackIds]
   );
 
-  const enqueue: PlayerActions["enqueue"] = useCallback(
+  const enqueue: PlayerActions['enqueue'] = useCallback(
     (trackId) => {
       setState((s) => {
         const nextQueue = [...s.queue.filter((x) => x !== trackId), trackId];
@@ -484,10 +482,10 @@ export function PlayerProvider({
         };
       });
     },
-    [recentTrackIds],
+    [recentTrackIds]
   );
 
-  const removeFromQueue: PlayerActions["removeFromQueue"] = useCallback(
+  const removeFromQueue: PlayerActions['removeFromQueue'] = useCallback(
     (trackId) => {
       setState((s) => {
         const nextQueue = s.queue.filter((x) => x !== trackId);
@@ -503,10 +501,10 @@ export function PlayerProvider({
         };
       });
     },
-    [recentTrackIds],
+    [recentTrackIds]
   );
 
-  const clearQueue: PlayerActions["clearQueue"] = useCallback(() => {
+  const clearQueue: PlayerActions['clearQueue'] = useCallback(() => {
     setState((s) => ({
       ...s,
       queue: [],
@@ -519,7 +517,7 @@ export function PlayerProvider({
     }));
   }, [recentTrackIds]);
 
-  const clearHistory: PlayerActions["clearHistory"] = useCallback(() => {
+  const clearHistory: PlayerActions['clearHistory'] = useCallback(() => {
     setState((s) => ({
       ...s,
       history: [],
@@ -532,7 +530,7 @@ export function PlayerProvider({
     }));
   }, [recentTrackIds]);
 
-  const removeHistoryAt: PlayerActions["removeHistoryAt"] = useCallback(
+  const removeHistoryAt: PlayerActions['removeHistoryAt'] = useCallback(
     (index) => {
       setState((s) => {
         const nextHistory = s.history.filter((_, i) => i !== index);
@@ -548,14 +546,14 @@ export function PlayerProvider({
         };
       });
     },
-    [recentTrackIds],
+    [recentTrackIds]
   );
 
-  const pause: PlayerActions["pause"] = useCallback(() => {
+  const pause: PlayerActions['pause'] = useCallback(() => {
     setState((s) => ({ ...s, playing: false }));
   }, []);
 
-  const toggle: PlayerActions["toggle"] = useCallback(() => {
+  const toggle: PlayerActions['toggle'] = useCallback(() => {
     setState((s) => {
       const nextPlaying = !s.playing;
       if (nextPlaying) broadcastPlay();
@@ -563,35 +561,35 @@ export function PlayerProvider({
     });
   }, [broadcastPlay]);
 
-  const setPlaying: PlayerActions["setPlaying"] = useCallback(
+  const setPlaying: PlayerActions['setPlaying'] = useCallback(
     (nextPlaying) => {
       setState((s) => ({ ...s, playing: nextPlaying }));
       if (nextPlaying) broadcastPlay();
     },
-    [broadcastPlay],
+    [broadcastPlay]
   );
 
-  const setMuted: PlayerActions["setMuted"] = useCallback((nextMuted) => {
+  const setMuted: PlayerActions['setMuted'] = useCallback((nextMuted) => {
     setState((s) => ({ ...s, muted: nextMuted }));
   }, []);
 
-  const setVolume: PlayerActions["setVolume"] = useCallback((nextVolume) => {
+  const setVolume: PlayerActions['setVolume'] = useCallback((nextVolume) => {
     const v = Math.max(0, Math.min(1, nextVolume));
     setState((s) => ({ ...s, volume: v }));
   }, []);
 
-  const seek: PlayerActions["seek"] = useCallback((seconds) => {
+  const seek: PlayerActions['seek'] = useCallback((seconds) => {
     setState((s) => ({ ...s, positionSeconds: Math.max(0, seconds) }));
   }, []);
 
-  const setDurationSeconds: PlayerActions["setDurationSeconds"] = useCallback((seconds) => {
+  const setDurationSeconds: PlayerActions['setDurationSeconds'] = useCallback((seconds) => {
     setState((s) => ({
       ...s,
       durationSeconds: Number.isFinite(seconds) ? seconds : s.durationSeconds,
     }));
   }, []);
 
-  const setPositionSeconds: PlayerActions["setPositionSeconds"] = useCallback((seconds) => {
+  const setPositionSeconds: PlayerActions['setPositionSeconds'] = useCallback((seconds) => {
     setState((s) => ({
       ...s,
       positionSeconds: Number.isFinite(seconds) ? seconds : s.positionSeconds,
@@ -642,7 +640,7 @@ export function PlayerProvider({
       seek,
       setDurationSeconds,
       setPositionSeconds,
-    ],
+    ]
   );
 
   return <PlayerContext.Provider value={value}>{children}</PlayerContext.Provider>;

@@ -4,10 +4,10 @@ export {
   MUSIC_AUDIO_EXTS as MIX_AUDIO_EXTS,
   imageContentTypeFromExt,
   audioContentTypeFromExt,
-} from "@/lib/music/supported";
+} from '@/lib/music/supported';
 
 export type {
   MusicArtType as MixArtType,
   MusicArtExt as MixArtExt,
   MusicAudioExt as MixAudioExt,
-} from "@/lib/music/supported";
+} from '@/lib/music/supported';
