@@ -1,7 +1,7 @@
 "use client";
 
 import { allMusic } from "content-collections";
-import { useMemo, useRef } from "react";
+import { useMemo } from "react";
 import { usePlayer } from "../../../context/usePlayer";
 import { MusicRow } from "./MusicRow";
 import { PlayInPlayerButton } from "../../../components/PlayInPlayerButton";
@@ -29,7 +29,6 @@ export function OnDeck({ itemsPerPage = 10 }: { itemsPerPage?: number }) {
 
 function OnDeckPaged({ itemsPerPage }: { itemsPerPage: number }) {
   const { onDeck } = usePlayer();
-  const topRef = useRef<HTMLDivElement | null>(null);
 
   const bySlug = useMemo(() => new Map(allMusic.map((x) => [x.slug, x])), []);
   const { page, pageCount, setPage, startIndex, endIndexExclusive } = usePagination({
@@ -42,12 +41,11 @@ function OnDeckPaged({ itemsPerPage }: { itemsPerPage: number }) {
 
   const onPageChange = (nextPage: number) => {
     setPage(nextPage);
-    topRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   return (
     <section className="space-y-3">
-      <div ref={topRef} className="flex items-center justify-between gap-3">
+      <div className="flex items-center justify-between gap-3">
         <h2 className="text-lg font-semibold">On deck</h2>
         <PaginationControls page={page} pageCount={pageCount} onPageChange={onPageChange} />
       </div>

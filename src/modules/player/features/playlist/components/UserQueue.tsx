@@ -29,7 +29,6 @@ export function UserQueue({ itemsPerPage = 10 }: { itemsPerPage?: number }) {
 
 function UserQueuePaged({ itemsPerPage }: { itemsPerPage: number }) {
   const { queue, clearQueue, removeFromQueue } = usePlayer();
-  const topRef = useRef<HTMLDivElement | null>(null);
 
   const bySlug = useMemo(() => new Map(allMusic.map((x) => [x.slug, x])), []);
   const { page, pageCount, setPage, startIndex, endIndexExclusive } = usePagination({
@@ -42,12 +41,11 @@ function UserQueuePaged({ itemsPerPage }: { itemsPerPage: number }) {
 
   const onPageChange = (nextPage: number) => {
     setPage(nextPage);
-    topRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   return (
     <section className="space-y-3">
-      <div ref={topRef} className="flex items-center justify-between gap-3">
+      <div className="flex items-center justify-between gap-3">
         <h2 className="text-lg font-semibold">Your queue</h2>
         <div className="flex items-center gap-2">
           <PaginationControls page={page} pageCount={pageCount} onPageChange={onPageChange} />

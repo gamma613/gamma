@@ -30,7 +30,6 @@ export function History({ itemsPerPage = 10 }: { itemsPerPage?: number }) {
 
 function HistoryPaged({ itemsPerPage }: { itemsPerPage: number }) {
   const { track, history, clearHistory, removeHistoryAt } = usePlayer();
-  const topRef = useRef<HTMLDivElement | null>(null);
 
   const entries = useMemo(() => {
     const currentSlug = track?.slug ?? null;
@@ -48,12 +47,11 @@ function HistoryPaged({ itemsPerPage }: { itemsPerPage: number }) {
 
   const onPageChange = (nextPage: number) => {
     setPage(nextPage);
-    topRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   return (
     <section className="space-y-3">
-      <div ref={topRef} className="flex items-center justify-between gap-3">
+      <div className="flex items-center justify-between gap-3">
         <h2 className="text-lg font-semibold">History</h2>
         <div className="flex items-center gap-2">
           <PaginationControls page={page} pageCount={pageCount} onPageChange={onPageChange} />
