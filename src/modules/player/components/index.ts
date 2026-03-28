@@ -11,7 +11,6 @@ export * from "./TrackDuration";
 export * from "./TrackPosition";
 export * from "./TrackTitle";
 export * from "./TrackTitleArtist";
-export * from "./Playlist";
 export * from "./VolumeButton";
 export * from "./VolumePopover";
 export * from "./VolumeSlider";
