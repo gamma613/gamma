@@ -78,6 +78,7 @@ export function PaginationControls({
         aria-disabled={page <= 1}
         aria-label="Previous page"
         onClick={() => onPageChange(page - 1)}
+        className="px-1"
       >
         <FontAwesomeIcon icon={faChevronLeft} />
       </Button>
@@ -89,6 +90,7 @@ export function PaginationControls({
         aria-disabled={page >= pageCount}
         aria-label="Next page"
         onClick={() => onPageChange(page + 1)}
+        className="px-1"
       >
         <FontAwesomeIcon icon={faChevronRight} />
       </Button>

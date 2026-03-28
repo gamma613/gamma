@@ -60,7 +60,9 @@ function UserQueuePaged({ itemsPerPage }: { itemsPerPage: number }) {
       </div>
 
       {queue.length === 0 ? (
-        <p className="text-sm text-muted-foreground">Nothing queued.</p>
+        <p className="text-sm text-muted-foreground">
+          {`Curate your listening experience using the "Play Next" and "Enqueue" buttons.`}
+        </p>
       ) : (
         <>
           <ul className="space-y-2">

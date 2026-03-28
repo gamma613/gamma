@@ -31,10 +31,7 @@ export default function RootLayout({
       <body className={`${geistMono.variable} antialiased`}>
         <ClientProviders>
           <Header />
-
-          <div className="mx-auto px-6 flex flex-col max-w-3xl pb-(--header-height)">
-            <main className="flex-1">{children}</main>
-          </div>
+          <main className="pb-(--header-height)">{children}</main>
         </ClientProviders>
       </body>
     </html>

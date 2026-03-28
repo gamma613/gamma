@@ -1,4 +1,4 @@
-import { PageControls, TitleArtist } from "@/components";
+import { PageWrapper, TitleArtist } from "@/components";
 import { formatDateYmd } from "@/lib/formatDate";
 import { getMusicItem } from "@/lib/music/getMusicItem";
 import { ROUTES } from "@/lib/routes";
@@ -32,9 +32,7 @@ export default async function MusicItemPage({ params }: Props) {
   const released = formatDateYmd(item.date);
 
   return (
-    <div className="py-6 mx-auto">
-      <PageControls backLink={{ path: ROUTES.music().root, title: "Music" }} />
-
+    <PageWrapper>
       <div className="flex items-center gap-6">
         <h1 className="order-2 flex-1 min-w-0 text-lg sm:text-sm lg:text-2xl">
           <TitleArtist title={item.title} artist={item.artist} />
@@ -77,7 +75,7 @@ export default async function MusicItemPage({ params }: Props) {
       </div>
 
       {item.content}
-    </div>
+    </PageWrapper>
   );
 }
 
