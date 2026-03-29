@@ -38,6 +38,8 @@ function OnDeckPaged({ itemsPerPage }: { itemsPerPage: number }) {
     itemKey: 'on-deck',
   });
 
+  if (onDeck.length === 0) return null;
+
   const pageItems = onDeck.slice(startIndex, endIndexExclusive);
 
   const onPageChange = (nextPage: number) => {
@@ -51,49 +53,43 @@ function OnDeckPaged({ itemsPerPage }: { itemsPerPage: number }) {
         <PaginationControls page={page} pageCount={pageCount} onPageChange={onPageChange} />
       </div>
 
-      {onDeck.length === 0 ? (
-        <p className="text-sm text-muted-foreground">Nothing on deck.</p>
-      ) : (
-        <>
-          <ul className="space-y-2">
-            {pageItems.map((trackId, indexOnPage) => {
-              const item = bySlug.get(trackId) ?? null;
-              const absoluteIndex = startIndex + indexOnPage;
-              const isCurrent = Boolean(currentSlug && trackId === currentSlug);
+      <ul className="space-y-2 sm:space-y-3 lg:space-y-4">
+        {pageItems.map((trackId, indexOnPage) => {
+          const item = bySlug.get(trackId) ?? null;
+          const absoluteIndex = startIndex + indexOnPage;
+          const isCurrent = Boolean(currentSlug && trackId === currentSlug);
 
-              return (
-                <li key={`${trackId}-${absoluteIndex}`}>
-                  <MusicRow
-                    trackId={trackId}
-                    item={
-                      item
-                        ? {
-                            slug: item.slug,
-                            title: item.title,
-                            artist: item.artist,
-                            type: item.type,
-                            genres: item.genres,
-                          }
-                        : null
-                    }
-                    left={<PlayInPlayerButton slug={trackId} className="size-9 shrink-0" />}
-                    actions={
-                      <div className="flex items-center gap-1">
-                        <PlayNextButton trackId={trackId} disabled={isCurrent} />
-                        <EnqueueButton trackId={trackId} disabled={isCurrent} />
-                      </div>
-                    }
-                  />
-                </li>
-              );
-            })}
-          </ul>
+          return (
+            <li key={`${trackId}-${absoluteIndex}`}>
+              <MusicRow
+                trackId={trackId}
+                item={
+                  item
+                    ? {
+                        slug: item.slug,
+                        title: item.title,
+                        artist: item.artist,
+                        type: item.type,
+                        genres: item.genres,
+                      }
+                    : null
+                }
+                left={<PlayInPlayerButton slug={trackId} className="size-9 shrink-0" />}
+                actions={
+                  <div className="flex items-center gap-1">
+                    <PlayNextButton trackId={trackId} disabled={isCurrent} />
+                    <EnqueueButton trackId={trackId} disabled={isCurrent} />
+                  </div>
+                }
+              />
+            </li>
+          );
+        })}
+      </ul>
 
-          <div className="flex justify-end">
-            <PaginationControls page={page} pageCount={pageCount} onPageChange={onPageChange} />
-          </div>
-        </>
-      )}
+      <div className="flex justify-end">
+        <PaginationControls page={page} pageCount={pageCount} onPageChange={onPageChange} />
+      </div>
     </section>
   );
 }

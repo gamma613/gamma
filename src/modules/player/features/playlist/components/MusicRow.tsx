@@ -48,23 +48,22 @@ export function MusicRow({
               alt=""
               aria-hidden="true"
               unoptimized
-              width={128}
-              height={128}
-              sizes="40px, (min-width: 768px) 52px, (min-width: 1024px) 64px"
-              className="size-10 md:size-13 lg:size-16 rounded-md object-cover border border-border/50"
+              width={104}
+              height={104}
+              sizes="40px, (min-width: 768px) 52px"
+              className="size-10 md:size-13 rounded-md object-cover border border-border/50"
             />
           </Link>
 
           {/* Info */}
           <div className="min-w-0 flex-1">
-            <Link href={href} className="truncate hover:underline">
-              <TitleArtist
-                title={title}
-                artist={artist}
-                className="text-xs xs:text-sm sm:text-md md:text-lg"
-              />
+            <Link
+              href={href}
+              className="inline-flex max-w-full min-w-0 truncate hover:underline rf-sm"
+            >
+              <TitleArtist title={title} artist={artist} />
             </Link>
-            <div className="min-w-0 text-muted-foreground truncate text-xs md:text-sm lg:text-md">
+            <div className="min-w-0 text-muted-foreground truncate rf-xs">
               <MetaData item={item} />
             </div>
           </div>
