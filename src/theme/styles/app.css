@@ -6,7 +6,9 @@
 */
 
 @import './tokens.css';
+
 /* @import "./skins/slider.css"; */
 /* @import "./skins/experimental.css"; */
 
 @import './globals.css';
+@import './typography.css';
