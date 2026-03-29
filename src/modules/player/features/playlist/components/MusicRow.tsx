@@ -35,8 +35,8 @@ export function MusicRow({
   const artist = item?.artist ?? undefined;
 
   return (
-    <Card className="py-2 bg-card/80">
-      <CardContent className="px-4">
+    <Card className="bg-card/80">
+      <CardContent>
         <div className="flex items-center gap-3">
           {/* Play button */}
           {left}
@@ -51,7 +51,7 @@ export function MusicRow({
               width={128}
               height={128}
               sizes="40px, (min-width: 768px) 52px, (min-width: 1024px) 64px"
-              className="size-10 md:13 lg:size-16 rounded-md object-cover border border-border/50"
+              className="size-10 md:size-13 lg:size-16 rounded-md object-cover border border-border/50"
             />
           </Link>
 
