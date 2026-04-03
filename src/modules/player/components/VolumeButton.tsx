@@ -9,8 +9,8 @@ import {
   faVolumeXmark,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { usePlayer } from '../context/usePlayer';
 import { usePlayerControlsReady } from '../context/usePlayerControlsReady';
+import { usePlayerVolume } from '../context/usePlayerVolume';
 
 // ----------------------------------------------------------------------
 
@@ -21,7 +21,7 @@ type Props = ButtonProps & {
 export function VolumeButton({ active, className, disabled: disabledProp, ...buttonProps }: Props) {
   const { disabled: playerDisabled } = usePlayerControlsReady();
   const disabled = Boolean(disabledProp) || playerDisabled;
-  const { muted, volume } = usePlayer();
+  const { muted, volume } = usePlayerVolume();
 
   const label = 'Adjust Volume';
 

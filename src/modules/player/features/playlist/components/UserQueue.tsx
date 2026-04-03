@@ -3,13 +3,13 @@
 import { Button, RemoveButton } from '@/components';
 import { PlayInPlayerButton } from '../../../components/PlayInPlayerButton';
 import { PlayNextButton } from '../../../components/PlayNextButton';
-import { usePlayer } from '../../../context/usePlayer';
+import { usePlayerMain } from '../../../context/usePlayerMain';
 import { PlaylistSection } from './PlaylistSection';
 
 // ----------------------------------------------------------------------
 
 export function UserQueue({ itemsPerPage = 10 }: { itemsPerPage?: number }) {
-  const { queue, clearQueue, removeFromQueue } = usePlayer();
+  const { queue, clearQueue, removeFromQueue } = usePlayerMain();
 
   return (
     <PlaylistSection

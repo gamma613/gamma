@@ -3,7 +3,7 @@
 import { IconButton, IconButtonProps } from '@/components/buttons/IconButton';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import type { PlayerTrackId } from '../context/types';
-import { usePlayer } from '../context/usePlayer';
+import { usePlayerMain } from '../context/usePlayerMain';
 
 // ----------------------------------------------------------------------
 
@@ -19,7 +19,7 @@ export function EnqueueButton({
   variant = 'ghost',
   ...buttonProps
 }: Props) {
-  const { queue, enqueue } = usePlayer();
+  const { queue, enqueue } = usePlayerMain();
   const isAlreadyQueued = queue.includes(trackId);
 
   return (

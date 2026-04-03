@@ -3,8 +3,8 @@
 import { Button, ButtonProps, Tooltip, TooltipContent, TooltipTrigger } from '@/components';
 import { faPause, faPlay } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { usePlayer } from '../context/usePlayer';
 import { usePlayerControlsReady } from '../context/usePlayerControlsReady';
+import { usePlayerMain } from '../context/usePlayerMain';
 
 // ----------------------------------------------------------------------
 
@@ -12,7 +12,7 @@ type PlayButtonToggleProps = Pick<ButtonProps, 'className' | 'variant'>;
 
 export const PlayToggleButton = ({ className, ...buttonProps }: PlayButtonToggleProps) => {
   const { isReady, disabled } = usePlayerControlsReady();
-  const { playing, toggle } = usePlayer();
+  const { playing, toggle } = usePlayerMain();
   const label = playing ? 'Pause' : 'Play';
   const icon = playing ? faPause : faPlay;
 

@@ -4,13 +4,13 @@ import { H2 } from '@/components';
 import { allMusic } from 'content-collections';
 import { useMemo } from 'react';
 import { PlayInPlayerButton } from '../../../components/PlayInPlayerButton';
-import { usePlayer } from '../../../context/usePlayer';
+import { usePlayerMain } from '../../../context/usePlayerMain';
 import { MusicRow } from './MusicRow';
 
 // ----------------------------------------------------------------------
 
 export function NowPlaying() {
-  const { track } = usePlayer();
+  const { track } = usePlayerMain();
 
   const bySlug = useMemo(() => new Map(allMusic.map((x) => [x.slug, x])), []);
   const item = track?.slug ? (bySlug.get(track.slug) ?? null) : null;

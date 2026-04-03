@@ -3,7 +3,7 @@
 import { IconButton, IconButtonProps } from '@/components/buttons/IconButton';
 import { faForwardStep } from '@fortawesome/free-solid-svg-icons';
 import type { PlayerTrackId } from '../context/types';
-import { usePlayer } from '../context/usePlayer';
+import { usePlayerMain } from '../context/usePlayerMain';
 
 // ----------------------------------------------------------------------
 
@@ -19,7 +19,7 @@ export function PlayNextButton({
   variant = 'ghost',
   ...buttonProps
 }: Props) {
-  const { queue, queueNext } = usePlayer();
+  const { queue, queueNext } = usePlayerMain();
   const isAlreadyNext = queue[0] === trackId;
 
   return (

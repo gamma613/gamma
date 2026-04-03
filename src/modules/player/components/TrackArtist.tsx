@@ -1,7 +1,7 @@
 'use client';
 
 import type React from 'react';
-import { usePlayer } from '../context/usePlayer';
+import { usePlayerMain } from '../context/usePlayerMain';
 
 // ----------------------------------------------------------------------
 
@@ -13,7 +13,7 @@ export function TrackArtist<T extends React.ElementType = 'span'>({
   as,
   ...props
 }: TrackArtistProps<T>) {
-  const { track } = usePlayer();
+  const { track } = usePlayerMain();
 
   if (!track?.artist) return null;
 

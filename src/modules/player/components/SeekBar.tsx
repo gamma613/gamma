@@ -3,15 +3,17 @@
 import { Slider, Tooltip, TooltipContent, TooltipTrigger } from '@/components';
 import { cn } from '@/lib/utils';
 import { useRef, useState } from 'react';
-import { usePlayer } from '../context/usePlayer';
 import { usePlayerControlsReady } from '../context/usePlayerControlsReady';
+import { usePlayerMain } from '../context/usePlayerMain';
+import { usePlayerProgress } from '../context/usePlayerProgress';
 import { formatTrackTime } from '../utils';
 
 // ----------------------------------------------------------------------
 
 export function SeekBar({ className }: { className?: string }) {
   const { isReady: baseReady } = usePlayerControlsReady();
-  const { track, positionSeconds, durationSeconds, seek } = usePlayer();
+  const { track, durationSeconds } = usePlayerMain();
+  const { positionSeconds, seek } = usePlayerProgress();
 
   const rafRef = useRef<number | null>(null);
 

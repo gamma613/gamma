@@ -3,7 +3,7 @@
 import { ROUTES } from '@/lib/routes';
 import Image, { type ImageProps } from 'next/image';
 import { useMemo } from 'react';
-import { usePlayer } from '../context/usePlayer';
+import { usePlayerMain } from '../context/usePlayerMain';
 
 // ----------------------------------------------------------------------
 
@@ -13,7 +13,7 @@ export type TrackArtProps = Omit<ImageProps, 'src' | 'alt'> & {
 };
 
 export function TrackArt(props: TrackArtProps) {
-  const { track } = usePlayer();
+  const { track } = usePlayerMain();
 
   const trackSlug = track?.slug;
   const trackCover = track?.cover;

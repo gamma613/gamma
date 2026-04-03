@@ -1,7 +1,7 @@
 'use client';
 
 import type React from 'react';
-import { usePlayer } from '../context/usePlayer';
+import { usePlayerMain } from '../context/usePlayerMain';
 import { formatTrackTime } from '../utils';
 
 // ----------------------------------------------------------------------
@@ -14,7 +14,7 @@ export function TrackDuration<T extends React.ElementType = 'span'>({
   as,
   ...props
 }: TrackDurationProps<T>) {
-  const { durationSeconds, track } = usePlayer();
+  const { durationSeconds, track } = usePlayerMain();
 
   if (!track) return null;
 

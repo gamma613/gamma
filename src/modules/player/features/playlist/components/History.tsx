@@ -5,13 +5,13 @@ import { useMemo } from 'react';
 import { EnqueueButton } from '../../../components/EnqueueButton';
 import { PlayInPlayerButton } from '../../../components/PlayInPlayerButton';
 import { PlayNextButton } from '../../../components/PlayNextButton';
-import { usePlayer } from '../../../context/usePlayer';
+import { usePlayerMain } from '../../../context/usePlayerMain';
 import { PlaylistSection } from './PlaylistSection';
 
 // ----------------------------------------------------------------------
 
 export function History({ itemsPerPage = 10 }: { itemsPerPage?: number }) {
-  const { track, history, clearHistory, removeHistoryAt } = usePlayer();
+  const { track, history, clearHistory, removeHistoryAt } = usePlayerMain();
 
   const entries = useMemo(() => {
     const currentSlug = track?.slug ?? null;

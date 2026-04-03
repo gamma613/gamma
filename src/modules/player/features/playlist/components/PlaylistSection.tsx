@@ -5,7 +5,7 @@ import { allMusic } from 'content-collections';
 import { useMemo } from 'react';
 import { PlayInPlayerButton } from '../../../components/PlayInPlayerButton';
 import type { PlayerTrackId } from '../../../context/types';
-import { usePlayer } from '../../../context/usePlayer';
+import { usePlayerMain } from '../../../context/usePlayerMain';
 import { MusicRow } from './MusicRow';
 import { PaginationControls, usePagination } from './Pagination';
 
@@ -51,7 +51,7 @@ export function PlaylistSection<TMeta = undefined>({
   ) => React.ReactNode;
   title: string;
 }) {
-  const { ready } = usePlayer();
+  const { ready } = usePlayerMain();
   if (!ready) {
     return (
       <section className="space-y-3">
@@ -108,7 +108,7 @@ function PlaylistSectionReady<TMeta = undefined>({
   ) => React.ReactNode;
   title: string;
 }) {
-  const { track } = usePlayer();
+  const { track } = usePlayerMain();
   const currentSlug = track?.slug ?? null;
 
   const bySlug = useMemo(() => new Map(allMusic.map((x) => [x.slug, x])), []);

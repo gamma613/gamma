@@ -4,14 +4,16 @@ import { Button, Tooltip, TooltipContent, TooltipTrigger } from '@/components';
 import { cn } from '@/lib/utils';
 import { faPause, faPlay } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { usePlayer } from '../context/usePlayer';
 import { usePlayerControlsReady } from '../context/usePlayerControlsReady';
+import { usePlayerMain } from '../context/usePlayerMain';
+import { usePlayerProgress } from '../context/usePlayerProgress';
 
 // ----------------------------------------------------------------------
 
 export function PlayInPlayerButton({ slug, className }: { slug: string; className?: string }) {
   const { disabled, gateClassName, isReady } = usePlayerControlsReady();
-  const { playId, toggle, track, playing, positionSeconds, durationSeconds } = usePlayer();
+  const { playId, toggle, track, playing, durationSeconds } = usePlayerMain();
+  const { positionSeconds } = usePlayerProgress();
 
   const isCurrent = track?.slug === slug;
   const isCurrentAndPlaying = Boolean(isCurrent && playing);

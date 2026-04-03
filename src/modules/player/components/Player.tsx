@@ -3,24 +3,18 @@
 import { useHydrated } from '@/lib/useHydrated';
 import { useCallback, useEffect, useRef } from 'react';
 import ReactPlayer from 'react-player';
-import { usePlayer } from '../context/usePlayer';
+import { usePlayerMain } from '../context/usePlayerMain';
+import { usePlayerProgress } from '../context/usePlayerProgress';
+import { usePlayerVolume } from '../context/usePlayerVolume';
 
 // ----------------------------------------------------------------------
 
 export const Player = () => {
   const hydrated = useHydrated();
   const playerRef = useRef<HTMLVideoElement | null>(null);
-  const {
-    track,
-    playing,
-    muted,
-    volume,
-    positionSeconds,
-    playNext,
-    setPlaying,
-    setPositionSeconds,
-    setDurationSeconds,
-  } = usePlayer();
+  const { track, playing, playNext, setPlaying, setDurationSeconds } = usePlayerMain();
+  const { muted, volume } = usePlayerVolume();
+  const { positionSeconds, setPositionSeconds } = usePlayerProgress();
   const hasRestoredRef = useRef(false);
 
   const restoreIfNeeded = useCallback(() => {

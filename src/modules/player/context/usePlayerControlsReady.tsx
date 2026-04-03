@@ -1,11 +1,11 @@
 'use client';
 
 import { useHydrated } from '@/lib/useHydrated';
-import { usePlayer } from './usePlayer';
+import { usePlayerMain } from './usePlayerMain';
 
 export function usePlayerControlsReady() {
   const hydrated = useHydrated();
-  const { ready } = usePlayer();
+  const { ready } = usePlayerMain();
 
   const isReady = hydrated && ready;
 

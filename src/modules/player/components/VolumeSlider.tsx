@@ -3,8 +3,8 @@
 import { Slider, SliderProps, Tooltip, TooltipContent, TooltipTrigger } from '@/components';
 import { cn } from '@/lib/utils';
 import { useRef, useState } from 'react';
-import { usePlayer } from '../context/usePlayer';
 import { usePlayerControlsReady } from '../context/usePlayerControlsReady';
+import { usePlayerVolume } from '../context/usePlayerVolume';
 
 // ----------------------------------------------------------------------
 
@@ -20,7 +20,7 @@ export function VolumeSlider({
   sliderProps,
 }: VolumeSliderProps) {
   const { isReady, gateClassName } = usePlayerControlsReady();
-  const { muted, volume, setMuted, setVolume } = usePlayer();
+  const { muted, volume, setMuted, setVolume } = usePlayerVolume();
 
   const [hoverOpen, setHoverOpen] = useState(false);
   const [hoverX, setHoverX] = useState(0);

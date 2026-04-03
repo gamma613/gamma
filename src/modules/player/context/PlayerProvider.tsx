@@ -4,13 +4,17 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { CHANNEL_NAME, CLAIM_KEY, STORAGE_KEY } from '../config';
 import { getRecentTrackIds } from '../library';
 import { resolveTrack } from '../resolveTrack';
-import { PlayerContext } from './PlayerContext';
+import { PlayerMainContext } from './PlayerMainContext';
+import { PlayerProgressContext } from './PlayerProgressContext';
+import { PlayerVolumeContext } from './PlayerVolumeContext';
 import {
   PlayerActions,
-  PlayerContextValue,
+  PlayerMainContextValue,
+  PlayerProgressContextValue,
   PlayerState,
   PlayerTrack,
   PlayerTrackId,
+  PlayerVolumeContextValue,
 } from './types';
 
 function computeOnDeck({
@@ -596,11 +600,16 @@ export function PlayerProvider({
     }));
   }, []);
 
-  const value: PlayerContextValue = useMemo(
+  const mainValue: PlayerMainContextValue = useMemo(
     () => ({
       tabId,
       ready: didLoadPersisted,
-      ...state,
+      track: state.track,
+      playing: state.playing,
+      durationSeconds: state.durationSeconds,
+      queue: state.queue,
+      onDeck: state.onDeck,
+      history: state.history,
       play,
       playId,
       playNext,
@@ -613,16 +622,17 @@ export function PlayerProvider({
       pause,
       toggle,
       setPlaying,
-      setMuted,
-      setVolume,
-      seek,
       setDurationSeconds,
-      setPositionSeconds,
     }),
     [
       tabId,
       didLoadPersisted,
-      state,
+      state.track,
+      state.playing,
+      state.durationSeconds,
+      state.queue,
+      state.onDeck,
+      state.history,
       play,
       playId,
       playNext,
@@ -635,13 +645,36 @@ export function PlayerProvider({
       pause,
       toggle,
       setPlaying,
-      setMuted,
-      setVolume,
-      seek,
       setDurationSeconds,
-      setPositionSeconds,
     ]
   );
 
-  return <PlayerContext.Provider value={value}>{children}</PlayerContext.Provider>;
+  const volumeValue: PlayerVolumeContextValue = useMemo(
+    () => ({
+      muted: state.muted,
+      volume: state.volume,
+      setMuted,
+      setVolume,
+    }),
+    [state.muted, state.volume, setMuted, setVolume]
+  );
+
+  const progressValue: PlayerProgressContextValue = useMemo(
+    () => ({
+      positionSeconds: state.positionSeconds,
+      seek,
+      setPositionSeconds,
+    }),
+    [state.positionSeconds, seek, setPositionSeconds]
+  );
+
+  return (
+    <PlayerMainContext.Provider value={mainValue}>
+      <PlayerVolumeContext.Provider value={volumeValue}>
+        <PlayerProgressContext.Provider value={progressValue}>
+          {children}
+        </PlayerProgressContext.Provider>
+      </PlayerVolumeContext.Provider>
+    </PlayerMainContext.Provider>
+  );
 }

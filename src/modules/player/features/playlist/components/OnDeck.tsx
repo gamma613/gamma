@@ -2,13 +2,13 @@
 
 import { EnqueueButton } from '../../../components/EnqueueButton';
 import { PlayNextButton } from '../../../components/PlayNextButton';
-import { usePlayer } from '../../../context/usePlayer';
+import { usePlayerMain } from '../../../context/usePlayerMain';
 import { PlaylistSection } from './PlaylistSection';
 
 // ----------------------------------------------------------------------
 
 export function OnDeck({ itemsPerPage = 10 }: { itemsPerPage?: number }) {
-  const { onDeck } = usePlayer();
+  const { onDeck } = usePlayerMain();
 
   return (
     <PlaylistSection

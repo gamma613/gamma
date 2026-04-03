@@ -45,3 +45,34 @@ export type PlayerContextValue = PlayerState &
     tabId: string;
     ready: boolean;
   };
+
+export type PlayerProgressContextValue = Pick<PlayerState, 'positionSeconds'> &
+  Pick<PlayerActions, 'seek' | 'setPositionSeconds'>;
+
+export type PlayerVolumeContextValue = Pick<PlayerState, 'muted' | 'volume'> &
+  Pick<PlayerActions, 'setMuted' | 'setVolume'>;
+
+export type PlayerMainContextValue = Pick<
+  PlayerContextValue,
+  | 'tabId'
+  | 'ready'
+  | 'track'
+  | 'playing'
+  | 'durationSeconds'
+  | 'queue'
+  | 'onDeck'
+  | 'history'
+  | 'play'
+  | 'playId'
+  | 'playNext'
+  | 'queueNext'
+  | 'enqueue'
+  | 'removeFromQueue'
+  | 'clearQueue'
+  | 'clearHistory'
+  | 'removeHistoryAt'
+  | 'pause'
+  | 'toggle'
+  | 'setPlaying'
+  | 'setDurationSeconds'
+>;
