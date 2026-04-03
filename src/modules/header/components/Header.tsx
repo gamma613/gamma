@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { HeaderPlayer } from './HeaderPlayer';
 import { MenuButton } from './MenuButton';
-import { NowPlaying } from './NowPlaying';
 
 // ----------------------------------------------------------------------
 
@@ -13,7 +13,7 @@ export function Header() {
         <MenuButton />
         {/* Stretches the full width, keeping remaining items pinned right */}
         <div className="flex-1 min-w-0">
-          <NowPlaying />
+          <HeaderPlayer />
         </div>
         <Link href="/" className="inline-block">
           <Image src="/logo-transparent.png" alt="gamma logo" height="44" width="44" priority />

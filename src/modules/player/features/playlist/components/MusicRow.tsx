@@ -57,13 +57,14 @@ export function MusicRow({
 
           {/* Info */}
           <div className="min-w-0 flex-1">
-            <Link
-              href={href}
-              className="inline-flex max-w-full min-w-0 truncate hover:underline rf-sm"
-            >
-              <TitleArtist title={title} artist={artist} />
+            <Link href={href} className="inline-flex max-w-full min-w-0 hover:underline">
+              <TitleArtist
+                title={title}
+                artist={artist}
+                className="truncate text-sm md:text-base"
+              />
             </Link>
-            <div className="min-w-0 text-muted-foreground truncate rf-xs">
+            <div className="min-w-0 text-muted-foreground truncate text-xs md:text-sm">
               <MetaData item={item} />
             </div>
           </div>

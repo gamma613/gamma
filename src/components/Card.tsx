@@ -4,8 +4,8 @@ import * as React from 'react';
 // ----------------------------------------------------------------------
 
 const cardPadding = {
-  x: 'px-1 sm:px-2',
-  y: 'py-1 sm:py-2',
+  x: 'px-1 xs:px-2 sm:px-2',
+  y: 'py-1 xs:py-2 sm:py-2',
 };
 
 function Card({

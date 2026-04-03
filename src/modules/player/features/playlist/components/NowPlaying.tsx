@@ -1,5 +1,6 @@
 'use client';
 
+import { H2 } from '@/components';
 import { allMusic } from 'content-collections';
 import { useMemo } from 'react';
 import { PlayInPlayerButton } from '../../../components/PlayInPlayerButton';
@@ -13,12 +14,11 @@ export function NowPlaying() {
 
   const bySlug = useMemo(() => new Map(allMusic.map((x) => [x.slug, x])), []);
   const item = track?.slug ? (bySlug.get(track.slug) ?? null) : null;
-
   if (!track?.slug) return null;
 
   return (
     <div className="space-y-2">
-      <h2 className="text-lg font-semibold">Now playing</h2>
+      <H2>Now playing</H2>
       <MusicRow
         trackId={track.slug}
         item={

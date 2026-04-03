@@ -12,7 +12,7 @@ import {
 
 // ----------------------------------------------------------------------
 
-export function NowPlaying() {
+export function HeaderPlayer() {
   return (
     <div aria-label="Now playing" role="Region" className="px-4">
       {/* Embed the player (hidden) */}
@@ -37,7 +37,11 @@ export function NowPlaying() {
         <div className="flex-1 min-w-0 flex flex-col">
           <div className="shrink min-w-0">
             {/* PingPong scrolls single line, constrained by parent width */}
-            <PingPong speed={30} pause={1000} className="text-foreground text-xs sm:text-sm/4">
+            <PingPong
+              speed={30}
+              pause={1000}
+              className="text-foreground text-xs/4 xs:text-sm/4 sm:text-md/4"
+            >
               <TrackTitleArtist />
             </PingPong>
           </div>

@@ -1,22 +1,22 @@
 /* Responsive font sizes */
 @layer utilities {
   .rf-xs {
-    @apply text-xs sm:text-sm md:text-base;
+    @apply text-xs xs:text-sm sm:text-base md:text-lg;
   }
 
   .rf-sm {
-    @apply text-sm sm:text-base md:text-lg;
+    @apply text-sm xs:text-base sm:text-lg md:text-xl;
   }
 
   .rf-md {
-    @apply text-base sm:text-lg md:text-xl;
+    @apply text-base xs:text-lg sm:text-xl md:text-2xl;
   }
 
   .rf-lg {
-    @apply text-lg sm:text-xl md:text-2xl;
+    @apply text-lg xs:text-xl sm:text-2xl md:text-3xl;
   }
 
   .rf-xl {
-    @apply text-xl sm:text-2xl md:text-3xl;
+    @apply text-xl xs:text-2xl sm:text-3xl md:text-4xl;
   }
 }
