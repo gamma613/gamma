@@ -1,4 +1,7 @@
+'use client';
+
 import { PingPong } from '@/components';
+import { ROUTES } from '@/lib/routes';
 import {
   Player,
   PlayToggleButton,
@@ -9,10 +12,15 @@ import {
   TrackTitleArtist,
   VolumePopover,
 } from '@/modules/player';
+import { usePlayerMain } from '@/modules/player/context/usePlayerMain';
+import Link from 'next/link';
 
 // ----------------------------------------------------------------------
 
 export function HeaderPlayer() {
+  const { track } = usePlayerMain();
+  const href = track?.slug ? ROUTES.music(track.slug).root : null;
+
   return (
     <div aria-label="Now playing" role="Region" className="px-4">
       {/* Embed the player (hidden) */}
@@ -32,18 +40,40 @@ export function HeaderPlayer() {
           className="hidden sm:block"
         />
         {/* Art (sm:up) */}
-        <TrackArt width={44} height={44} className="hidden sm:block" />
+        {href ? (
+          <Link href={href} className="hidden sm:block shrink-0" aria-label="Open track page">
+            <TrackArt width={44} height={44} />
+          </Link>
+        ) : (
+          <TrackArt width={44} height={44} className="hidden sm:block" />
+        )}
         {/* Track info: shrinkable container */}
         <div className="flex-1 min-w-0 flex flex-col">
           <div className="shrink min-w-0">
             {/* PingPong scrolls single line, constrained by parent width */}
-            <PingPong
-              speed={30}
-              pause={1000}
-              className="text-foreground text-xs/4 xs:text-sm/4 sm:text-md/4"
-            >
-              <TrackTitleArtist />
-            </PingPong>
+            {href ? (
+              <Link
+                href={href}
+                className="block min-w-0 hover:underline"
+                aria-label="Open track page"
+              >
+                <PingPong
+                  speed={30}
+                  pause={1000}
+                  className="text-foreground text-xs/4 xs:text-sm/4 sm:text-md/4"
+                >
+                  <TrackTitleArtist />
+                </PingPong>
+              </Link>
+            ) : (
+              <PingPong
+                speed={30}
+                pause={1000}
+                className="text-foreground text-xs/4 xs:text-sm/4 sm:text-md/4"
+              >
+                <TrackTitleArtist />
+              </PingPong>
+            )}
           </div>
 
           {/* Track position and duration */}
