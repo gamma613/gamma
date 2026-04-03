@@ -1,40 +1,23 @@
 'use client';
 
-import { H2 } from '@/components';
-import { getMusicBySlug } from '@/lib/music/allMusicIndex';
 import { PlayInPlayerButton } from '../../../components/PlayInPlayerButton';
 import { usePlayerMain } from '../../../context/usePlayerMain';
-import { MusicRow } from './MusicRow';
+import { PlaylistSection, type PlaylistSectionItem } from './PlaylistSection';
 
 // ----------------------------------------------------------------------
 
 export function NowPlaying() {
   const { track } = usePlayerMain();
-  if (!track?.slug) return null;
-  const item = track?.slug ? getMusicBySlug(track.slug) : null;
+  const items: PlaylistSectionItem[] = track?.slug ? [{ trackId: track.slug }] : [];
 
   return (
-    <div className="space-y-2">
-      <H2>Now playing</H2>
-      <MusicRow
-        trackId={track.slug}
-        item={
-          item
-            ? {
-                slug: item.slug,
-                title: item.title,
-                artist: item.artist,
-                type: item.type,
-                genres: item.genres,
-              }
-            : {
-                slug: track.slug,
-                title: track.title ?? track.slug,
-                artist: track.artist,
-              }
-        }
-        left={<PlayInPlayerButton slug={track.slug} className="size-9 shrink-0" />}
-      />
-    </div>
+    <PlaylistSection
+      title="Now playing"
+      itemKey="now-playing"
+      items={items}
+      itemsPerPage={1}
+      hideWhenEmpty
+      renderLeft={(trackId) => <PlayInPlayerButton slug={trackId} className="size-9 shrink-0" />}
+    />
   );
 }

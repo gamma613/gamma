@@ -55,7 +55,7 @@ export function PlaylistSection<TMeta = undefined>({
     return (
       <section className="space-y-3">
         <div className="flex items-center justify-between gap-3">
-          <h2 className="text-lg font-semibold">{title}</h2>
+          <H2 disableGutter>{title}</H2>
         </div>
         <p className="text-sm text-muted-foreground">Loading…</p>
       </section>
@@ -131,7 +131,7 @@ function PlaylistSectionReady<TMeta = undefined>({
   return (
     <section className="space-y-3">
       <div className="flex items-center justify-between gap-3">
-        <H2>{title}</H2>
+        <H2 disableGutter>{title}</H2>
         <div className="flex items-center gap-2">
           {pagination}
           {headerRight}
