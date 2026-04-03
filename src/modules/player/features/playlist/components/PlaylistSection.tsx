@@ -1,8 +1,7 @@
 'use client';
 
 import { H2 } from '@/components';
-import { allMusic } from 'content-collections';
-import { useMemo } from 'react';
+import { getMusicBySlug } from '@/lib/music/allMusicIndex';
 import { PlayInPlayerButton } from '../../../components/PlayInPlayerButton';
 import type { PlayerTrackId } from '../../../context/types';
 import { usePlayerMain } from '../../../context/usePlayerMain';
@@ -111,7 +110,6 @@ function PlaylistSectionReady<TMeta = undefined>({
   const { track } = usePlayerMain();
   const currentSlug = track?.slug ?? null;
 
-  const bySlug = useMemo(() => new Map(allMusic.map((x) => [x.slug, x])), []);
   const { page, pageCount, setPage, startIndex, endIndexExclusive } = usePagination({
     itemCount: items.length,
     itemsPerPage,
@@ -149,7 +147,7 @@ function PlaylistSectionReady<TMeta = undefined>({
               const absoluteIndex = startIndex + indexOnPage;
               const isCurrent = Boolean(currentSlug && trackId === currentSlug);
 
-              const item = bySlug.get(trackId) ?? null;
+              const item = getMusicBySlug(trackId);
               const playlistItem = item
                 ? {
                     slug: item.slug,

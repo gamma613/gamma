@@ -1,9 +1,9 @@
+import { allMusicBySlug } from '@/lib/music/allMusicIndex';
 import { ROUTES } from '@/lib/routes';
-import { allMusic } from 'content-collections';
 import { cache } from 'react';
 
 export const getMusicItem = cache((slug: string) => {
-  const item = allMusic.find((doc) => doc.slug === slug);
+  const item = allMusicBySlug.get(slug) ?? null;
   if (!item) return undefined;
 
   return {

@@ -1,8 +1,7 @@
 'use client';
 
 import { H2 } from '@/components';
-import { allMusic } from 'content-collections';
-import { useMemo } from 'react';
+import { getMusicBySlug } from '@/lib/music/allMusicIndex';
 import { PlayInPlayerButton } from '../../../components/PlayInPlayerButton';
 import { usePlayerMain } from '../../../context/usePlayerMain';
 import { MusicRow } from './MusicRow';
@@ -11,10 +10,8 @@ import { MusicRow } from './MusicRow';
 
 export function NowPlaying() {
   const { track } = usePlayerMain();
-
-  const bySlug = useMemo(() => new Map(allMusic.map((x) => [x.slug, x])), []);
-  const item = track?.slug ? (bySlug.get(track.slug) ?? null) : null;
   if (!track?.slug) return null;
+  const item = track?.slug ? getMusicBySlug(track.slug) : null;
 
   return (
     <div className="space-y-2">

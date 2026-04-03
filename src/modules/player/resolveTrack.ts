@@ -1,11 +1,11 @@
 'use client';
 
+import { getMusicBySlug } from '@/lib/music/allMusicIndex';
 import { ROUTES } from '@/lib/routes';
-import { allMusic } from 'content-collections';
 import type { PlayerTrack, PlayerTrackId } from './context/types';
 
 export function resolveTrack(trackId: PlayerTrackId): PlayerTrack | null {
-  const item = allMusic.find((doc) => doc.slug === trackId);
+  const item = getMusicBySlug(trackId);
   if (item) {
     return {
       slug: trackId,

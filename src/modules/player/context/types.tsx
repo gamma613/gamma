@@ -1,3 +1,5 @@
+import type { Music } from 'content-collections';
+
 export type PlayerTrackId = string;
 
 export type PlayerTrack = {
@@ -52,7 +54,7 @@ export type PlayerProgressContextValue = Pick<PlayerState, 'positionSeconds'> &
 export type PlayerVolumeContextValue = Pick<PlayerState, 'muted' | 'volume'> &
   Pick<PlayerActions, 'setMuted' | 'setVolume'>;
 
-export type PlayerMainContextValue = Pick<
+type PlayerMainContextValueBase = Pick<
   PlayerContextValue,
   | 'tabId'
   | 'ready'
@@ -76,3 +78,11 @@ export type PlayerMainContextValue = Pick<
   | 'setPlaying'
   | 'setDurationSeconds'
 >;
+
+export type PlayerMainContextValue = PlayerMainContextValueBase & {
+  /**
+   * Resolved library metadata for the current `track` (when it corresponds to a `content-collections` music item).
+   * `null` for unknown tracks (e.g. mixes or any track not in `allMusic`).
+   */
+  music: Music | null;
+};

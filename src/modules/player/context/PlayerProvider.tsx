@@ -1,5 +1,6 @@
 'use client';
 
+import { getMusicBySlug } from '@/lib/music/allMusicIndex';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { CHANNEL_NAME, CLAIM_KEY, STORAGE_KEY } from '../config';
 import { getRecentTrackIds } from '../library';
@@ -81,45 +82,38 @@ function getTabId(): string {
   return created;
 }
 
-function loadPersisted(): Partial<PlayerState> | null {
+function loadPersisted(): unknown | null {
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY);
     if (!raw) return null;
-    const parsed = JSON.parse(raw) as Partial<PlayerState> | null;
+    const parsed = JSON.parse(raw) as unknown;
     return parsed && typeof parsed === 'object' ? parsed : null;
   } catch {
     return null;
   }
 }
 
-type PersistedPlayerState = Pick<
+type PersistedPlayerStateV2 = Pick<
   PlayerState,
-  | 'track'
-  | 'playing'
-  | 'muted'
-  | 'volume'
-  | 'positionSeconds'
-  | 'durationSeconds'
-  | 'queue'
-  | 'onDeck'
-  | 'history'
->;
+  'playing' | 'muted' | 'volume' | 'positionSeconds' | 'durationSeconds' | 'queue' | 'history'
+> & {
+  trackId: PlayerTrackId | null;
+};
 
 function persist(state: PlayerState) {
   try {
     window.localStorage.setItem(
       STORAGE_KEY,
       JSON.stringify({
-        track: state.track,
+        trackId: state.track?.slug ?? null,
         playing: state.playing,
         muted: state.muted,
         volume: state.volume,
         positionSeconds: state.positionSeconds,
         durationSeconds: state.durationSeconds,
         queue: state.queue,
-        onDeck: state.onDeck,
         history: state.history,
-      } satisfies PersistedPlayerState)
+      } satisfies PersistedPlayerStateV2)
     );
   } catch {
     // Ignore storage failures (private mode, quota, etc.)
@@ -172,6 +166,24 @@ function normalizePersistedTrack(track: unknown): PlayerTrack | null {
   return normalizeTrack({ ...(track as PlayerTrack), slug: derived });
 }
 
+function getPersistedTrackId(persisted: unknown): PlayerTrackId | null {
+  if (!persisted || typeof persisted !== 'object') return null;
+
+  const p = persisted as { trackId?: unknown; track?: unknown };
+
+  // v2 format (preferred)
+  if (typeof p.trackId === 'string' && p.trackId) return p.trackId;
+
+  // v1 format (back-compat): persisted `track` object
+  const normalized = normalizePersistedTrack(p.track);
+  if (normalized?.slug) return normalized.slug;
+
+  // v0-ish format: persisted `track` as a string
+  if (typeof p.track === 'string' && p.track) return p.track;
+
+  return null;
+}
+
 export function PlayerProvider({
   children,
   defaultTrack,
@@ -212,17 +224,13 @@ export function PlayerProvider({
     })();
 
     setState((s) => {
-      const persistedTrack = persisted
-        ? normalizePersistedTrack((persisted as { track?: unknown }).track)
-        : null;
+      const persistedTrackId = getPersistedTrackId(persisted);
 
       const track = (() => {
-        if (persistedTrack) {
+        if (persistedTrackId) {
           const d = resolvedDefaultTrack;
-          if (d && persistedTrack.slug === d.slug) {
-            return { ...d, ...persistedTrack };
-          }
-          return persistedTrack;
+          if (d && d.slug === persistedTrackId) return d;
+          return resolveAndNormalize(persistedTrackId);
         }
         return fallbackTrack;
       })();
@@ -246,16 +254,26 @@ export function PlayerProvider({
         track,
         // Restore "playing" state from persistence (browser may still block autoplay).
         playing:
-          persisted && typeof persisted.playing === 'boolean' ? persisted.playing : s.playing,
-        muted: persisted && typeof persisted.muted === 'boolean' ? persisted.muted : s.muted,
-        volume: persisted && typeof persisted.volume === 'number' ? persisted.volume : s.volume,
+          persisted && typeof (persisted as { playing?: unknown }).playing === 'boolean'
+            ? (persisted as { playing: boolean }).playing
+            : s.playing,
+        muted:
+          persisted && typeof (persisted as { muted?: unknown }).muted === 'boolean'
+            ? (persisted as { muted: boolean }).muted
+            : s.muted,
+        volume:
+          persisted && typeof (persisted as { volume?: unknown }).volume === 'number'
+            ? (persisted as { volume: number }).volume
+            : s.volume,
         positionSeconds:
-          persisted && typeof persisted.positionSeconds === 'number'
-            ? persisted.positionSeconds
+          persisted &&
+          typeof (persisted as { positionSeconds?: unknown }).positionSeconds === 'number'
+            ? (persisted as { positionSeconds: number }).positionSeconds
             : s.positionSeconds,
         durationSeconds:
-          persisted && typeof persisted.durationSeconds === 'number'
-            ? persisted.durationSeconds
+          persisted &&
+          typeof (persisted as { durationSeconds?: unknown }).durationSeconds === 'number'
+            ? (persisted as { durationSeconds: number }).durationSeconds
             : s.durationSeconds,
         queue,
         history,
@@ -605,6 +623,7 @@ export function PlayerProvider({
       tabId,
       ready: didLoadPersisted,
       track: state.track,
+      music: state.track?.slug ? getMusicBySlug(state.track.slug) : null,
       playing: state.playing,
       durationSeconds: state.durationSeconds,
       queue: state.queue,
