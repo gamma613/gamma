@@ -2,16 +2,14 @@ import { cn } from '@/lib/utils';
 import { Header } from '@/modules/header';
 import '@fortawesome/fontawesome-svg-core/styles.css';
 import '@/theme/styles/app.css';
+import { monoFonts, sansFonts } from '@/theme/fonts';
 import type { Metadata } from 'next';
-import { Geist_Mono, Outfit } from 'next/font/google';
 import ClientProviders from './ClientProviders';
 
-const outfit = Outfit({ subsets: ['latin'], variable: '--font-outfit' });
-
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
-});
+const fontVars = [
+  ...Object.values(sansFonts).map((f) => f.variable),
+  ...Object.values(monoFonts).map((f) => f.variable),
+].join(' ');
 
 export const metadata: Metadata = {
   description: '',
@@ -27,8 +25,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={cn('font-sans dark', outfit.variable)}>
-      <body className={`${geistMono.variable} antialiased`}>
+    <html lang="en" className={cn('font-sans dark', fontVars)}>
+      <body className="antialiased">
         <ClientProviders>
           <Header />
           <main className="pb-(--header-height)">{children}</main>
