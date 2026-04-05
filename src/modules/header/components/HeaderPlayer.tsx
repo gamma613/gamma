@@ -81,7 +81,7 @@ export function HeaderPlayer() {
           </div>
 
           {/* Track position and duration */}
-          <div className="flex items-center gap-2 pt-1 tabular-nums text-foreground text-xs">
+          <div className="flex items-center gap-2 pt-1 text-foreground text-xs">
             <TrackPosition />
             <span className="text-muted-foreground">/</span>
             <TrackDuration />
