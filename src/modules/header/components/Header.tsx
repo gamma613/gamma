@@ -1,4 +1,3 @@
-import { VIEWPORT_PADDING_CN } from '@/components';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -14,7 +13,7 @@ export function Header() {
       <div
         className={cn(
           'mx-auto max-w-3xl h-full flex items-center gap-1 xs:gap-2 sm:gap-3 md:gap-4',
-          VIEWPORT_PADDING_CN.x
+          'p-1 xs:p-2 sm:p-3 md:p-4'
         )}
       >
         <MenuPopover />
