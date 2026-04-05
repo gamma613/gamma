@@ -9,5 +9,5 @@ slug: 'step-2-rinse'
 tags:
   - DJ Mix
   - Studio Mix
-title: 'step 2 rinse'
+title: 'step 2: rinse'
 ---

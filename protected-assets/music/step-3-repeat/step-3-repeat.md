@@ -9,5 +9,5 @@ slug: 'step-3-repeat'
 tags:
   - DJ Mix
   - Studio Mix
-title: 'step 3 repeat'
+title: 'step 3: repeat'
 ---
