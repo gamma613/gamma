@@ -1,5 +1,7 @@
 import { cn } from '@/lib/utils';
+import { H1 } from '../Headings';
 import { PageControls } from '../PageControls';
+import { VIEWPORT_PADDING_CN } from './config';
 
 // ----------------------------------------------------------------------
 
@@ -8,22 +10,17 @@ type Props = React.PropsWithChildren & {
   title?: string;
 };
 
-export const CN_PAGE_WRAPPER_PADDING = {
-  x: 'px-4 sm:px-5 lg:px-6',
-  y: 'py-4 sm:py-5 lg:py-6',
-};
-
 export function PageWrapper({ children, title }: Props) {
   return (
     <div
       className={cn(
         'mx-auto max-w-3xl bg-background/75 rounded-xl',
-        CN_PAGE_WRAPPER_PADDING.x,
-        CN_PAGE_WRAPPER_PADDING.y
+        VIEWPORT_PADDING_CN.x,
+        'py-4 sm:py-5 lg:py-6'
       )}
     >
       <PageControls />
-      {title && <h1 className="text-2xl font-semibold mb-6">{title}</h1>}
+      {title && <H1>{title}</H1>}
       {children}
     </div>
   );
