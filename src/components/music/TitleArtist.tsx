@@ -15,7 +15,7 @@ export function TitleArtist({ artist, className, title }: TitleArtistProps) {
       {artist && (
         <span className="text-muted-foreground">
           <span aria-hidden="true"> — </span>
-          <span className="sr-only"> by </span>
+          <span className="a11y-only"> by </span>
           {artist}
         </span>
       )}
