@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { HeaderPlayer } from './HeaderPlayer';
-import { MenuButton } from './MenuButton';
+import { MenuPopover } from './MenuPopover';
 
 // ----------------------------------------------------------------------
 
@@ -10,7 +10,7 @@ export function Header() {
     <header className="fixed inset-x-0 bottom-0 z-30 bg-background/75 supports-backdrop-filter:backdrop-blur-md h-(--header-height)">
       {/* Limits the content width */}
       <div className="mx-auto max-w-3xl h-full flex items-center">
-        <MenuButton />
+        <MenuPopover />
         {/* Stretches the full width, keeping remaining items pinned right */}
         <div className="flex-1 min-w-0">
           <HeaderPlayer />

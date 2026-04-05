@@ -1,27 +1,18 @@
 'use client';
 
 import { Button, Tooltip, TooltipContent, TooltipTrigger } from '@/components';
+import { usePageCollapse } from '@/components/layout';
 import { useHydrated } from '@/lib/useHydrated';
 import { cn } from '@/lib/utils';
 import { faCompress, faExpand } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 // ----------------------------------------------------------------------
 
 export function PageControls() {
-  const [collapsed, setCollapsed] = useState(false);
   const hydrated = useHydrated();
-
-  useEffect(() => {
-    const el = document.documentElement;
-    if (collapsed) el.dataset.pageCollapsed = 'true';
-    else delete el.dataset.pageCollapsed;
-    return () => {
-      delete el.dataset.pageCollapsed;
-    };
-  }, [collapsed]);
+  const { collapsed, toggleCollapsed } = usePageCollapse();
 
   const collapseLabel = collapsed ? 'Expand page' : 'Collapse page';
 
@@ -42,7 +33,7 @@ export function PageControls() {
             size="icon"
             aria-label={collapseLabel}
             className="active:translate-y-0"
-            onClick={() => setCollapsed((v) => !v)}
+            onClick={toggleCollapsed}
           >
             <FontAwesomeIcon icon={collapsed ? faExpand : faCompress} className="size-4" />
           </Button>
