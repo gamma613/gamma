@@ -22,14 +22,18 @@ export function HeaderPlayer() {
   const href = track?.slug ? ROUTES.music(track.slug).root : null;
 
   return (
-    <div aria-label="Now playing" role="Region" className="px-4">
+    <div aria-label="Now playing" role="Region">
       {/* Embed the player (hidden) */}
       <div aria-hidden="true" className="hidden">
         <Player />
       </div>
 
       {/* Toolbar */}
-      <div role="toolbar" aria-label="Media controls" className="flex flex-row items-center gap-4">
+      <div
+        role="toolbar"
+        aria-label="Media controls"
+        className="flex flex-row items-center gap-1 xs:gap-2 sm:gap-3 md:gap-4"
+      >
         {/* Play toggle */}
         <PlayToggleButton className="h-11 w-11" />
         {/* Volume popover (sm:up) */}

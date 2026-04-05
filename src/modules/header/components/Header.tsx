@@ -11,7 +11,12 @@ export function Header() {
   return (
     <header className="fixed inset-x-0 bottom-0 z-30 bg-background/75 supports-backdrop-filter:backdrop-blur-md h-(--header-height)">
       {/* Limits the content width */}
-      <div className={cn('mx-auto max-w-3xl h-full flex items-center', VIEWPORT_PADDING_CN)}>
+      <div
+        className={cn(
+          'mx-auto max-w-3xl h-full flex items-center gap-1 xs:gap-2 sm:gap-3 md:gap-4',
+          VIEWPORT_PADDING_CN.x
+        )}
+      >
         <MenuPopover />
         {/* Stretches the full width, keeping remaining items pinned right */}
         <div className="flex-1 min-w-0">
