@@ -1,4 +1,4 @@
-import { PageWrapper, TitleArtist } from '@/components';
+import { DD, DL, DLRow, DT, PageWrapper, TitleArtist } from '@/components';
 import { formatDateYmd } from '@/lib/formatDate';
 import { getMusicItem } from '@/lib/music/getMusicItem';
 import { ROUTES } from '@/lib/routes';
@@ -51,38 +51,28 @@ export default async function MusicItemPage({ params }: Props) {
           unoptimized
           className="w-full sm:max-w-1/2 max-w-[400px] h-auto"
         />
-        <table className="w-full border-collapse">
-          <tbody>
-            <tr className="border-b">
-              <MetaTh>BPM</MetaTh>
-              <MetaTh>
-                {item.bpm}
-                {item.bpm2 && ` — ${item.bpm2}`}
-              </MetaTh>
-            </tr>
+        <DL variant="table">
+          <DLRow>
+            <DT>BPM</DT>
+            <DD>
+              {item.bpm}
+              {item.bpm2 && ` — ${item.bpm2}`}
+            </DD>
+          </DLRow>
 
-            <tr className="border-b">
-              <MetaTh>Released</MetaTh>
-              <MetaTd>{released}</MetaTd>
-            </tr>
+          <DLRow>
+            <DT>Released</DT>
+            <DD>{released}</DD>
+          </DLRow>
 
-            <tr>
-              <MetaTh>Duration</MetaTh>
-              <MetaTd>54:12</MetaTd>
-            </tr>
-          </tbody>
-        </table>
+          <DLRow>
+            <DT>Duration</DT>
+            <DD>54:12</DD>
+          </DLRow>
+        </DL>
       </div>
 
       {item.content}
     </PageWrapper>
   );
 }
-
-const MetaTh = ({ children }: React.PropsWithChildren) => (
-  <th className="py-2 pr-4 text-left font-medium">{children}</th>
-);
-
-const MetaTd = ({ children }: React.PropsWithChildren) => (
-  <td className="py-2 w-full">{children}</td>
-);
