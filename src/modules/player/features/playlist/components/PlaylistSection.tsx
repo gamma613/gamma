@@ -139,8 +139,8 @@ function PlaylistSectionReady<TMeta = undefined>({
       <div className="flex items-center justify-between gap-3">
         <H2 disableGutter>{title}</H2>
         <div className="flex items-center gap-2">
-          {pagination}
           {headerRight}
+          {pagination}
         </div>
       </div>
 
