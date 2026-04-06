@@ -26,6 +26,7 @@ export function History({ itemsPerPage = 10 }: { itemsPerPage?: number }) {
       itemKey="history"
       itemsPerPage={itemsPerPage}
       items={entries.map(({ id, index }) => ({ trackId: id, meta: index }))}
+      actionsInPopover
       empty={<p className="rf-sm text-muted-foreground">Nothing played yet.</p>}
       headerRight={
         history.length > 0 ? (

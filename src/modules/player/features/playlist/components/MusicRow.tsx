@@ -1,11 +1,15 @@
 'use client';
 
 import { Card, CardAction, CardContent, TitleArtist } from '@/components';
+import { IconButton } from '@/components/buttons/IconButton';
 import { ROUTES } from '@/lib/routes';
 import { cn } from '@/lib/utils';
+import { faEllipsisVertical } from '@fortawesome/free-solid-svg-icons';
 import Image from 'next/image';
 import Link from 'next/link';
+import { Popover } from 'radix-ui';
 import type React from 'react';
+import { useMemo, useState } from 'react';
 import type { PlayerTrackId } from '../../../context/types';
 
 // ----------------------------------------------------------------------
@@ -23,16 +27,23 @@ export function MusicRow({
   item,
   left,
   actions,
+  actionsPopover,
 }: {
   trackId: PlayerTrackId;
   item: PlaylistMusicItem | null;
   left: React.ReactNode;
   actions?: React.ReactNode;
+  actionsPopover?: React.ReactNode;
 }) {
   const slug = item?.slug ?? trackId;
   const href = ROUTES.music(slug).root;
   const title = item?.title ?? slug;
   const artist = item?.artist ?? undefined;
+
+  const [actionsOpen, setActionsOpen] = useState(false);
+  const hasPopoverActions = Boolean(actionsPopover);
+
+  const popoverContent = useMemo(() => actionsPopover ?? actions, [actionsPopover, actions]);
 
   return (
     <Card className="bg-card/80">
@@ -72,7 +83,48 @@ export function MusicRow({
           {/* Actions */}
           {actions && (
             <CardAction className={cn('ml-auto flex items-center gap-1 self-center shrink-0')}>
-              {actions}
+              {hasPopoverActions ? (
+                <>
+                  <div className="hidden xs:flex items-center gap-1">{actions}</div>
+
+                  <div className="xs:hidden">
+                    <Popover.Root open={actionsOpen} onOpenChange={setActionsOpen}>
+                      <Popover.Trigger asChild>
+                        <IconButton
+                          icon={faEllipsisVertical}
+                          label="Actions"
+                          type="button"
+                          variant="ghost"
+                          aria-haspopup="menu"
+                        />
+                      </Popover.Trigger>
+                      <Popover.Portal>
+                        <Popover.Content
+                          side="top"
+                          align="end"
+                          sideOffset={8}
+                          aria-label="Actions"
+                          className={cn(
+                            'z-50 rounded-lg border bg-background/80 p-2 text-popover-foreground shadow-md',
+                            'supports-[backdrop-filter]:backdrop-blur-md'
+                          )}
+                          onClickCapture={(e) => {
+                            const target = e.target as HTMLElement | null;
+                            if (!target) return;
+                            if (!target.closest('button,a,[role=menuitem]')) return;
+                            // Defer closing so the action's click handler can run before unmount.
+                            window.setTimeout(() => setActionsOpen(false), 0);
+                          }}
+                        >
+                          <div className="flex items-center gap-1">{popoverContent}</div>
+                        </Popover.Content>
+                      </Popover.Portal>
+                    </Popover.Root>
+                  </div>
+                </>
+              ) : (
+                actions
+              )}
             </CardAction>
           )}
         </div>

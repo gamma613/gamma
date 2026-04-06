@@ -29,6 +29,7 @@ export function PlaylistSection<TMeta = undefined>({
   items,
   itemsPerPage = 10,
   listClassName = 'space-y-2',
+  actionsInPopover,
   renderActions,
   renderLeft,
   title,
@@ -40,6 +41,8 @@ export function PlaylistSection<TMeta = undefined>({
   items: PlaylistSectionItem<TMeta>[];
   itemsPerPage?: number;
   listClassName?: string;
+  /** When true, actions render inline at `xs` and up, and inside an ellipsis popover below `xs`. */
+  actionsInPopover?: boolean;
   renderActions?: (
     trackId: PlayerTrackId,
     ctx: PlaylistSectionRenderContext<TMeta>
@@ -71,6 +74,7 @@ export function PlaylistSection<TMeta = undefined>({
       items={items}
       itemsPerPage={itemsPerPage}
       listClassName={listClassName}
+      actionsInPopover={actionsInPopover}
       renderActions={renderActions}
       renderLeft={renderLeft}
       title={title}
@@ -86,6 +90,7 @@ function PlaylistSectionReady<TMeta = undefined>({
   items,
   itemsPerPage,
   listClassName,
+  actionsInPopover,
   renderActions,
   renderLeft,
   title,
@@ -97,6 +102,7 @@ function PlaylistSectionReady<TMeta = undefined>({
   items: PlaylistSectionItem<TMeta>[];
   itemsPerPage: number;
   listClassName: string;
+  actionsInPopover?: boolean;
   renderActions?: (
     trackId: PlayerTrackId,
     ctx: PlaylistSectionRenderContext<TMeta>
@@ -175,6 +181,9 @@ function PlaylistSectionReady<TMeta = undefined>({
                       )
                     }
                     actions={renderActions?.(trackId, ctx)}
+                    actionsPopover={
+                      actionsInPopover && renderActions ? renderActions(trackId, ctx) : undefined
+                    }
                   />
                 </li>
               );
