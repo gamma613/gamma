@@ -1,6 +1,8 @@
 'use client';
 
 import { Button, RemoveButton } from '@/components';
+import { IconButton } from '@/components/buttons/IconButton';
+import { faPlay } from '@fortawesome/free-solid-svg-icons';
 import { useMemo } from 'react';
 import { EnqueueButton } from '../../../components/EnqueueButton';
 import { PlayInPlayerButton } from '../../../components/PlayInPlayerButton';
@@ -11,7 +13,7 @@ import { PlaylistSection } from './PlaylistSection';
 // ----------------------------------------------------------------------
 
 export function History({ itemsPerPage = 10 }: { itemsPerPage?: number }) {
-  const { track, history, clearHistory, removeHistoryAt } = usePlayerMain();
+  const { track, history, clearHistory, removeHistoryAt, playId } = usePlayerMain();
 
   const entries = useMemo(() => {
     const currentSlug = track?.slug ?? null;
@@ -32,9 +34,19 @@ export function History({ itemsPerPage = 10 }: { itemsPerPage?: number }) {
           </Button>
         ) : null
       }
-      renderLeft={(trackId) => <PlayInPlayerButton slug={trackId} className="size-9 shrink-0" />}
+      renderLeft={(trackId) => (
+        <PlayInPlayerButton slug={trackId} className="hidden xs:inline-flex size-9 shrink-0" />
+      )}
       renderActions={(trackId, { meta }) => (
         <div className="flex items-center gap-1">
+          <IconButton
+            icon={faPlay}
+            label="Play again"
+            className="xs:hidden"
+            onClick={() => playId(trackId, { seekSeconds: 0 })}
+            type="button"
+            variant="ghost"
+          />
           <PlayNextButton trackId={trackId} />
           <EnqueueButton trackId={trackId} />
           <RemoveButton onClick={() => removeHistoryAt(meta!)} />
