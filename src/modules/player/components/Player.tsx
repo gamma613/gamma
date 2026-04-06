@@ -19,11 +19,12 @@ export const Player = () => {
 
   const restoreIfNeeded = useCallback(() => {
     if (hasRestoredRef.current) return;
-    if (!playerRef.current) return;
+    const el = playerRef.current;
+    if (!el || typeof el.currentTime !== 'number') return;
     if (!(positionSeconds > 0)) return;
     // Seeking before metadata is loaded can be ignored by the browser; we also try onLoadedMetadata.
     try {
-      playerRef.current.currentTime = positionSeconds;
+      el.currentTime = positionSeconds;
     } catch {
       // Ignore.
     }
@@ -32,11 +33,16 @@ export const Player = () => {
 
   // Keep the underlying player in sync when state changes (seek from persisted state, external UI, etc.).
   useEffect(() => {
-    if (!playerRef.current) return;
-    const current = playerRef.current.currentTime ?? 0;
+    const el = playerRef.current;
+    if (!el || typeof el.currentTime !== 'number') return;
+    const current = el.currentTime ?? 0;
     // Avoid fighting with `onTimeUpdate` (and avoid tiny jitter due to float precision).
     if (Math.abs(current - positionSeconds) < 0.75) return;
-    playerRef.current.currentTime = positionSeconds;
+    try {
+      el.currentTime = positionSeconds;
+    } catch {
+      // Ignore.
+    }
   }, [positionSeconds]);
 
   // If the user hits play after a refresh, ensure we restore the persisted seek position first.
@@ -72,13 +78,14 @@ export const Player = () => {
       onLoadedMetadata={() => {
         restoreIfNeeded();
       }}
-      onDurationChange={() => {
-        if (!playerRef.current) return;
-        setDurationSeconds(playerRef.current.duration ?? 0);
+      onDurationChange={(e) => {
+        const d = e.currentTarget.duration ?? 0;
+        setDurationSeconds(d);
       }}
-      onTimeUpdate={() => {
-        if (!playerRef.current) return;
-        const t = playerRef.current.currentTime ?? 0;
+      onTimeUpdate={(e) => {
+        // Use the event target for time updates to avoid ref/element mismatches when the underlying
+        // player implementation changes; this keeps progress + persistence accurate.
+        const t = e.currentTarget.currentTime ?? 0;
         // Avoid overwriting a persisted seek target with an initial `0` timeupdate.
         if (!hasRestoredRef.current && positionSeconds > 0 && t < 1) return;
         setPositionSeconds(t);
