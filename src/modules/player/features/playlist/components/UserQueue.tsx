@@ -18,7 +18,7 @@ export function UserQueue({ itemsPerPage = 10 }: { itemsPerPage?: number }) {
       itemsPerPage={itemsPerPage}
       items={queue.map((trackId) => ({ trackId }))}
       empty={
-        <p className="rf-xs text-muted-foreground">
+        <p className="rf-sm text-muted-foreground">
           {`Curate your listening experience using the "Play Next" and "Enqueue" buttons.`}
         </p>
       }
