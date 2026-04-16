@@ -31,11 +31,11 @@ interface Orb {
 }
 
 const DEFAULT_COLORS = [
-  'rgba(255, 200, 120, 0.3)',
-  'rgba(255, 180, 100, 0.25)',
-  'rgba(255, 220, 150, 0.2)',
-  'rgba(255, 160, 80, 0.25)',
-  'rgba(255, 240, 200, 0.2)',
+  'rgba(147, 255, 120, 0.3)',
+  'rgba(100, 255, 146, 0.25)',
+  'rgba(47, 20, 146, 0.2)',
+  'rgba(95, 80, 255, 0.25)',
+  'rgba(114, 85, 229, 0.2)',
 ];
 
 export function BokehBackground({
@@ -159,15 +159,17 @@ export function BokehBackground({
       <div
         ref={containerRef}
         className={cn('fixed inset-0 overflow-hidden', className)}
-        style={{
-          background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f1a 100%)',
-        }}
+        style={
+          {
+            // background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f1a 100%)',
+          }
+        }
       >
         <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" />
 
         {/* Subtle warm overlay */}
         <div
-          className="pointer-events-none absolute inset-0 opacity-20"
+          className="pointer-events-none absolute inset-0 opacity-10"
           style={{
             background:
               'radial-gradient(ellipse at 30% 30%, rgba(255, 180, 100, 0.15) 0%, transparent 50%)',
