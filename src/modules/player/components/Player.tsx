@@ -4,6 +4,7 @@ import { useHydrated } from '@/lib/useHydrated';
 import { useCallback, useEffect, useRef } from 'react';
 import ReactPlayer from 'react-player';
 import { usePlayerMain } from '../context/usePlayerMain';
+import { usePlayerMedia } from '../context/usePlayerMedia';
 import { usePlayerProgress } from '../context/usePlayerProgress';
 import { usePlayerVolume } from '../context/usePlayerVolume';
 
@@ -12,6 +13,7 @@ import { usePlayerVolume } from '../context/usePlayerVolume';
 export const Player = () => {
   const hydrated = useHydrated();
   const playerRef = useRef<HTMLVideoElement | null>(null);
+  const { setMediaEl } = usePlayerMedia();
   const { track, playing, playNext, setPlaying, setDurationSeconds } = usePlayerMain();
   const { muted, volume } = usePlayerVolume();
   const { positionSeconds, setPositionSeconds } = usePlayerProgress();
@@ -76,6 +78,8 @@ export const Player = () => {
       onPause={() => setPlaying(false)}
       onEnded={() => playNext()}
       onLoadedMetadata={() => {
+        // Ensure we capture the real underlying media element for visualization/analysis.
+        if (playerRef.current) setMediaEl(playerRef.current);
         restoreIfNeeded();
       }}
       onDurationChange={(e) => {

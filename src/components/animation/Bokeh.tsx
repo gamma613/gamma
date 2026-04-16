@@ -155,7 +155,7 @@ export function BokehBackground({
   }, [count, minSize, maxSize, speed, colors]);
 
   return (
-    <div className="relative min-h-screen">
+    <>
       <div
         ref={containerRef}
         className={cn('fixed inset-0 overflow-hidden', className)}
@@ -184,8 +184,8 @@ export function BokehBackground({
         />
       </div>
 
-      {children && <div className="relative z-10">{children}</div>}
-    </div>
+      {children}
+    </>
   );
 }
 

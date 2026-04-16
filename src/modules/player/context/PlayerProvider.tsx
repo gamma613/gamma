@@ -6,6 +6,7 @@ import { CHANNEL_NAME, CLAIM_KEY, STORAGE_KEY } from '../config';
 import { getRecentTrackIds } from '../library';
 import { resolveTrack } from '../resolveTrack';
 import { PlayerMainContext } from './PlayerMainContext';
+import { PlayerMediaContext } from './PlayerMediaContext';
 import { PlayerProgressContext } from './PlayerProgressContext';
 import { PlayerVolumeContext } from './PlayerVolumeContext';
 import {
@@ -687,13 +688,20 @@ export function PlayerProvider({
     [state.positionSeconds, seek, setPositionSeconds]
   );
 
+  const [mediaEl, setMediaElState] = useState<HTMLMediaElement | null>(null);
+  const setMediaEl = useCallback((el: HTMLMediaElement | null) => {
+    setMediaElState((prev) => (prev === el ? prev : el));
+  }, []);
+
   return (
     <PlayerMainContext.Provider value={mainValue}>
-      <PlayerVolumeContext.Provider value={volumeValue}>
-        <PlayerProgressContext.Provider value={progressValue}>
-          {children}
-        </PlayerProgressContext.Provider>
-      </PlayerVolumeContext.Provider>
+      <PlayerMediaContext.Provider value={{ mediaEl, setMediaEl }}>
+        <PlayerVolumeContext.Provider value={volumeValue}>
+          <PlayerProgressContext.Provider value={progressValue}>
+            {children}
+          </PlayerProgressContext.Provider>
+        </PlayerVolumeContext.Provider>
+      </PlayerMediaContext.Provider>
     </PlayerMainContext.Provider>
   );
 }
