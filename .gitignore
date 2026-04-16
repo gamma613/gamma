@@ -39,3 +39,14 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# generated content
+certificates
+.content-collections
+
+# large assets
+/protected-assets/**/*.m4a
+/protected-assets/**/*.flac
+/protected-assets/**/*.mp3
+/protected-assets/**/*.mp4
+/protected-assets/**/*.wav

@@ -1,0 +1,99 @@
+'use client';
+
+import { useHydrated } from '@/lib/useHydrated';
+import { useCallback, useEffect, useRef } from 'react';
+import ReactPlayer from 'react-player';
+import { usePlayerMain } from '../context/usePlayerMain';
+import { usePlayerMedia } from '../context/usePlayerMedia';
+import { usePlayerProgress } from '../context/usePlayerProgress';
+import { usePlayerVolume } from '../context/usePlayerVolume';
+
+// ----------------------------------------------------------------------
+
+export const Player = () => {
+  const hydrated = useHydrated();
+  const playerRef = useRef<HTMLVideoElement | null>(null);
+  const { setMediaEl } = usePlayerMedia();
+  const { track, playing, playNext, setPlaying, setDurationSeconds } = usePlayerMain();
+  const { muted, volume } = usePlayerVolume();
+  const { positionSeconds, setPositionSeconds } = usePlayerProgress();
+  const hasRestoredRef = useRef(false);
+
+  const restoreIfNeeded = useCallback(() => {
+    if (hasRestoredRef.current) return;
+    const el = playerRef.current;
+    if (!el || typeof el.currentTime !== 'number') return;
+    if (!(positionSeconds > 0)) return;
+    // Seeking before metadata is loaded can be ignored by the browser; we also try onLoadedMetadata.
+    try {
+      el.currentTime = positionSeconds;
+    } catch {
+      // Ignore.
+    }
+    hasRestoredRef.current = true;
+  }, [positionSeconds]);
+
+  // Keep the underlying player in sync when state changes (seek from persisted state, external UI, etc.).
+  useEffect(() => {
+    const el = playerRef.current;
+    if (!el || typeof el.currentTime !== 'number') return;
+    const current = el.currentTime ?? 0;
+    // Avoid fighting with `onTimeUpdate` (and avoid tiny jitter due to float precision).
+    if (Math.abs(current - positionSeconds) < 0.75) return;
+    try {
+      el.currentTime = positionSeconds;
+    } catch {
+      // Ignore.
+    }
+  }, [positionSeconds]);
+
+  // If the user hits play after a refresh, ensure we restore the persisted seek position first.
+  useEffect(() => {
+    if (!playing) return;
+    restoreIfNeeded();
+  }, [playing, restoreIfNeeded]);
+
+  useEffect(() => {
+    // New track: allow restoring again (typically to 0 unless a seek is set externally).
+    hasRestoredRef.current = false;
+  }, [track?.src]);
+
+  // Early return if there's no track
+  if (!track) return null;
+
+  // Keep SSR + initial hydration deterministic; render the real UI after hydration.
+  if (!hydrated) return null;
+
+  return (
+    <ReactPlayer
+      ref={playerRef}
+      src={track.src}
+      playing={playing}
+      controls={false}
+      muted={muted}
+      volume={volume}
+      preload="metadata"
+      playsInline
+      onPlay={() => setPlaying(true)}
+      onPause={() => setPlaying(false)}
+      onEnded={() => playNext()}
+      onLoadedMetadata={() => {
+        // Ensure we capture the real underlying media element for visualization/analysis.
+        if (playerRef.current) setMediaEl(playerRef.current);
+        restoreIfNeeded();
+      }}
+      onDurationChange={(e) => {
+        const d = e.currentTarget.duration ?? 0;
+        setDurationSeconds(d);
+      }}
+      onTimeUpdate={(e) => {
+        // Use the event target for time updates to avoid ref/element mismatches when the underlying
+        // player implementation changes; this keeps progress + persistence accurate.
+        const t = e.currentTarget.currentTime ?? 0;
+        // Avoid overwriting a persisted seek target with an initial `0` timeupdate.
+        if (!hasRestoredRef.current && positionSeconds > 0 && t < 1) return;
+        setPositionSeconds(t);
+      }}
+    />
+  );
+};
