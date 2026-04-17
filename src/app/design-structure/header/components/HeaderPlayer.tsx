@@ -1,6 +1,6 @@
 'use client';
 
-import { PingPong } from '@/components';
+import { PingPong, usePageCollapse } from '@/components';
 import { ROUTES } from '@/lib/routes';
 import {
   Player,
@@ -19,7 +19,12 @@ import Link from 'next/link';
 
 export function HeaderPlayer() {
   const { track } = usePlayerMain();
-  const href = track?.slug ? ROUTES.music(track.slug).root : null;
+  const { setCollapsed } = usePageCollapse();
+
+  if (!track) return null;
+  const trackHref = ROUTES.music(track.slug).root;
+  const trackLinkAriaLabel = `Open page for ${track.title}`;
+  const trackLinkCallback = () => setCollapsed(false);
 
   return (
     <div aria-label="Now playing" role="Region">
@@ -44,8 +49,13 @@ export function HeaderPlayer() {
           className="hidden sm:block"
         />
         {/* Art (sm:up) */}
-        {href ? (
-          <Link href={href} className="hidden sm:block shrink-0" aria-label="Open track page">
+        {trackHref ? (
+          <Link
+            href={trackHref}
+            onClick={trackLinkCallback}
+            className="hidden sm:block shrink-0"
+            aria-label={trackLinkAriaLabel}
+          >
             <TrackArt width={44} height={44} />
           </Link>
         ) : (
@@ -55,11 +65,12 @@ export function HeaderPlayer() {
         <div className="flex-1 min-w-0 flex flex-col">
           <div className="shrink min-w-0">
             {/* PingPong scrolls single line, constrained by parent width */}
-            {href ? (
+            {trackHref ? (
               <Link
-                href={href}
+                href={trackHref}
+                onClick={trackLinkCallback}
                 className="block min-w-0 hover:underline"
-                aria-label="Open track page"
+                aria-label={trackLinkAriaLabel}
               >
                 <PingPong
                   speed={30}

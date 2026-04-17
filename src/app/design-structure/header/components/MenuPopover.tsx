@@ -20,7 +20,11 @@ export function MenuPopover({ className }: { className?: string }) {
   const panelRef = useRef<HTMLDivElement | null>(null);
   const [triggerRect, setTriggerRect] = useState<DOMRect | null>(null);
   const [panelRect, setPanelRect] = useState<DOMRect | null>(null);
-  const { collapsed, toggleCollapsed } = usePageCollapse();
+  const { collapsed, setCollapsed, toggleCollapsed } = usePageCollapse();
+  const menuItemClickCallback = () => {
+    setCollapsed(false);
+    setOpen(false);
+  };
 
   const popoverStyle = useMemo<React.CSSProperties | undefined>(() => {
     if (!triggerRect) return undefined;
@@ -121,7 +125,7 @@ export function MenuPopover({ className }: { className?: string }) {
               className="justify-start px-3"
               onClick={() => {
                 router.push(ROUTES.music().root);
-                setOpen(false);
+                menuItemClickCallback();
               }}
             >
               Music
@@ -133,7 +137,7 @@ export function MenuPopover({ className }: { className?: string }) {
               className="justify-start px-3"
               onClick={() => {
                 router.push('/playlist');
-                setOpen(false);
+                menuItemClickCallback();
               }}
             >
               Playlist
