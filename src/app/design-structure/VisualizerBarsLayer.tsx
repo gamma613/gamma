@@ -1,7 +1,11 @@
 'use client';
 
-import { usePageCollapse } from '../layout';
-import { VisualizerBars, VisualizerBarsConfig, VisualizerBarsProps } from './VisualizerBars';
+import {
+  VisualizerBars,
+  VisualizerBarsConfig,
+  VisualizerBarsProps,
+} from '../../components/animation/VisualizerBars';
+import { usePageCollapse } from '../../components/layout';
 
 // ----------------------------------------------------------------------
 
@@ -9,7 +13,7 @@ import { VisualizerBars, VisualizerBarsConfig, VisualizerBarsProps } from './Vis
  * VisualizerBars, but with dynamic opacity based on `collapsed `state from
  * PageCollapseProvider
  */
-export function VisualizerBarsWithDynamicOpacity({
+export function VisualizerBarsLayer({
   config,
   ...rest
 }: Omit<VisualizerBarsProps, 'config'> & {
