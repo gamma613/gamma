@@ -121,13 +121,12 @@ function clamp01(n: number) {
   return clamp(n, 0, 1);
 }
 
-export function VisualizerBars({
-  className,
-  config,
-}: {
+export type VisualizerBarsProps = {
   className?: string;
   config: VisualizerBarsConfig;
-}) {
+};
+
+export function VisualizerBars({ className, config }: VisualizerBarsProps) {
   const { playing, track } = usePlayerMain();
   const { mediaEl } = usePlayerMedia();
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
