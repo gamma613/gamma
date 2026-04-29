@@ -10,9 +10,11 @@ type PreviousButtonProps = Pick<ButtonProps, 'className' | 'variant'>;
 
 export function PreviousButton({ className, ...buttonProps }: PreviousButtonProps) {
   const { isReady } = usePlayerControlsReady();
-  const { track, playPrevious } = usePlayerMain();
+  const { track, history, playPrevious } = usePlayerMain();
 
-  const disabled = !isReady || !track;
+  const currentSlug = track?.slug ?? null;
+  const hasHistory = Boolean(currentSlug) && history.some((h) => h.trackId !== currentSlug);
+  const disabled = !isReady || !track || !hasHistory;
   const label = 'Previous';
 
   return (

@@ -31,9 +31,8 @@ function computeOnDeck({
   history: PlayerTrackId[];
   currentSlug: string | null;
 }): PlayerTrackId[] {
-  // "History" is most-recent-first. OnDeck should be unique and exclude the current track,
-  // with "most recently played" sinking toward the bottom. Queued items sink just above the current.
-  // The current track is placed last.
+  // "History" is most-recent-first. OnDeck should be unique and exclude the current track
+  // and any items currently in the user queue.
   const lastPlayedRank = new Map<PlayerTrackId, number>();
   for (let i = 0; i < history.length; i += 1) {
     const id = history[i]!;
@@ -52,26 +51,13 @@ function computeOnDeck({
   const MAX_RANK = 1_000_000_000;
 
   const sorted = libraryIds.slice().sort((a, b) => {
-    const aIsCurrent = Boolean(currentSlug && a === currentSlug);
-    const bIsCurrent = Boolean(currentSlug && b === currentSlug);
-    if (aIsCurrent !== bIsCurrent) return aIsCurrent ? 1 : -1;
-
-    const aQueued = queuePos.has(a);
-    const bQueued = queuePos.has(b);
-    if (aQueued !== bQueued) return aQueued ? 1 : -1;
-
-    if (aQueued && bQueued) {
-      // queue[0] should be closest to the tail, so sort queued items by position descending.
-      return (queuePos.get(b) ?? 0) - (queuePos.get(a) ?? 0);
-    }
-
     const ra = lastPlayedRank.get(a) ?? MAX_RANK;
     const rb = lastPlayedRank.get(b) ?? MAX_RANK;
     if (ra !== rb) return rb - ra; // higher index (less recent) comes first
     return (libraryIndex.get(a) ?? 0) - (libraryIndex.get(b) ?? 0);
   });
 
-  return sorted;
+  return sorted.filter((id) => id !== currentSlug && !queuePos.has(id));
 }
 
 function getTabId(): string {
@@ -442,9 +428,10 @@ export function PlayerProvider({
               } satisfies PlayerHistoryEntry)
             : null;
 
-        const nextHistory = prevHistoryEntry
-          ? [prevHistoryEntry, ...s.history].slice(0, 500)
-          : s.history;
+        const nextHistory = (() => {
+          if (opts?.suppressHistory) return s.history;
+          return prevHistoryEntry ? [prevHistoryEntry, ...s.history].slice(0, 500) : s.history;
+        })();
 
         const nextQueue = s.queue.filter((x) => x !== normalized.slug);
         const nextHistoryIds = nextHistory.map((h) => h.trackId);
@@ -498,7 +485,36 @@ export function PlayerProvider({
 
     const fromHistory = history.find((h) => h.trackId !== currentSlug) ?? null;
     if (fromHistory) {
-      playFromHistory(fromHistory.trackId);
+      const seekSeconds = shouldResumeHistoryPosition(fromHistory)
+        ? fromHistory.positionSeconds
+        : 0;
+      if (!currentSlug) {
+        playId(fromHistory.trackId, { seekSeconds });
+        return;
+      }
+
+      setState((s) => {
+        const removeIndex = s.history.findIndex((h) => h.trackId === fromHistory.trackId);
+        const nextHistory =
+          removeIndex >= 0 ? s.history.filter((_, i) => i !== removeIndex) : s.history;
+        // When going "back" into history, bump the current track to the top of the user queue.
+        // This preserves a clean "forward" path via Next without relying on onDeck ordering rules.
+        const nextQueue = [currentSlug, ...s.queue.filter((x) => x !== currentSlug)];
+
+        return {
+          ...s,
+          queue: nextQueue,
+          history: nextHistory,
+          onDeck: computeOnDeck({
+            libraryIds: recentTrackIds,
+            queue: nextQueue,
+            history: nextHistory.map((h) => h.trackId),
+            currentSlug,
+          }),
+        };
+      });
+
+      playId(fromHistory.trackId, { seekSeconds, suppressHistory: true });
       return;
     }
 
@@ -508,11 +524,9 @@ export function PlayerProvider({
     }
 
     if (onDeck.length > 0) {
-      const currentIndex = currentSlug ? onDeck.lastIndexOf(currentSlug) : -1;
-      const fallback = currentIndex > 0 ? onDeck[currentIndex - 1]! : onDeck[0]!;
-      playId(fallback);
+      playId(onDeck[onDeck.length - 1]!);
     }
-  }, [playFromHistory, playId]);
+  }, [playId, recentTrackIds]);
 
   const playNext: PlayerActions['playNext'] = useCallback(() => {
     const queued = stateRef.current.queue;

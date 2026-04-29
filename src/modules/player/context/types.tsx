@@ -29,8 +29,11 @@ export type PlayerHistoryEntry = {
 };
 
 export type PlayerActions = {
-  play: (track: PlayerTrack, opts?: { seekSeconds?: number }) => void;
-  playId: (track: PlayerTrackId, opts?: { seekSeconds?: number }) => void;
+  play: (track: PlayerTrack, opts?: { seekSeconds?: number; suppressHistory?: boolean }) => void;
+  playId: (
+    track: PlayerTrackId,
+    opts?: { seekSeconds?: number; suppressHistory?: boolean }
+  ) => void;
   playFromHistory: (trackId: PlayerTrackId) => void;
   playPrevious: () => void;
   playNext: () => void;
