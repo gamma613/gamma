@@ -25,6 +25,7 @@ export type PlayerState = {
 export type PlayerActions = {
   play: (track: PlayerTrack, opts?: { seekSeconds?: number }) => void;
   playId: (track: PlayerTrackId, opts?: { seekSeconds?: number }) => void;
+  playPrevious: () => void;
   playNext: () => void;
   queueNext: (trackId: PlayerTrackId) => void;
   enqueue: (trackId: PlayerTrackId) => void;
@@ -66,6 +67,7 @@ type PlayerMainContextValueBase = Pick<
   | 'history'
   | 'play'
   | 'playId'
+  | 'playPrevious'
   | 'playNext'
   | 'queueNext'
   | 'enqueue'

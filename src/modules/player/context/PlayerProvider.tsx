@@ -435,6 +435,28 @@ export function PlayerProvider({
     [play]
   );
 
+  const playPrevious: PlayerActions['playPrevious'] = useCallback(() => {
+    const { history, queue, onDeck, track } = stateRef.current;
+    const currentSlug = track?.slug ?? null;
+
+    const fromHistory = history.find((id) => id !== currentSlug) ?? null;
+    if (fromHistory) {
+      playId(fromHistory);
+      return;
+    }
+
+    if (queue.length > 0) {
+      playId(queue[queue.length - 1]!);
+      return;
+    }
+
+    if (onDeck.length > 0) {
+      const currentIndex = currentSlug ? onDeck.lastIndexOf(currentSlug) : -1;
+      const fallback = currentIndex > 0 ? onDeck[currentIndex - 1]! : onDeck[0]!;
+      playId(fallback);
+    }
+  }, [playId]);
+
   const playNext: PlayerActions['playNext'] = useCallback(() => {
     const queued = stateRef.current.queue;
     if (queued.length > 0) {
@@ -464,7 +486,9 @@ export function PlayerProvider({
     });
     const nextSlug = nextOnDeck[0] ?? null;
     if (!nextSlug) {
-      setState((s) => ({ ...s, playing: false }));
+      const loopSlug = stateRef.current.history[0] ?? null;
+      if (loopSlug) playId(loopSlug);
+      else setState((s) => ({ ...s, playing: false }));
       return;
     }
     playId(nextSlug);
@@ -632,6 +656,7 @@ export function PlayerProvider({
       history: state.history,
       play,
       playId,
+      playPrevious,
       playNext,
       queueNext,
       enqueue,
@@ -655,6 +680,7 @@ export function PlayerProvider({
       state.history,
       play,
       playId,
+      playPrevious,
       playNext,
       queueNext,
       enqueue,

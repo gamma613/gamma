@@ -3,8 +3,10 @@
 import { PingPong, usePageCollapse } from '@/components';
 import { ROUTES } from '@/lib/routes';
 import {
+  NextButton,
   Player,
   PlayToggleButton,
+  PreviousButton,
   SeekBar,
   TrackArt,
   TrackDuration,
@@ -39,8 +41,12 @@ export function HeaderPlayer() {
         aria-label="Media controls"
         className="flex flex-row items-center gap-1 xs:gap-2 sm:gap-3 md:gap-4"
       >
+        {/* Prev (sm:up) */}
+        <PreviousButton className="h-11 w-11 hidden sm:block" variant="ghost" />
         {/* Play toggle */}
         <PlayToggleButton className="h-11 w-11" />
+        {/* Next (sm:up) */}
+        <NextButton className="h-11 w-11 hidden sm:block" variant="ghost" />
         {/* Volume popover (sm:up) */}
         <VolumePopover
           buttonProps={{
@@ -48,18 +54,18 @@ export function HeaderPlayer() {
           }}
           className="hidden sm:block"
         />
-        {/* Art (sm:up) */}
+        {/* Art (xs:up) */}
         {trackHref ? (
           <Link
             href={trackHref}
             onClick={trackLinkCallback}
-            className="hidden sm:block shrink-0"
+            className="hidden xs:block shrink-0"
             aria-label={trackLinkAriaLabel}
           >
             <TrackArt width={44} height={44} />
           </Link>
         ) : (
-          <TrackArt width={44} height={44} className="hidden sm:block" />
+          <TrackArt width={44} height={44} className="hidden xs:block" />
         )}
         {/* Track info: shrinkable container */}
         <div className="flex-1 min-w-0 flex flex-col">
