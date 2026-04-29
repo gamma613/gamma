@@ -13,11 +13,13 @@ import { PlaylistSection } from './PlaylistSection';
 // ----------------------------------------------------------------------
 
 export function History({ itemsPerPage = 10 }: { itemsPerPage?: number }) {
-  const { track, history, clearHistory, removeHistoryAt, playId } = usePlayerMain();
+  const { track, history, clearHistory, removeHistoryAt, playFromHistory } = usePlayerMain();
 
   const entries = useMemo(() => {
     const currentSlug = track?.slug ?? null;
-    return history.map((id, index) => ({ id, index })).filter((x) => x.id !== currentSlug);
+    return history
+      .map((h, index) => ({ id: h.trackId, index }))
+      .filter((x) => x.id !== currentSlug);
   }, [history, track?.slug]);
 
   return (
@@ -36,7 +38,11 @@ export function History({ itemsPerPage = 10 }: { itemsPerPage?: number }) {
         ) : null
       }
       renderLeft={(trackId) => (
-        <PlayInPlayerButton slug={trackId} className="hidden xs:inline-flex size-9 shrink-0" />
+        <PlayInPlayerButton
+          slug={trackId}
+          resumeFromHistory
+          className="hidden xs:inline-flex size-9 shrink-0"
+        />
       )}
       renderActions={(trackId, { meta }) => (
         <div className="flex items-center gap-1">
@@ -44,7 +50,7 @@ export function History({ itemsPerPage = 10 }: { itemsPerPage?: number }) {
             icon={faPlay}
             label="Play again"
             className="xs:hidden"
-            onClick={() => playId(trackId, { seekSeconds: 0 })}
+            onClick={() => playFromHistory(trackId)}
             type="button"
             variant="ghost"
           />

@@ -19,12 +19,19 @@ export type PlayerState = {
   durationSeconds: number;
   queue: PlayerTrackId[];
   onDeck: PlayerTrackId[];
-  history: PlayerTrackId[];
+  history: PlayerHistoryEntry[];
+};
+
+export type PlayerHistoryEntry = {
+  trackId: PlayerTrackId;
+  positionSeconds: number;
+  durationSeconds: number;
 };
 
 export type PlayerActions = {
   play: (track: PlayerTrack, opts?: { seekSeconds?: number }) => void;
   playId: (track: PlayerTrackId, opts?: { seekSeconds?: number }) => void;
+  playFromHistory: (trackId: PlayerTrackId) => void;
   playPrevious: () => void;
   playNext: () => void;
   queueNext: (trackId: PlayerTrackId) => void;
@@ -67,6 +74,7 @@ type PlayerMainContextValueBase = Pick<
   | 'history'
   | 'play'
   | 'playId'
+  | 'playFromHistory'
   | 'playPrevious'
   | 'playNext'
   | 'queueNext'

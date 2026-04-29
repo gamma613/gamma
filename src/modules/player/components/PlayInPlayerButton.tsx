@@ -10,9 +10,17 @@ import { usePlayerProgress } from '../context/usePlayerProgress';
 
 // ----------------------------------------------------------------------
 
-export function PlayInPlayerButton({ slug, className }: { slug: string; className?: string }) {
+export function PlayInPlayerButton({
+  slug,
+  className,
+  resumeFromHistory = false,
+}: {
+  slug: string;
+  className?: string;
+  resumeFromHistory?: boolean;
+}) {
   const { disabled, gateClassName, isReady } = usePlayerControlsReady();
-  const { playId, toggle, track, playing, durationSeconds } = usePlayerMain();
+  const { playFromHistory, playId, toggle, track, playing, durationSeconds } = usePlayerMain();
   const { positionSeconds } = usePlayerProgress();
 
   const isCurrent = track?.slug === slug;
@@ -47,7 +55,8 @@ export function PlayInPlayerButton({ slug, className }: { slug: string; classNam
               return;
             }
 
-            playId(slug);
+            if (resumeFromHistory) playFromHistory(slug);
+            else playId(slug);
           }}
         >
           {progress !== null && (
