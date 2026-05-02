@@ -13,7 +13,7 @@ export function UserQueue({ itemsPerPage = 10 }: { itemsPerPage?: number }) {
 
   return (
     <PlaylistSection
-      title="Your queue"
+      title="Manually added"
       itemKey="user-queue"
       itemsPerPage={itemsPerPage}
       items={queue.map((trackId) => ({ trackId }))}
