@@ -17,7 +17,7 @@ export function NowPlaying() {
       items={items}
       itemsPerPage={1}
       hideWhenEmpty
-      renderLeft={(trackId) => <PlayInPlayerButton slug={trackId} className="size-9 shrink-0" />}
+      renderActions={(trackId) => <PlayInPlayerButton slug={trackId} className="size-11" />}
     />
   );
 }

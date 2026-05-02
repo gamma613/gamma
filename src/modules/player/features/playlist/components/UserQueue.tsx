@@ -1,15 +1,15 @@
 'use client';
 
-import { Button, RemoveButton } from '@/components';
-import { PlayInPlayerButton } from '../../../components/PlayInPlayerButton';
-import { PlayNextButton } from '../../../components/PlayNextButton';
+import { Button } from '@/components';
+import { faCircleXmark, faForwardStep, faPlay } from '@fortawesome/free-solid-svg-icons';
 import { usePlayerMain } from '../../../context/usePlayerMain';
+import { PlaylistActionItem } from './PlaylistActionItem';
 import { PlaylistSection } from './PlaylistSection';
 
 // ----------------------------------------------------------------------
 
 export function UserQueue({ itemsPerPage = 10 }: { itemsPerPage?: number }) {
-  const { queue, clearQueue, removeFromQueue } = usePlayerMain();
+  const { queue, clearQueue, removeFromQueue, playId, queueNext } = usePlayerMain();
 
   return (
     <PlaylistSection
@@ -17,6 +17,7 @@ export function UserQueue({ itemsPerPage = 10 }: { itemsPerPage?: number }) {
       itemKey="user-queue"
       itemsPerPage={itemsPerPage}
       items={queue.map((trackId) => ({ trackId }))}
+      actionsInPopover
       empty={
         <p className="rf-sm text-muted-foreground">
           {`Curate your listening experience using the "Play Next" and "Enqueue" buttons.`}
@@ -29,12 +30,26 @@ export function UserQueue({ itemsPerPage = 10 }: { itemsPerPage?: number }) {
           </Button>
         ) : null
       }
-      renderLeft={(trackId) => <PlayInPlayerButton slug={trackId} className="size-9 shrink-0" />}
-      renderActions={(trackId, { absoluteIndex }) => (
-        <div className="flex items-center gap-1">
-          {absoluteIndex !== 0 && <PlayNextButton trackId={trackId} />}
-          <RemoveButton onClick={() => removeFromQueue(trackId)} />
-        </div>
+      renderActions={(trackId, { absoluteIndex, isCurrent }) => (
+        <>
+          {!isCurrent && (
+            <PlaylistActionItem icon={faPlay} label="Play now" onClick={() => playId(trackId)} />
+          )}
+
+          {absoluteIndex !== 0 && !isCurrent && (
+            <PlaylistActionItem
+              icon={faForwardStep}
+              label="Play next"
+              onClick={() => queueNext(trackId)}
+            />
+          )}
+
+          <PlaylistActionItem
+            icon={faCircleXmark}
+            label="Remove"
+            onClick={() => removeFromQueue(trackId)}
+          />
+        </>
       )}
     />
   );

@@ -1,19 +1,25 @@
 'use client';
 
-import { Button, RemoveButton } from '@/components';
-import { IconButton } from '@/components/buttons/IconButton';
-import { faPlay } from '@fortawesome/free-solid-svg-icons';
+import { Button } from '@/components';
+import { faCircleXmark, faForwardStep, faPlay, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useMemo } from 'react';
-import { EnqueueButton } from '../../../components/EnqueueButton';
-import { PlayInPlayerButton } from '../../../components/PlayInPlayerButton';
-import { PlayNextButton } from '../../../components/PlayNextButton';
 import { usePlayerMain } from '../../../context/usePlayerMain';
+import { PlaylistActionItem } from './PlaylistActionItem';
 import { PlaylistSection } from './PlaylistSection';
 
 // ----------------------------------------------------------------------
 
 export function History({ itemsPerPage = 10 }: { itemsPerPage?: number }) {
-  const { track, history, clearHistory, removeHistoryAt, playFromHistory } = usePlayerMain();
+  const {
+    track,
+    history,
+    clearHistory,
+    removeHistoryAt,
+    playFromHistory,
+    queue,
+    queueNext,
+    enqueue,
+  } = usePlayerMain();
 
   const entries = useMemo(() => {
     const currentSlug = track?.slug ?? null;
@@ -37,27 +43,32 @@ export function History({ itemsPerPage = 10 }: { itemsPerPage?: number }) {
           </Button>
         ) : null
       }
-      renderLeft={(trackId) => (
-        <PlayInPlayerButton
-          slug={trackId}
-          resumeFromHistory
-          className="hidden xs:inline-flex size-9 shrink-0"
-        />
-      )}
       renderActions={(trackId, { meta }) => (
-        <div className="flex items-center gap-1">
-          <IconButton
+        <>
+          <PlaylistActionItem
             icon={faPlay}
-            label="Play again"
-            className="xs:hidden"
+            label="Play now"
             onClick={() => playFromHistory(trackId)}
-            type="button"
-            variant="ghost"
           />
-          <PlayNextButton trackId={trackId} />
-          <EnqueueButton trackId={trackId} />
-          <RemoveButton onClick={() => removeHistoryAt(meta!)} />
-        </div>
+          <PlaylistActionItem
+            icon={faForwardStep}
+            label="Play next"
+            onClick={() => queueNext(trackId)}
+            disabled={queue[0] === trackId}
+          />
+          <PlaylistActionItem
+            icon={faPlus}
+            label="Enqueue"
+            onClick={() => enqueue(trackId)}
+            disabled={queue.includes(trackId)}
+          />
+          <PlaylistActionItem
+            icon={faCircleXmark}
+            label="Remove"
+            className="text-muted-foreground hover:text-foreground"
+            onClick={() => removeHistoryAt(meta!)}
+          />
+        </>
       )}
     />
   );
