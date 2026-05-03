@@ -1,7 +1,7 @@
 # Playlist / Infinite Player Workflow
 
 This directory contains the playlist UI (`Playlist.tsx`, `components/*`). The _behavior_ of the playlist
-(queue/history/on-deck logic) lives in `src/modules/player/context/PlayerProvider.tsx`.
+(queue/history/on-deck logic, transport semantics) lives in `src/modules/player/context/PlayerProvider.tsx`.
 
 The core idea is an infinite player that can always produce a “next track” by:
 
@@ -14,6 +14,9 @@ The core idea is an infinite player that can always produce a “next track” b
 State comes from `usePlayerMain()`:
 
 - **Now Playing**: `state.track` (single current track)
+- **Undo / Redo navigation**
+  - `state.backStack` (undo stack; most-recent-first)
+  - `state.forwardStack` (redo stack; most-recent-first)
 - **User Queue**: `state.queue` (array; index `0` is the _next_ track)
 - **History**: `state.history` (array of `{ trackId, positionSeconds, durationSeconds }`, most-recent-first)
 - **On Deck**: `state.onDeck` (derived list of library trackIds, excluding current + anything in the queue)
@@ -30,7 +33,9 @@ Notes:
 - On Deck excludes:
   - the current track
   - anything currently in the queue
-- “Next” is deterministic: it consumes queue first, then On Deck.
+- Transport buttons are navigation-first:
+  - **Previous** is Undo (go back to what was just playing).
+  - **Next** is Redo when available; otherwise it skips forward (queue → on-deck → loop).
 
 ## Behavior of key actions (today)
 
@@ -39,6 +44,7 @@ Notes:
 When you start playing a track:
 
 - the previous track (if any and different) is prepended into `history` _(unless `suppressHistory` is true)_
+- the previous track is pushed onto `backStack` and `forwardStack` is cleared _(unless `navigation: 'none'`)_
 - the chosen track is removed from the queue (if present)
 - On Deck is recomputed
 
@@ -48,89 +54,75 @@ Implication: clicking “Play now” on an item that was queued removes it from 
 
 When you hit “Next”:
 
-1. if `queue` has items: shift `queue[0]` and play it
-2. else if `onDeck` has items: play `onDeck[0]`
-3. else: recompute on-deck; if still empty, loop by playing `history[0]` (most recent)
+1. if `forwardStack` has items: **Redo** by playing `forwardStack[0]` (does not rewrite play-log history or queue)
+2. else if `queue` has items: shift `queue[0]` and play it
+3. else if `onDeck` has items: play `onDeck[0]`
+4. else: recompute on-deck; if still empty, loop by playing `history[0]` (most recent)
 
 ### Previous (`playPrevious`)
 
 When you hit “Previous”:
 
-1. find the first history entry with `trackId !== currentSlug` (most-recent-first)
-2. remove that entry from history
-3. prepend the current track to the front of the user queue
-4. play the history track with `{ suppressHistory: true }`
-
-This “bump current into queue” rule is an intentional simplification: it creates a clean, predictable
-forward path after going backwards.
+1. if `backStack` has items: **Undo** by playing `backStack[0]`
+2. push the current track onto `forwardStack`
+3. do not mutate the queue and do not rewrite play-log history (`suppressHistory: true`, `navigation: 'none'`)
 
 ### Play from history (`playFromHistory`)
 
-When you explicitly choose a track from History in the UI:
+When you explicitly choose a track from History in the UI, it behaves like a normal “Play now”:
 
-- it plays the chosen track (optionally seeking to its saved position)
-- it does **not** do the “bump current into queue” behavior (that is only for `playPrevious`)
+- it plays the chosen track (optionally seeking to the saved position)
+- it participates in Undo/Redo (pushes onto `backStack`, clears `forwardStack`)
 
-So manual “play from history” behaves like a normal “Play now” in terms of history updates.
+## Visual model (using animals)
 
-## Reasoning about the tricky cases
+Notation:
 
-### “When I go back to history, where does the currently playing song go?”
+- `NP` = now playing
+- `B` = back/undo stack (leftmost is the next undo)
+- `F` = forward/redo stack (leftmost is the next redo)
+- `Q` = user queue (leftmost is next)
 
-Current rule (implemented): it goes to the **front of the user queue**, becoming what plays next.
+### Example 1: Skip → Undo → Redo
 
-Why this is nice:
+Start:
 
-- “Next” after going back is always well-defined (it consumes the queue).
-- It avoids relying on on-deck ordering rules to infer what “forward” means.
+- `NP=Otter`
+- `B=[]`
+- `F=[]`
+- `Q=[Panda, Fox]`
 
-### “What happens when you click back multiple times?”
+Press Next (skip): plays `Panda`
 
-Each “Previous”:
+- `NP=Panda`
+- `B=[Otter]`
+- `F=[]`
+- `Q=[Fox]`
 
-- moves you to an older history entry
-- pushes the track you backed out of onto the front of the queue
+Press Previous (undo): plays `Otter`
 
-Net effect: you build a “forward stack” in the queue, so pressing “Next” undoes your back-stepping.
+- `NP=Otter`
+- `B=[]`
+- `F=[Panda]`
+- `Q=[Fox]` (unchanged)
 
-### “Back once, then manually pick an older history item, then Prev: what should happen?”
+Press Next (redo): plays `Panda`
 
-There are two coherent mental models:
+- `NP=Panda`
+- `B=[Otter]`
+- `F=[]`
+- `Q=[Fox]` (unchanged)
 
-1. **Navigation model (browser-like)**: Prev/Next walk the exact navigation steps you took.
-2. **Play-log model**: Prev means “go to the most recently played other track”.
+### Example 2: “Play now” clears redo
 
-Today is closer to (2). If you want (1), you usually need an explicit back-stack + forward-stack
-separate from play history.
+Start:
 
-### “Should history record repeats like A, B, C, C, D…?”
+- `NP=Koala`
+- `B=[Lynx]`
+- `F=[Capybara]`
 
-Today: yes, repeats can exist.
+Click “Play now” on `Hedgehog`:
 
-Trade-offs:
-
-- **Exact play log** (allows repeats): most faithful, but makes Prev semantics subjective.
-- **Unique history** (no repeats; move-to-front): simpler Prev semantics, but loses fidelity.
-
-On Deck already behaves like “unique history” for ranking purposes (it only cares about the most recent
-occurrence), so switching history to a move-to-front model is feasible if we decide that’s the UX we want.
-
-## Suggested simplification (if we want to reduce complexity)
-
-If the goal is: “each library item lives in exactly one place at a time”, we can treat each track as
-being in exactly one of these states:
-
-- `nowPlaying`
-- `queued` (user queue)
-- `onDeck`
-- `history`
-
-Then:
-
-- “Play now” moves the track to `nowPlaying` and moves the prior `nowPlaying` to `history` (or to `queued`
-  if we want browser-like forward behavior).
-- “Previous” becomes: swap `nowPlaying` with the head of `history`, and push the swapped-out track into
-  the head of `queued` (current behavior).
-- “Next” becomes: pop from `queued` else take head from `onDeck` else loop.
-
-This keeps the UI concepts aligned with a single underlying state machine.
+- `NP=Hedgehog`
+- `B=[Koala, Lynx]` (push previous NP)
+- `F=[]` (redo cleared on new action)
