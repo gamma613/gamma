@@ -715,6 +715,33 @@ export function PlayerProvider({
     [recentTrackIds]
   );
 
+  const reorderQueue: PlayerActions['reorderQueue'] = useCallback(
+    (fromIndex, toIndex) => {
+      setState((s) => {
+        if (fromIndex === toIndex) return s;
+        if (fromIndex < 0 || fromIndex >= s.queue.length) return s;
+        if (toIndex < 0 || toIndex >= s.queue.length) return s;
+
+        const nextQueue = s.queue.slice();
+        const [movedTrackId] = nextQueue.splice(fromIndex, 1);
+        if (!movedTrackId) return s;
+        nextQueue.splice(toIndex, 0, movedTrackId);
+
+        return {
+          ...s,
+          queue: nextQueue,
+          onDeck: computeOnDeck({
+            libraryIds: recentTrackIds,
+            queue: nextQueue,
+            history: s.history.map((h) => h.trackId),
+            currentSlug: s.track?.slug ?? null,
+          }),
+        };
+      });
+    },
+    [recentTrackIds]
+  );
+
   const removeFromQueue: PlayerActions['removeFromQueue'] = useCallback(
     (trackId) => {
       setState((s) => {
@@ -846,6 +873,7 @@ export function PlayerProvider({
       playNext,
       queueNext,
       enqueue,
+      reorderQueue,
       removeFromQueue,
       clearQueue,
       clearHistory,
@@ -873,6 +901,7 @@ export function PlayerProvider({
       playNext,
       queueNext,
       enqueue,
+      reorderQueue,
       removeFromQueue,
       clearQueue,
       clearHistory,
