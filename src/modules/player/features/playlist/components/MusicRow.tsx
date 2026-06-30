@@ -31,7 +31,7 @@ export function MusicRow({
 }: {
   trackId: PlayerTrackId;
   item: PlaylistMusicItem | null;
-  left: React.ReactNode;
+  left?: React.ReactNode;
   actions?: React.ReactNode;
   actionsPopover?: React.ReactNode;
 }) {
@@ -41,7 +41,7 @@ export function MusicRow({
   const artist = item?.artist ?? undefined;
 
   const [actionsOpen, setActionsOpen] = useState(false);
-  const hasPopoverActions = Boolean(actionsPopover);
+  const hasPopoverActions = actionsPopover !== undefined;
 
   const popoverContent = useMemo(() => actionsPopover ?? actions, [actionsPopover, actions]);
 
@@ -50,7 +50,7 @@ export function MusicRow({
       <CardContent>
         <div className="flex items-center gap-3">
           {/* Play button */}
-          {left}
+          {left ? left : null}
 
           {/* Artwork */}
           <Link href={href} className="shrink-0">
@@ -84,44 +84,39 @@ export function MusicRow({
           {actions && (
             <CardAction className={cn('ml-auto flex items-center gap-1 self-center shrink-0')}>
               {hasPopoverActions ? (
-                <>
-                  <div className="hidden xs:flex items-center gap-1">{actions}</div>
-
-                  <div className="xs:hidden">
-                    <Popover.Root open={actionsOpen} onOpenChange={setActionsOpen}>
-                      <Popover.Trigger asChild>
-                        <IconButton
-                          icon={faEllipsisVertical}
-                          label="Actions"
-                          type="button"
-                          variant="ghost"
-                          aria-haspopup="menu"
-                        />
-                      </Popover.Trigger>
-                      <Popover.Portal>
-                        <Popover.Content
-                          side="top"
-                          align="end"
-                          sideOffset={8}
-                          aria-label="Actions"
-                          className={cn(
-                            'z-50 rounded-lg border bg-background/80 p-2 text-popover-foreground shadow-md',
-                            'supports-[backdrop-filter]:backdrop-blur-md'
-                          )}
-                          onClickCapture={(e) => {
-                            const target = e.target as HTMLElement | null;
-                            if (!target) return;
-                            if (!target.closest('button,a,[role=menuitem]')) return;
-                            // Defer closing so the action's click handler can run before unmount.
-                            window.setTimeout(() => setActionsOpen(false), 0);
-                          }}
-                        >
-                          <div className="flex items-center gap-1">{popoverContent}</div>
-                        </Popover.Content>
-                      </Popover.Portal>
-                    </Popover.Root>
-                  </div>
-                </>
+                <Popover.Root open={actionsOpen} onOpenChange={setActionsOpen}>
+                  <Popover.Trigger asChild>
+                    <IconButton
+                      icon={faEllipsisVertical}
+                      label="Options"
+                      type="button"
+                      variant="ghost"
+                      aria-haspopup="menu"
+                      aria-expanded={actionsOpen}
+                    />
+                  </Popover.Trigger>
+                  <Popover.Portal>
+                    <Popover.Content
+                      side="left"
+                      align="start"
+                      sideOffset={8}
+                      aria-label="Options"
+                      className={cn(
+                        'z-50 rounded-lg border bg-background/80 p-1 text-popover-foreground shadow-md',
+                        'supports-[backdrop-filter]:backdrop-blur-md'
+                      )}
+                      onClickCapture={(e) => {
+                        const target = e.target as HTMLElement | null;
+                        if (!target) return;
+                        if (!target.closest('button,a,[role=menuitem]')) return;
+                        // Defer closing so the action's click handler can run before unmount.
+                        window.setTimeout(() => setActionsOpen(false), 0);
+                      }}
+                    >
+                      <div className="flex flex-col">{popoverContent}</div>
+                    </Popover.Content>
+                  </Popover.Portal>
+                </Popover.Root>
               ) : (
                 actions
               )}

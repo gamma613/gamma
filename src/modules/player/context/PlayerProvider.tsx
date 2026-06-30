@@ -232,6 +232,8 @@ export function PlayerProvider({
     volume: 0.8,
     positionSeconds: 0,
     durationSeconds: 0,
+    backStack: [],
+    forwardStack: [],
     queue: [],
     onDeck: [],
     history: [],
@@ -419,6 +421,16 @@ export function PlayerProvider({
       const normalized = normalizeTrack(track);
       setState((s) => {
         const prevSlug = s.track?.slug ?? null;
+        const navigationMode = opts?.navigation ?? 'push';
+
+        const nextBackStack = (() => {
+          if (navigationMode !== 'push') return s.backStack;
+          if (!prevSlug) return s.backStack;
+          if (prevSlug === normalized.slug) return s.backStack;
+          return [prevSlug, ...s.backStack].slice(0, 500);
+        })();
+
+        const nextForwardStack = navigationMode === 'push' ? [] : s.forwardStack;
         const prevHistoryEntry =
           prevSlug && prevSlug !== normalized.slug
             ? ({
@@ -433,7 +445,8 @@ export function PlayerProvider({
           return prevHistoryEntry ? [prevHistoryEntry, ...s.history].slice(0, 500) : s.history;
         })();
 
-        const nextQueue = s.queue.filter((x) => x !== normalized.slug);
+        const nextQueue =
+          navigationMode === 'none' ? s.queue : s.queue.filter((x) => x !== normalized.slug);
         const nextHistoryIds = nextHistory.map((h) => h.trackId);
         const nextOnDeck = computeOnDeck({
           libraryIds: recentTrackIds,
@@ -444,6 +457,8 @@ export function PlayerProvider({
 
         return {
           ...s,
+          backStack: nextBackStack,
+          forwardStack: nextForwardStack,
           history: nextHistory,
           onDeck: nextOnDeck,
           queue: nextQueue,
@@ -480,55 +495,44 @@ export function PlayerProvider({
   );
 
   const playPrevious: PlayerActions['playPrevious'] = useCallback(() => {
-    const { history, queue, onDeck, track } = stateRef.current;
+    const { backStack, track } = stateRef.current;
     const currentSlug = track?.slug ?? null;
 
-    const fromHistory = history.find((h) => h.trackId !== currentSlug) ?? null;
-    if (fromHistory) {
-      const seekSeconds = shouldResumeHistoryPosition(fromHistory)
-        ? fromHistory.positionSeconds
-        : 0;
-      if (!currentSlug) {
-        playId(fromHistory.trackId, { seekSeconds });
-        return;
-      }
+    const prevSlug = backStack[0] ?? null;
+    if (!prevSlug) return;
 
-      setState((s) => {
-        const removeIndex = s.history.findIndex((h) => h.trackId === fromHistory.trackId);
-        const nextHistory =
-          removeIndex >= 0 ? s.history.filter((_, i) => i !== removeIndex) : s.history;
-        // When going "back" into history, bump the current track to the top of the user queue.
-        // This preserves a clean "forward" path via Next without relying on onDeck ordering rules.
-        const nextQueue = [currentSlug, ...s.queue.filter((x) => x !== currentSlug)];
+    const entry = stateRef.current.history.find((h) => h.trackId === prevSlug) ?? null;
+    const seekSeconds = entry && shouldResumeHistoryPosition(entry) ? entry.positionSeconds : 0;
 
-        return {
-          ...s,
-          queue: nextQueue,
-          history: nextHistory,
-          onDeck: computeOnDeck({
-            libraryIds: recentTrackIds,
-            queue: nextQueue,
-            history: nextHistory.map((h) => h.trackId),
-            currentSlug,
-          }),
-        };
-      });
+    setState((s) => ({
+      ...s,
+      backStack: s.backStack.slice(1),
+      forwardStack: currentSlug ? [currentSlug, ...s.forwardStack].slice(0, 500) : s.forwardStack,
+    }));
 
-      playId(fromHistory.trackId, { seekSeconds, suppressHistory: true });
-      return;
-    }
-
-    if (queue.length > 0) {
-      playId(queue[queue.length - 1]!);
-      return;
-    }
-
-    if (onDeck.length > 0) {
-      playId(onDeck[onDeck.length - 1]!);
-    }
-  }, [playId, recentTrackIds]);
+    playId(prevSlug, { seekSeconds, suppressHistory: true, navigation: 'none' });
+  }, [playId]);
 
   const playNext: PlayerActions['playNext'] = useCallback(() => {
+    const { forwardStack } = stateRef.current;
+    const currentSlug = stateRef.current.track?.slug ?? null;
+
+    // Redo (forward navigation) takes priority when available.
+    const redoSlug = forwardStack[0] ?? null;
+    if (redoSlug) {
+      const entry = stateRef.current.history.find((h) => h.trackId === redoSlug) ?? null;
+      const seekSeconds = entry && shouldResumeHistoryPosition(entry) ? entry.positionSeconds : 0;
+
+      setState((s) => ({
+        ...s,
+        forwardStack: s.forwardStack.slice(1),
+        backStack: currentSlug ? [currentSlug, ...s.backStack].slice(0, 500) : s.backStack,
+      }));
+
+      playId(redoSlug, { seekSeconds, suppressHistory: true, navigation: 'none' });
+      return;
+    }
+
     const queued = stateRef.current.queue;
     if (queued.length > 0) {
       const [nextSlug, ...rest] = queued;
@@ -548,7 +552,6 @@ export function PlayerProvider({
       return;
     }
 
-    const currentSlug = stateRef.current.track?.slug ?? null;
     const nextOnDeck = computeOnDeck({
       libraryIds: recentTrackIds,
       queue: stateRef.current.queue,
@@ -722,6 +725,8 @@ export function PlayerProvider({
       music: state.track?.slug ? getMusicBySlug(state.track.slug) : null,
       playing: state.playing,
       durationSeconds: state.durationSeconds,
+      backStack: state.backStack,
+      forwardStack: state.forwardStack,
       queue: state.queue,
       onDeck: state.onDeck,
       history: state.history,
@@ -747,6 +752,8 @@ export function PlayerProvider({
       state.track,
       state.playing,
       state.durationSeconds,
+      state.backStack,
+      state.forwardStack,
       state.queue,
       state.onDeck,
       state.history,

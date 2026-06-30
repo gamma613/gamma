@@ -2,7 +2,6 @@
 
 import { H2 } from '@/components';
 import { getMusicBySlug } from '@/lib/music/allMusicIndex';
-import { PlayInPlayerButton } from '../../../components/PlayInPlayerButton';
 import type { PlayerTrackId } from '../../../context/types';
 import { usePlayerMain } from '../../../context/usePlayerMain';
 import { MusicRow } from './MusicRow';
@@ -41,7 +40,7 @@ export function PlaylistSection<TMeta = undefined>({
   items: PlaylistSectionItem<TMeta>[];
   itemsPerPage?: number;
   listClassName?: string;
-  /** When true, actions render inline at `xs` and up, and inside an ellipsis popover below `xs`. */
+  /** When true, actions render inside an ellipsis popover. */
   actionsInPopover?: boolean;
   renderActions?: (
     trackId: PlayerTrackId,
@@ -175,11 +174,7 @@ function PlaylistSectionReady<TMeta = undefined>({
                   <MusicRow
                     trackId={trackId}
                     item={playlistItem}
-                    left={
-                      renderLeft?.(trackId, ctx) ?? (
-                        <PlayInPlayerButton slug={trackId} className="size-9 shrink-0" />
-                      )
-                    }
+                    left={renderLeft?.(trackId, ctx)}
                     actions={renderActions?.(trackId, ctx)}
                     actionsPopover={
                       actionsInPopover && renderActions ? renderActions(trackId, ctx) : undefined

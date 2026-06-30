@@ -17,6 +17,10 @@ export type PlayerState = {
   volume: number; // 0..1
   positionSeconds: number;
   durationSeconds: number;
+  /** Navigation-only undo stack (most-recent-first). */
+  backStack: PlayerTrackId[];
+  /** Navigation-only redo stack (most-recent-first). */
+  forwardStack: PlayerTrackId[];
   queue: PlayerTrackId[];
   onDeck: PlayerTrackId[];
   history: PlayerHistoryEntry[];
@@ -29,10 +33,22 @@ export type PlayerHistoryEntry = {
 };
 
 export type PlayerActions = {
-  play: (track: PlayerTrack, opts?: { seekSeconds?: number; suppressHistory?: boolean }) => void;
+  play: (
+    track: PlayerTrack,
+    opts?: {
+      seekSeconds?: number;
+      suppressHistory?: boolean;
+      /**
+       * Controls whether a playback change should push onto the navigation stacks.
+       * - `push` (default): push previous track to `backStack` and clear `forwardStack`
+       * - `none`: do not mutate navigation stacks (used for undo/redo navigation)
+       */
+      navigation?: 'push' | 'none';
+    }
+  ) => void;
   playId: (
     track: PlayerTrackId,
-    opts?: { seekSeconds?: number; suppressHistory?: boolean }
+    opts?: { seekSeconds?: number; suppressHistory?: boolean; navigation?: 'push' | 'none' }
   ) => void;
   playFromHistory: (trackId: PlayerTrackId) => void;
   playPrevious: () => void;
@@ -72,6 +88,8 @@ type PlayerMainContextValueBase = Pick<
   | 'track'
   | 'playing'
   | 'durationSeconds'
+  | 'backStack'
+  | 'forwardStack'
   | 'queue'
   | 'onDeck'
   | 'history'
