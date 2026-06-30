@@ -53,19 +53,18 @@ export function History({ itemsPerPage = 10 }: { itemsPerPage?: number }) {
           <PlaylistActionItem
             icon={faForwardStep}
             label="Play next"
-            onClick={() => queueNext(trackId)}
+            onClick={() => queueNext(trackId, { removeFromHistory: true })}
             disabled={queue[0] === trackId}
           />
           <PlaylistActionItem
             icon={faPlus}
             label="Enqueue"
-            onClick={() => enqueue(trackId)}
+            onClick={() => enqueue(trackId, { removeFromHistory: true })}
             disabled={queue.includes(trackId)}
           />
           <PlaylistActionItem
             icon={faCircleXmark}
             label="Remove"
-            className="text-muted-foreground hover:text-foreground"
             onClick={() => removeHistoryAt(meta!)}
           />
         </>
