@@ -31,33 +31,64 @@ function computeOnDeck({
   history: PlayerTrackId[];
   currentSlug: string | null;
 }): PlayerTrackId[] {
-  // "History" is most-recent-first. OnDeck should be unique and exclude the current track
-  // and any items currently in the user queue.
+  // "History" is most-recent-first. OnDeck includes the full library, with
+  // current and queued tracks sinking to the bottom to reduce near-term repeats.
   const lastPlayedRank = new Map<PlayerTrackId, number>();
   for (let i = 0; i < history.length; i += 1) {
-    const id = history[i]!;
-    if (!lastPlayedRank.has(id)) lastPlayedRank.set(id, i);
+    const trackId = history[i]!;
+    if (!lastPlayedRank.has(trackId)) lastPlayedRank.set(trackId, i);
   }
 
   const queuePos = new Map<PlayerTrackId, number>();
   for (let i = 0; i < queue.length; i += 1) {
-    const id = queue[i]!;
-    if (!queuePos.has(id)) queuePos.set(id, i);
+    const trackId = queue[i]!;
+    if (!queuePos.has(trackId)) queuePos.set(trackId, i);
   }
 
   const libraryIndex = new Map<PlayerTrackId, number>();
   for (let i = 0; i < libraryIds.length; i += 1) libraryIndex.set(libraryIds[i]!, i);
 
   const MAX_RANK = 1_000_000_000;
+  const getOnDeckPriority = (trackId: PlayerTrackId) => {
+    if (trackId === currentSlug) return 1;
+    if (queuePos.has(trackId)) return 2;
+    return 0;
+  };
 
-  const sorted = libraryIds.slice().sort((a, b) => {
-    const ra = lastPlayedRank.get(a) ?? MAX_RANK;
-    const rb = lastPlayedRank.get(b) ?? MAX_RANK;
-    if (ra !== rb) return rb - ra; // higher index (less recent) comes first
-    return (libraryIndex.get(a) ?? 0) - (libraryIndex.get(b) ?? 0);
+  return libraryIds.slice().sort((trackA, trackB) => {
+    const queuePosA = queuePos.get(trackA);
+    const queuePosB = queuePos.get(trackB);
+    const priorityA = getOnDeckPriority(trackA);
+    const priorityB = getOnDeckPriority(trackB);
+
+    if (priorityA !== priorityB) return priorityA - priorityB;
+
+    if (priorityA === 2) return (queuePosA ?? 0) - (queuePosB ?? 0);
+
+    const rankA = trackA === currentSlug ? -1 : (lastPlayedRank.get(trackA) ?? MAX_RANK);
+    const rankB = trackB === currentSlug ? -1 : (lastPlayedRank.get(trackB) ?? MAX_RANK);
+    if (rankA !== rankB) return rankB - rankA; // higher index (less recent) comes first
+    return (libraryIndex.get(trackA) ?? 0) - (libraryIndex.get(trackB) ?? 0);
   });
+}
 
-  return sorted.filter((id) => id !== currentSlug && !queuePos.has(id));
+function prependToQueue(queue: PlayerTrackId[], trackIds: PlayerTrackId[]): PlayerTrackId[] {
+  const seenTrackIds = new Set<PlayerTrackId>();
+  const front = trackIds.filter((trackId) => {
+    if (seenTrackIds.has(trackId)) return false;
+    seenTrackIds.add(trackId);
+    return true;
+  });
+  return [...front, ...queue.filter((trackId) => !seenTrackIds.has(trackId))];
+}
+
+function removeFirstFromHistory(
+  history: PlayerHistoryEntry[],
+  trackId: PlayerTrackId
+): PlayerHistoryEntry[] {
+  const index = history.findIndex((entry) => entry.trackId === trackId);
+  if (index < 0) return history;
+  return history.filter((_, entryIndex) => entryIndex !== index);
 }
 
 function getTabId(): string {
@@ -487,52 +518,121 @@ export function PlayerProvider({
 
   const playFromHistory: PlayerActions['playFromHistory'] = useCallback(
     (trackId) => {
-      const entry = stateRef.current.history.find((h) => h.trackId === trackId) ?? null;
-      const seekSeconds = entry && shouldResumeHistoryPosition(entry) ? entry.positionSeconds : 0;
-      playId(trackId, { seekSeconds });
+      const resolved = resolveAndNormalize(trackId);
+
+      setState((s) => {
+        const historyIndex = s.history.findIndex((entry) => entry.trackId === trackId);
+        if (historyIndex < 0) {
+          const prevSlug = s.track?.slug ?? null;
+          const prevHistoryEntry =
+            prevSlug && prevSlug !== resolved.slug
+              ? ({
+                  trackId: prevSlug,
+                  positionSeconds: s.positionSeconds,
+                  durationSeconds: s.durationSeconds,
+                } satisfies PlayerHistoryEntry)
+              : null;
+          const nextHistory = prevHistoryEntry
+            ? [prevHistoryEntry, ...s.history].slice(0, 500)
+            : s.history;
+          const nextQueue = s.queue.filter((queuedTrackId) => queuedTrackId !== resolved.slug);
+
+          return {
+            ...s,
+            backStack: [],
+            forwardStack: [],
+            history: nextHistory,
+            onDeck: computeOnDeck({
+              libraryIds: recentTrackIds,
+              queue: nextQueue,
+              history: nextHistory.map((entry) => entry.trackId),
+              currentSlug: resolved.slug,
+            }),
+            queue: nextQueue,
+            track: resolved,
+            playing: true,
+            durationSeconds: resolved.slug === s.track?.slug ? s.durationSeconds : 0,
+            positionSeconds: resolved.slug === s.track?.slug ? s.positionSeconds : 0,
+          };
+        }
+
+        const selectedEntry = s.history[historyIndex]!;
+        const currentSlug = s.track?.slug ?? null;
+        const nextQueue =
+          currentSlug && currentSlug !== resolved.slug
+            ? prependToQueue(s.queue, [currentSlug])
+            : s.queue.filter((queuedTrackId) => queuedTrackId !== resolved.slug);
+        const nextHistory = s.history.filter((_, entryIndex) => entryIndex !== historyIndex);
+        const seekSeconds = shouldResumeHistoryPosition(selectedEntry)
+          ? selectedEntry.positionSeconds
+          : 0;
+
+        return {
+          ...s,
+          backStack: [],
+          forwardStack: [],
+          history: nextHistory,
+          onDeck: computeOnDeck({
+            libraryIds: recentTrackIds,
+            queue: nextQueue,
+            history: nextHistory.map((entry) => entry.trackId),
+            currentSlug: resolved.slug,
+          }),
+          queue: nextQueue,
+          track: resolved,
+          playing: true,
+          durationSeconds: resolved.slug === s.track?.slug ? s.durationSeconds : 0,
+          positionSeconds: seekSeconds,
+        };
+      });
+      broadcastPlay();
     },
-    [playId]
+    [broadcastPlay, recentTrackIds]
   );
 
   const playPrevious: PlayerActions['playPrevious'] = useCallback(() => {
-    const { backStack, track } = stateRef.current;
-    const currentSlug = track?.slug ?? null;
+    setState((s) => {
+      const currentSlug = s.track?.slug ?? null;
+      if (!currentSlug) return s;
 
-    const prevSlug = backStack[0] ?? null;
-    if (!prevSlug) return;
+      const historyIndex = s.history.findIndex((entry) => entry.trackId !== currentSlug);
+      if (historyIndex < 0) return s;
 
-    const entry = stateRef.current.history.find((h) => h.trackId === prevSlug) ?? null;
-    const seekSeconds = entry && shouldResumeHistoryPosition(entry) ? entry.positionSeconds : 0;
+      const selectedEntry = s.history[historyIndex]!;
+      const resolved = resolveAndNormalize(selectedEntry.trackId);
+      const forwardTrackIds = s.history
+        .slice(0, historyIndex)
+        .reverse()
+        .map((entry) => entry.trackId);
+      const nextQueue = prependToQueue(s.queue, [...forwardTrackIds, currentSlug]);
+      const nextHistory = s.history.slice(historyIndex + 1);
+      const seekSeconds = shouldResumeHistoryPosition(selectedEntry)
+        ? selectedEntry.positionSeconds
+        : 0;
 
-    setState((s) => ({
-      ...s,
-      backStack: s.backStack.slice(1),
-      forwardStack: currentSlug ? [currentSlug, ...s.forwardStack].slice(0, 500) : s.forwardStack,
-    }));
-
-    playId(prevSlug, { seekSeconds, suppressHistory: true, navigation: 'none' });
-  }, [playId]);
+      return {
+        ...s,
+        backStack: [],
+        forwardStack: [],
+        history: nextHistory,
+        onDeck: computeOnDeck({
+          libraryIds: recentTrackIds,
+          queue: nextQueue,
+          history: nextHistory.map((entry) => entry.trackId),
+          currentSlug: resolved.slug,
+        }),
+        queue: nextQueue,
+        track: resolved,
+        playing: true,
+        durationSeconds: resolved.slug === s.track?.slug ? s.durationSeconds : 0,
+        positionSeconds: seekSeconds,
+      };
+    });
+    broadcastPlay();
+  }, [broadcastPlay, recentTrackIds]);
 
   const playNext: PlayerActions['playNext'] = useCallback(() => {
-    const { forwardStack } = stateRef.current;
     const currentSlug = stateRef.current.track?.slug ?? null;
-
-    // Redo (forward navigation) takes priority when available.
-    const redoSlug = forwardStack[0] ?? null;
-    if (redoSlug) {
-      const entry = stateRef.current.history.find((h) => h.trackId === redoSlug) ?? null;
-      const seekSeconds = entry && shouldResumeHistoryPosition(entry) ? entry.positionSeconds : 0;
-
-      setState((s) => ({
-        ...s,
-        forwardStack: s.forwardStack.slice(1),
-        backStack: currentSlug ? [currentSlug, ...s.backStack].slice(0, 500) : s.backStack,
-      }));
-
-      playId(redoSlug, { seekSeconds, suppressHistory: true, navigation: 'none' });
-      return;
-    }
-
     const queued = stateRef.current.queue;
     if (queued.length > 0) {
       const [nextSlug, ...rest] = queued;
@@ -542,8 +642,9 @@ export function PlayerProvider({
     }
 
     const { onDeck } = stateRef.current;
-    if (onDeck.length > 0) {
-      playId(onDeck[0]!);
+    const onDeckSlug = onDeck.find((trackId) => trackId !== currentSlug) ?? null;
+    if (onDeckSlug) {
+      playId(onDeckSlug);
       return;
     }
 
@@ -558,7 +659,7 @@ export function PlayerProvider({
       history: stateRef.current.history.map((h) => h.trackId),
       currentSlug,
     });
-    const nextSlug = nextOnDeck[0] ?? null;
+    const nextSlug = nextOnDeck.find((trackId) => trackId !== currentSlug) ?? null;
     if (!nextSlug) {
       const loopSlug = stateRef.current.history[0]?.trackId ?? null;
       if (loopSlug) playFromHistory(loopSlug);
@@ -569,16 +670,20 @@ export function PlayerProvider({
   }, [playFromHistory, playId, recentTrackIds]);
 
   const queueNext: PlayerActions['queueNext'] = useCallback(
-    (trackId) => {
+    (trackId, opts) => {
       setState((s) => {
         const nextQueue = [trackId, ...s.queue.filter((x) => x !== trackId)];
+        const nextHistory = opts?.removeFromHistory
+          ? removeFirstFromHistory(s.history, trackId)
+          : s.history;
         return {
           ...s,
+          history: nextHistory,
           queue: nextQueue,
           onDeck: computeOnDeck({
             libraryIds: recentTrackIds,
             queue: nextQueue,
-            history: s.history.map((h) => h.trackId),
+            history: nextHistory.map((h) => h.trackId),
             currentSlug: s.track?.slug ?? null,
           }),
         };
@@ -588,16 +693,20 @@ export function PlayerProvider({
   );
 
   const enqueue: PlayerActions['enqueue'] = useCallback(
-    (trackId) => {
+    (trackId, opts) => {
       setState((s) => {
         const nextQueue = [...s.queue.filter((x) => x !== trackId), trackId];
+        const nextHistory = opts?.removeFromHistory
+          ? removeFirstFromHistory(s.history, trackId)
+          : s.history;
         return {
           ...s,
+          history: nextHistory,
           queue: nextQueue,
           onDeck: computeOnDeck({
             libraryIds: recentTrackIds,
             queue: nextQueue,
-            history: s.history.map((h) => h.trackId),
+            history: nextHistory.map((h) => h.trackId),
             currentSlug: s.track?.slug ?? null,
           }),
         };

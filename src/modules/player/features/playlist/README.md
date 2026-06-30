@@ -1,128 +1,104 @@
 # Playlist / Infinite Player Workflow
 
-This directory contains the playlist UI (`Playlist.tsx`, `components/*`). The _behavior_ of the playlist
+This directory contains the playlist UI (`Playlist.tsx`, `components/*`). The playlist behavior
 (queue/history/on-deck logic, transport semantics) lives in `src/modules/player/context/PlayerProvider.tsx`.
 
-The core idea is an infinite player that can always produce a “next track” by:
+The core model is a moving playback bead:
 
-1. consuming the **User Queue** first
-2. otherwise choosing from **On Deck** (library items not currently queued, biased toward least-recently-played)
-3. otherwise looping from **History**
+1. **History** is behind the bead.
+2. **Now Playing** is the bead.
+3. **User Queue** is the intentional future path.
+4. **On Deck** is the complete, loopable library fallback.
 
-## Current data model (as implemented)
+## Current data model
 
 State comes from `usePlayerMain()`:
 
 - **Now Playing**: `state.track` (single current track)
-- **Undo / Redo navigation**
-  - `state.backStack` (undo stack; most-recent-first)
-  - `state.forwardStack` (redo stack; most-recent-first)
-- **User Queue**: `state.queue` (array; index `0` is the _next_ track)
+- **User Queue**: `state.queue` (array; index `0` is the next track)
 - **History**: `state.history` (array of `{ trackId, positionSeconds, durationSeconds }`, most-recent-first)
-- **On Deck**: `state.onDeck` (derived list of library trackIds, excluding current + anything in the queue)
+- **On Deck**: `state.onDeck` (derived list of every library trackId)
+- **Legacy Navigation Stacks**: `state.backStack` / `state.forwardStack` remain on the context for compatibility, but playlist transport no longer uses undo/redo semantics.
 
-Notes:
+## Invariants
 
-- History is most-recent-first.
-- History can contain duplicates (ex: you can play the same track again later).
-- On Deck is derived using “least recently played” ordering based on the _most recent_ occurrence in history.
+- The queue should not contain duplicates.
+- On Deck contains every available library item.
+- On Deck orders ordinary items by least-recently-played first.
+- On Deck sinks the current track and queued tracks to the bottom, with the current track before the queued tracks.
+- Transport is bead-first:
+  - **Previous** moves back through History and pushes the displaced future into the front of User Queue.
+  - **Next** consumes User Queue first, then falls back to On Deck.
 
-## Invariants (intended)
-
-- The queue should not contain duplicates (queue operations filter them out).
-- On Deck excludes:
-  - the current track
-  - anything currently in the queue
-- Transport buttons are navigation-first:
-  - **Previous** is Undo (go back to what was just playing).
-  - **Next** is Redo when available; otherwise it skips forward (queue → on-deck → loop).
-
-## Behavior of key actions (today)
+## Behavior of key actions
 
 ### Play now (`playId` / `play`)
 
-When you start playing a track:
+When you start playing a track normally:
 
-- the previous track (if any and different) is prepended into `history` _(unless `suppressHistory` is true)_
-- the previous track is pushed onto `backStack` and `forwardStack` is cleared _(unless `navigation: 'none'`)_
-- the chosen track is removed from the queue (if present)
+- the previous track is prepended into History if it is different
+- the chosen track is removed from User Queue if present
 - On Deck is recomputed
-
-Implication: clicking “Play now” on an item that was queued removes it from the queue.
 
 ### Next (`playNext`)
 
-When you hit “Next”:
+When you hit Next:
 
-1. if `forwardStack` has items: **Redo** by playing `forwardStack[0]` (does not rewrite play-log history or queue)
-2. else if `queue` has items: shift `queue[0]` and play it
-3. else if `onDeck` has items: play `onDeck[0]`
-4. else: recompute on-deck; if still empty, loop by playing `history[0]` (most recent)
+1. if User Queue has items, shift `queue[0]` and play it
+2. otherwise play the first On Deck item that is not already current
+3. otherwise recompute On Deck and try again
+4. otherwise loop from the most recent History item when available
 
 ### Previous (`playPrevious`)
 
-When you hit “Previous”:
+When you hit Previous:
 
-1. if `backStack` has items: **Undo** by playing `backStack[0]`
-2. push the current track onto `forwardStack`
-3. do not mutate the queue and do not rewrite play-log history (`suppressHistory: true`, `navigation: 'none'`)
+1. choose the most recent History item that is not the current track
+2. remove that item, plus any more-recent skipped History items, from History
+3. prepend the forward path to User Queue
+4. play the chosen History item
+
+Example:
+
+- Start: `H=[A, B, C]`, `NP=D`, `Q=[E, F, G]`
+- Previous: `H=[A, B]`, `NP=C`, `Q=[D, E, F, G]`
+- Previous again: `H=[A]`, `NP=B`, `Q=[C, D, E, F, G]`
+
+Note: state History is stored most-recent-first, so the example above is written in display order for readability.
 
 ### Play from history (`playFromHistory`)
 
-When you explicitly choose a track from History in the UI, it behaves like a normal “Play now”:
+Choosing Play now on an item from History selects only that item:
 
-- it plays the chosen track (optionally seeking to the saved position)
-- it participates in Undo/Redo (pushes onto `backStack`, clears `forwardStack`)
+- the chosen item is removed from History
+- the chosen item becomes Now Playing
+- the previous Now Playing item is pushed to the front of User Queue
+- other History items stay in History
 
-## Visual model (using animals)
+Example:
 
-Notation:
+- Start: `H=[A, B, C]`, `NP=D`, `Q=[E, F, G]`
+- Play `A`: `H=[B, C]`, `NP=A`, `Q=[D, E, F, G]`
 
-- `NP` = now playing
-- `B` = back/undo stack (leftmost is the next undo)
-- `F` = forward/redo stack (leftmost is the next redo)
-- `Q` = user queue (leftmost is next)
+### Queue from history
 
-### Example 1: Skip → Undo → Redo
+Choosing Play next or Enqueue on an item from History moves only that item:
 
-Start:
+- the chosen item is removed from History
+- Play next moves it to the front of User Queue
+- Enqueue moves it to the end of User Queue
+- Now Playing and other History items are unchanged
 
-- `NP=Otter`
-- `B=[]`
-- `F=[]`
-- `Q=[Panda, Fox]`
+## On Deck ordering
 
-Press Next (skip): plays `Panda`
+On Deck always contains the whole library. Its order is dynamic:
 
-- `NP=Panda`
-- `B=[Otter]`
-- `F=[]`
-- `Q=[Fox]`
+- unqueued, non-current tracks come first, least-recently-played first
+- the current track sinks near the bottom
+- User Queue tracks sink below the current track in queue order
 
-Press Previous (undo): plays `Otter`
+Example:
 
-- `NP=Otter`
-- `B=[]`
-- `F=[Panda]`
-- `Q=[Fox]` (unchanged)
-
-Press Next (redo): plays `Panda`
-
-- `NP=Panda`
-- `B=[Otter]`
-- `F=[]`
-- `Q=[Fox]` (unchanged)
-
-### Example 2: “Play now” clears redo
-
-Start:
-
-- `NP=Koala`
-- `B=[Lynx]`
-- `F=[Capybara]`
-
-Click “Play now” on `Hedgehog`:
-
-- `NP=Hedgehog`
-- `B=[Koala, Lynx]` (push previous NP)
-- `F=[]` (redo cleared on new action)
+- `NP=C`
+- `Q=[D, E, F]`
+- On Deck tail: `[..., C, D, E, F]`
