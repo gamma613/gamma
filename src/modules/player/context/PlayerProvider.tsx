@@ -9,6 +9,7 @@ import { PlayerMainContext } from './PlayerMainContext';
 import { PlayerMediaContext } from './PlayerMediaContext';
 import { PlayerProgressContext } from './PlayerProgressContext';
 import { PlayerVolumeContext } from './PlayerVolumeContext';
+import { reorderQueueItems } from './queueOrder';
 import {
   PlayerActions,
   PlayerHistoryEntry,
@@ -718,14 +719,8 @@ export function PlayerProvider({
   const reorderQueue: PlayerActions['reorderQueue'] = useCallback(
     (fromIndex, toIndex) => {
       setState((s) => {
-        if (fromIndex === toIndex) return s;
-        if (fromIndex < 0 || fromIndex >= s.queue.length) return s;
-        if (toIndex < 0 || toIndex >= s.queue.length) return s;
-
-        const nextQueue = s.queue.slice();
-        const [movedTrackId] = nextQueue.splice(fromIndex, 1);
-        if (!movedTrackId) return s;
-        nextQueue.splice(toIndex, 0, movedTrackId);
+        const nextQueue = reorderQueueItems(s.queue, fromIndex, toIndex);
+        if (nextQueue === s.queue) return s;
 
         return {
           ...s,
