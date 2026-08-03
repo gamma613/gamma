@@ -28,12 +28,14 @@ export function MusicRow({
   left,
   actions,
   actionsPopover,
+  beforeActions,
 }: {
   trackId: PlayerTrackId;
   item: PlaylistMusicItem | null;
   left?: React.ReactNode;
   actions?: React.ReactNode;
   actionsPopover?: React.ReactNode;
+  beforeActions?: React.ReactNode;
 }) {
   const slug = item?.slug ?? trackId;
   const href = ROUTES.music(slug).root;
@@ -81,8 +83,9 @@ export function MusicRow({
           </div>
 
           {/* Actions */}
-          {actions && (
+          {(beforeActions || actions) && (
             <CardAction className={cn('ml-auto flex items-center gap-1 self-center shrink-0')}>
+              {beforeActions}
               {hasPopoverActions ? (
                 <Popover.Root open={actionsOpen} onOpenChange={setActionsOpen}>
                   <Popover.Trigger asChild>

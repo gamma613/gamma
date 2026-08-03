@@ -30,6 +30,10 @@ export function PlaylistSection<TMeta = undefined>({
   listClassName = 'space-y-2',
   actionsInPopover,
   renderActions,
+  renderBeforeActions,
+  renderAfterItem,
+  renderBeforeItem,
+  renderItemContainer,
   renderLeft,
   title,
 }: {
@@ -43,6 +47,23 @@ export function PlaylistSection<TMeta = undefined>({
   /** When true, actions render inside an ellipsis popover. */
   actionsInPopover?: boolean;
   renderActions?: (
+    trackId: PlayerTrackId,
+    ctx: PlaylistSectionRenderContext<TMeta>
+  ) => React.ReactNode;
+  renderBeforeActions?: (
+    trackId: PlayerTrackId,
+    ctx: PlaylistSectionRenderContext<TMeta>
+  ) => React.ReactNode;
+  renderAfterItem?: (
+    trackId: PlayerTrackId,
+    ctx: PlaylistSectionRenderContext<TMeta>
+  ) => React.ReactNode;
+  renderBeforeItem?: (
+    trackId: PlayerTrackId,
+    ctx: PlaylistSectionRenderContext<TMeta>
+  ) => React.ReactNode;
+  renderItemContainer?: (
+    children: React.ReactNode,
     trackId: PlayerTrackId,
     ctx: PlaylistSectionRenderContext<TMeta>
   ) => React.ReactNode;
@@ -75,6 +96,10 @@ export function PlaylistSection<TMeta = undefined>({
       listClassName={listClassName}
       actionsInPopover={actionsInPopover}
       renderActions={renderActions}
+      renderBeforeActions={renderBeforeActions}
+      renderAfterItem={renderAfterItem}
+      renderBeforeItem={renderBeforeItem}
+      renderItemContainer={renderItemContainer}
       renderLeft={renderLeft}
       title={title}
     />
@@ -91,6 +116,10 @@ function PlaylistSectionReady<TMeta = undefined>({
   listClassName,
   actionsInPopover,
   renderActions,
+  renderBeforeActions,
+  renderAfterItem,
+  renderBeforeItem,
+  renderItemContainer,
   renderLeft,
   title,
 }: {
@@ -103,6 +132,23 @@ function PlaylistSectionReady<TMeta = undefined>({
   listClassName: string;
   actionsInPopover?: boolean;
   renderActions?: (
+    trackId: PlayerTrackId,
+    ctx: PlaylistSectionRenderContext<TMeta>
+  ) => React.ReactNode;
+  renderBeforeActions?: (
+    trackId: PlayerTrackId,
+    ctx: PlaylistSectionRenderContext<TMeta>
+  ) => React.ReactNode;
+  renderAfterItem?: (
+    trackId: PlayerTrackId,
+    ctx: PlaylistSectionRenderContext<TMeta>
+  ) => React.ReactNode;
+  renderBeforeItem?: (
+    trackId: PlayerTrackId,
+    ctx: PlaylistSectionRenderContext<TMeta>
+  ) => React.ReactNode;
+  renderItemContainer?: (
+    children: React.ReactNode,
     trackId: PlayerTrackId,
     ctx: PlaylistSectionRenderContext<TMeta>
   ) => React.ReactNode;
@@ -169,18 +215,27 @@ function PlaylistSectionReady<TMeta = undefined>({
                 meta,
               };
 
-              return (
-                <li key={`${trackId}-${absoluteIndex}`}>
+              const row = (
+                <>
+                  {renderBeforeItem?.(trackId, ctx)}
                   <MusicRow
                     trackId={trackId}
                     item={playlistItem}
                     left={renderLeft?.(trackId, ctx)}
+                    beforeActions={renderBeforeActions?.(trackId, ctx)}
                     actions={renderActions?.(trackId, ctx)}
                     actionsPopover={
                       actionsInPopover && renderActions ? renderActions(trackId, ctx) : undefined
                     }
                   />
-                </li>
+                  {renderAfterItem?.(trackId, ctx)}
+                </>
+              );
+
+              return renderItemContainer ? (
+                renderItemContainer(row, trackId, ctx)
+              ) : (
+                <li key={`${trackId}-${absoluteIndex}`}>{row}</li>
               );
             })}
           </ul>

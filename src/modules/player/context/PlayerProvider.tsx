@@ -9,6 +9,7 @@ import { PlayerMainContext } from './PlayerMainContext';
 import { PlayerMediaContext } from './PlayerMediaContext';
 import { PlayerProgressContext } from './PlayerProgressContext';
 import { PlayerVolumeContext } from './PlayerVolumeContext';
+import { reorderQueueItems } from './queueOrder';
 import {
   PlayerActions,
   PlayerHistoryEntry,
@@ -715,6 +716,27 @@ export function PlayerProvider({
     [recentTrackIds]
   );
 
+  const reorderQueue: PlayerActions['reorderQueue'] = useCallback(
+    (fromIndex, toIndex) => {
+      setState((s) => {
+        const nextQueue = reorderQueueItems(s.queue, fromIndex, toIndex);
+        if (nextQueue === s.queue) return s;
+
+        return {
+          ...s,
+          queue: nextQueue,
+          onDeck: computeOnDeck({
+            libraryIds: recentTrackIds,
+            queue: nextQueue,
+            history: s.history.map((h) => h.trackId),
+            currentSlug: s.track?.slug ?? null,
+          }),
+        };
+      });
+    },
+    [recentTrackIds]
+  );
+
   const removeFromQueue: PlayerActions['removeFromQueue'] = useCallback(
     (trackId) => {
       setState((s) => {
@@ -846,6 +868,7 @@ export function PlayerProvider({
       playNext,
       queueNext,
       enqueue,
+      reorderQueue,
       removeFromQueue,
       clearQueue,
       clearHistory,
@@ -873,6 +896,7 @@ export function PlayerProvider({
       playNext,
       queueNext,
       enqueue,
+      reorderQueue,
       removeFromQueue,
       clearQueue,
       clearHistory,

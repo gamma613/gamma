@@ -55,6 +55,7 @@ export type PlayerActions = {
   playNext: () => void;
   queueNext: (trackId: PlayerTrackId, opts?: { removeFromHistory?: boolean }) => void;
   enqueue: (trackId: PlayerTrackId, opts?: { removeFromHistory?: boolean }) => void;
+  reorderQueue: (fromIndex: number, toIndex: number) => void;
   removeFromQueue: (trackId: PlayerTrackId) => void;
   clearQueue: () => void;
   clearHistory: () => void;
@@ -100,6 +101,7 @@ type PlayerMainContextValueBase = Pick<
   | 'playNext'
   | 'queueNext'
   | 'enqueue'
+  | 'reorderQueue'
   | 'removeFromQueue'
   | 'clearQueue'
   | 'clearHistory'
