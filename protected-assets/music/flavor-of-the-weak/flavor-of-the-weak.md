@@ -7,8 +7,7 @@ genres:
   - Electro Breaks
 slug: 'flavor-of-the-weak'
 tags:
-  - DJ Mix
-  - Studio Mix
+  - Studio
   - Dance
   - Rave
 title: 'flavor of the weak'

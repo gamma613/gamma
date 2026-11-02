@@ -6,7 +6,6 @@ genres:
   - Drum & Bass
 slug: 'basslift'
 tags:
-  - DJ Mix
-  - Live Mix
+  - Live
 title: 'basslift'
 ---

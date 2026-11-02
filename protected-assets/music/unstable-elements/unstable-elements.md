@@ -7,8 +7,7 @@ genres:
   - House
 slug: 'unstable-elements'
 tags:
-  - DJ Mix
-  - Studio Mix
+  - Studio
   - Nightlife
 title: 'unstable elements'
 ---

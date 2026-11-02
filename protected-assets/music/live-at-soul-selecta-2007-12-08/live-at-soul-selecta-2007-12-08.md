@@ -6,8 +6,7 @@ genres:
   - Breaks
 slug: 'live-at-soul-selecta-2007-12-08'
 tags:
-  - DJ Mix
-  - Studio Mix
+  - Studio
   - Dance
 title: 'live at soul selecta (2007-12-08)'
 ---

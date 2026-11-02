@@ -9,8 +9,8 @@ genres:
   - Drum & Bass
 slug: 'subdivision'
 tags:
-  - DJ Mix
-  - Studio Mix
+  - Collaboration
+  - Studio
 title: 'subdivision'
 ---
 

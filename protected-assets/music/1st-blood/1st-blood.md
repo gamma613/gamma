@@ -6,8 +6,7 @@ genres:
   - Electro House
 slug: '1st-blood'
 tags:
-  - DJ Mix
-  - Studio Mix
+  - Studio
   - Dark
   - Dirty
   - Gritty

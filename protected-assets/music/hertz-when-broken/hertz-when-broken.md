@@ -8,8 +8,7 @@ genres:
   - Mainstream
 slug: 'hertz-when-broken'
 tags:
-  - DJ Mix
-  - Studio Mix
+  - Studio
   - Upbeat
 title: 'hertz when broken'
 ---

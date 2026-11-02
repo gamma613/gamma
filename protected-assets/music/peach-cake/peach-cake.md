@@ -7,8 +7,7 @@ genres:
   - Breaks
 slug: 'peach-cake'
 tags:
-  - DJ Mix
-  - Studio Mix
+  - Studio
   - Dirty
 title: 'peach cake'
 ---

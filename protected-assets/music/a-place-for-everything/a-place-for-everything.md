@@ -8,8 +8,7 @@ genres:
   - Progressive House
 slug: 'a-place-for-everything'
 tags:
-  - DJ Mix
-  - Studio Mix
+  - Studio
   - Chillout
   - Introspective
 title: 'a place for everything'

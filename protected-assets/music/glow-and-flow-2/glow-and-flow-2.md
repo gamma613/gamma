@@ -6,8 +6,7 @@ genres:
   - Drum & Bass (liquidfunk)
 slug: 'glow-and-flow-2'
 tags:
-  - DJ Mix
-  - Live Mix
+  - Live
 title: 'glow and flow 2'
 ---
 

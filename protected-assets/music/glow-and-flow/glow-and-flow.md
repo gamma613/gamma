@@ -5,8 +5,7 @@ genres:
   - Progressive House
 slug: 'glow-and-flow'
 tags:
-  - DJ Mix
-  - Live Mix
+  - Live
 title: 'glow and flow'
 ---
 

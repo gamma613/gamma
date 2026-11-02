@@ -7,7 +7,6 @@ genres:
   - Jungle
 slug: 'step-2-rinse'
 tags:
-  - DJ Mix
-  - Studio Mix
+  - Studio
 title: 'step 2: rinse'
 ---

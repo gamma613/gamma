@@ -6,8 +6,7 @@ genres:
   - Electro Houe
 slug: 'industry-standard'
 tags:
-  - DJ Mix
-  - Studio Mix
+  - Studio
   - Dark
   - Gritty
   - Atmospheric

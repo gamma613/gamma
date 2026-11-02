@@ -7,8 +7,7 @@ genres:
   - Deep House
 slug: 'acid-reign'
 tags:
-  - DJ Mix
-  - Studio Mix
+  - Studio
   - Introspective
 title: 'acid reign'
 ---

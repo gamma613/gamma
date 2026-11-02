@@ -6,8 +6,7 @@ genres:
   - Electro House
 slug: '3rd-party'
 tags:
-  - DJ Mix
-  - Studio Mix
+  - Studio
   - Dance
   - Rave
 title: '3rd party'

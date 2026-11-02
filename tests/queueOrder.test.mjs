@@ -1,6 +1,5 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-
 import { reorderQueueItems } from '../src/modules/player/context/queueOrder.ts';
 
 test('reorderQueueItems moves an item down', () => {

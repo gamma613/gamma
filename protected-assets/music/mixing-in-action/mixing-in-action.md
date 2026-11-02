@@ -7,7 +7,6 @@ genres:
   - Electro Pop
 slug: 'mixing-in-action'
 tags:
-  - DJ Mix
-  - Studio Mix
+  - Studio
 title: 'mixing in action'
 ---

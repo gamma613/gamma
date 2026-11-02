@@ -9,8 +9,7 @@ genres:
   - Techno
 slug: 'unlawful-assembly-line'
 tags:
-  - DJ Mix
-  - Studio Mix
+  - Studio
   - Quirky
   - Chickens
 title: 'unlawful assembly line'

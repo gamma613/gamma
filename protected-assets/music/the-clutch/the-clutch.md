@@ -7,8 +7,7 @@ genres:
   - Nuskool Breaks
 slug: 'the-clutch'
 tags:
-  - DJ Mix
-  - Studio Mix
+  - Studio
   - Dance
 title: 'the clutch'
 ---

@@ -9,8 +9,7 @@ genres:
   - Dubstep
 slug: 'hole-sum'
 tags:
-  - DJ Mix
-  - Studio Mix
+  - Studio
   - Dark
   - Introspective
 title: 'hole sum'

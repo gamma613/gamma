@@ -8,8 +8,7 @@ genres:
   - Techno
 slug: 'reserve-psychology'
 tags:
-  - DJ Mix
-  - Studio Mix
+  - Studio
   - Introspective
 title: 'reserve psychology'
 ---

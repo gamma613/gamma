@@ -7,8 +7,7 @@ genres:
   - Electro Breaks
 slug: 'indoor-recess'
 tags:
-  - DJ Mix
-  - Studio Mix
+  - Studio
   - Dance
   - Dirty
 title: 'indoor recess'

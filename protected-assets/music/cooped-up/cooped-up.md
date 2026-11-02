@@ -8,9 +8,8 @@ genres:
   - Minimal
 slug: 'cooped-up'
 tags:
-  - DJ Mix
-  - Studio Mix
-  - Quiryk
+  - Studio
+  - Quirky
   - Introspective
   - Chickens
 title: 'cooped up'
