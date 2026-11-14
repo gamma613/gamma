@@ -54,6 +54,12 @@ function musicDirForSlug(slug: string): string | null {
   return path.join(process.cwd(), 'protected-assets/music', slug);
 }
 
+function localAudioDirForSlug(slug: string): string | null {
+  const item = getMusicItem(slug);
+  if (!item) return null;
+  return path.join(process.cwd(), 'developer-assets/media');
+}
+
 export async function resolveMusicArtFile(
   slug: string,
   type: MusicArtType
@@ -69,7 +75,7 @@ export async function resolveMusicArtFile(
 }
 
 export async function resolveMusicAudioFile(slug: string): Promise<string | null> {
-  const dir = musicDirForSlug(slug);
+  const dir = localAudioDirForSlug(slug);
   if (!dir) return null;
 
   let entries: string[];

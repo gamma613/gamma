@@ -18,6 +18,15 @@ Gamma is built with **Next.js (App Router)**, **React 19**, and **TypeScript**, 
 - **`tests/`**: Unit tests using Node.js's native test runner (`node:test`).
 - **`content-collections.ts`**: Static content metadata configuration for music items.
 
+### Media storage
+
+- Cloudflare R2 bucket: `gamma-media` (America East location).
+- Local audio/video development copies live flat under `developer-assets/media/`, named `<slug>.<extension>`; media files are gitignored and the directory README is committed to explain their purpose. Music metadata and cover art remain under `protected-assets/music/`.
+- Local and R2 audio/video files always live flat at their respective media roots, named `<slug>.<extension>`. The R2 audio reader fetches `<slug>.mp3` directly. Use `scripts/sync-media.sh push|pull` to preview directional copies; append `--execute` to transfer. It uses available checksums and does not delete destination-only files.
+- The project README documents the rclone upload command for future MP3/MP4 files.
+- Local audio playback defaults to filesystem. `MEDIA_STORAGE=r2` switches the server-side stream route to R2; configure credentials in ignored `.env.local`. Use a separate bucket-scoped Object Read Only token for playback, never the write-enabled rclone token. The route must continue supporting HTTP byte ranges for seeking.
+- Do not commit Cloudflare R2 credentials. Use local environment files such as `.env.local` (ignored by `.gitignore`) or local rclone configuration. Never expose R2 credentials to browser code.
+
 ---
 
 ## 2. Technology Stack & Key Libraries
