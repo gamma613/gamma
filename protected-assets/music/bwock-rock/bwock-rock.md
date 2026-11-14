@@ -8,8 +8,7 @@ genres:
   - Minimal
 slug: 'bwock-rock'
 tags:
-  - DJ Mix
-  - Studio Mix
+  - Studio
   - Quirky
   - Introspective
   - Chickens

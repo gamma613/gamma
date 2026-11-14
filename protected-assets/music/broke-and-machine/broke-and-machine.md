@@ -6,8 +6,7 @@ genres:
   - Breaks
 slug: 'broke-and-machine'
 tags:
-  - DJ Mix
-  - Studio Mix
+  - Studio
   - Dark
   - Introspective
 title: 'broke & machine'

@@ -9,8 +9,7 @@ genres:
   - Top 40's
 slug: 'the-heard'
 tags:
-  - DJ Mix
-  - Studio Mix
+  - Studio
   - Dance
 title: 'the heard'
 ---

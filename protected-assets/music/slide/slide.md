@@ -8,7 +8,6 @@ genres:
   - Nuskool Breaks
 slug: 'slide'
 tags:
-  - DJ Mix
-  - Studio Mix
+  - Studio
 title: 'slide'
 ---

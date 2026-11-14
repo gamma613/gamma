@@ -7,8 +7,7 @@ genres:
   - Electro House
 slug: 'breaks-on-a-plane'
 tags:
-  - DJ Mix
-  - Live Mix
+  - Live
   - Dance
 title: 'breaks on a plane'
 ---

@@ -6,8 +6,7 @@ genres:
   - Dubstep
 slug: 'tidal-acceleration'
 tags:
-  - DJ Mix
-  - Studio Mix
+  - Studio
   - Dark
   - Gritty
 title: 'tidal acceleration'

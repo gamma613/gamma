@@ -6,7 +6,6 @@ genres:
   - Dubstep
 slug: 'displacement'
 tags:
-  - DJ Mix
-  - Studio Mix
+  - Studio
 title: 'displacement'
 ---

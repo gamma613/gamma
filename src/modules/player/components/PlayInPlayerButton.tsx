@@ -13,10 +13,12 @@ import { usePlayerProgress } from '../context/usePlayerProgress';
 export function PlayInPlayerButton({
   slug,
   className,
+  progressShape = 'circle',
   resumeFromHistory = false,
 }: {
   slug: string;
   className?: string;
+  progressShape?: 'circle' | 'rectangle' | 'none';
   resumeFromHistory?: boolean;
 }) {
   const { disabled, gateClassName, isReady } = usePlayerControlsReady();
@@ -59,32 +61,63 @@ export function PlayInPlayerButton({
             else playId(slug);
           }}
         >
-          {progress !== null && (
+          {progress !== null && progressShape !== 'none' && (
             <svg
               aria-hidden="true"
               viewBox="0 0 100 100"
               className="pointer-events-none absolute -inset-[3px] size-[calc(100%+6px)] -rotate-90"
             >
-              <circle
-                cx="50"
-                cy="50"
-                r="46"
-                fill="none"
-                className="stroke-muted-foreground/20"
-                strokeWidth="6"
-              />
-              <circle
-                cx="50"
-                cy="50"
-                r="46"
-                fill="none"
-                className="stroke-primary"
-                strokeWidth="6"
-                strokeLinecap="round"
-                pathLength={100}
-                strokeDasharray={100}
-                strokeDashoffset={(1 - progress) * 100}
-              />
+              {progressShape === 'rectangle' ? (
+                <>
+                  <rect
+                    x="3"
+                    y="3"
+                    width="94"
+                    height="94"
+                    rx="8"
+                    fill="none"
+                    className="stroke-muted-foreground/20"
+                    strokeWidth="6"
+                  />
+                  <rect
+                    x="3"
+                    y="3"
+                    width="94"
+                    height="94"
+                    rx="8"
+                    fill="none"
+                    className="stroke-primary"
+                    strokeWidth="6"
+                    strokeLinecap="round"
+                    pathLength={100}
+                    strokeDasharray={100}
+                    strokeDashoffset={(1 - progress) * 100}
+                  />
+                </>
+              ) : (
+                <>
+                  <circle
+                    cx="50"
+                    cy="50"
+                    r="46"
+                    fill="none"
+                    className="stroke-muted-foreground/20"
+                    strokeWidth="6"
+                  />
+                  <circle
+                    cx="50"
+                    cy="50"
+                    r="46"
+                    fill="none"
+                    className="stroke-primary"
+                    strokeWidth="6"
+                    strokeLinecap="round"
+                    pathLength={100}
+                    strokeDasharray={100}
+                    strokeDashoffset={(1 - progress) * 100}
+                  />
+                </>
+              )}
             </svg>
           )}
 

@@ -6,8 +6,7 @@ genres:
   - Dubstep
 slug: 'in-the-eye'
 tags:
-  - DJ Mix
-  - Studio Mix
+  - Studio
   - Introspective
 title: 'in the eye'
 ---

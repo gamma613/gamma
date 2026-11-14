@@ -8,8 +8,7 @@ genres:
   - Progressive House
 slug: '2nd-nature'
 tags:
-  - DJ Mix
-  - Studio Mix
+  - Studio
   - Chillout
 title: '2nd nature'
 ---

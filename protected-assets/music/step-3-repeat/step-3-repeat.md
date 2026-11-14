@@ -7,7 +7,6 @@ genres:
   - Jungle
 slug: 'step-3-repeat'
 tags:
-  - DJ Mix
-  - Studio Mix
+  - Studio
 title: 'step 3: repeat'
 ---

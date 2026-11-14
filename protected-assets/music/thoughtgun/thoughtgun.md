@@ -6,8 +6,7 @@ genres:
   - Drum & Bass
 slug: 'thoughtgun'
 tags:
-  - DJ Mix
-  - Studio Mix
+  - Studio
 title: 'thoughtgun'
 ---
 

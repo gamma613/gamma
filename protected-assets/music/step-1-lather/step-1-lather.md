@@ -6,8 +6,7 @@ genres:
   - Drum & Bass
 slug: 'step-1-lather'
 tags:
-  - DJ Mix
-  - Studio Mix
+  - Studio
   - Atmospheric
 title: 'step 1: lather'
 ---

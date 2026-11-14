@@ -6,8 +6,7 @@ genres:
   - Dubstep
 slug: 'gravity'
 tags:
-  - DJ Mix
-  - Studio Mix
+  - Studio
   - Dark
 title: 'gravity'
 ---

@@ -6,8 +6,7 @@ genres:
   - Drum & Bass
 slug: 'based'
 tags:
-  - DJ Mix
-  - Studio Mix
+  - Studio
 title: 'based'
 ---
 

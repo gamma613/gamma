@@ -5,7 +5,6 @@ genres:
   - Drum & Bass
 slug: 'grump-and-bass'
 tags:
-  - DJ Mix
-  - Live Mix
+  - Live
 title: 'grump & bass'
 ---

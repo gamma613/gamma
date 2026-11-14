@@ -5,8 +5,7 @@ date: '2024-03-04'
 genres:
   - Drum & Bass
 tags:
-  - DJ Mix
-  - Studio Mix
+  - Studio
   - Atmospheric
   - Deep Listening
 title: 'repossession'

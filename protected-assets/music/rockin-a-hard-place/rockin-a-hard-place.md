@@ -7,7 +7,6 @@ genres:
   - Electro Breaks
 slug: 'rockin-a-hard-place'
 tags:
-  - DJ Mix
-  - Studio Mix
+  - Studio
 title: 'rockin a hard place'
 ---

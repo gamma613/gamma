@@ -7,8 +7,7 @@ genres:
   - Electro House
 slug: 'this-is-for-you'
 tags:
-  - DJ Mix
-  - Studio Mix
+  - Studio
   - Dance
 title: 'this is for you'
 ---

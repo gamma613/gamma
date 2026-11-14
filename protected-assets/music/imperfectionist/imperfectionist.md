@@ -7,8 +7,7 @@ genres:
   - Hard House
 slug: 'imperfectionist'
 tags:
-  - DJ Mix
-  - Live Mix
+  - Live
   - Vinyl
   - Dance
 title: 'imperfectionist'

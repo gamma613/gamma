@@ -8,7 +8,6 @@ genres:
   - Drum & Bass
 slug: 'dont-feed-the-artists'
 tags:
-  - DJ Mix
-  - Live Mix
+  - Live
 title: "don't feed the artists"
 ---

@@ -7,8 +7,7 @@ genres:
   - Fidget
 slug: 'bad-news-bear'
 tags:
-  - DJ Mix
-  - Studio Mix
+  - Studio
   - Dark
   - Gritty
 title: 'bad news bear'

@@ -7,7 +7,6 @@ genres:
   - Top 40s
 slug: 'astrids-8th-birthday'
 tags:
-  - DJ Mix
-  - Studio Mix
+  - Studio
 title: "astrid's 8th birthday"
 ---

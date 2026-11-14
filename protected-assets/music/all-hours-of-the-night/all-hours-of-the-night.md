@@ -7,8 +7,7 @@ genres:
   - Dubstep
 slug: 'all-hours-of-the-night'
 tags:
-  - DJ Mix
-  - Studio Mix
+  - Studio
   - Dance
   - Rave
 title: 'all hours of the night'

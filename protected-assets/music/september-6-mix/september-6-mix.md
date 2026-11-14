@@ -6,8 +6,7 @@ genres:
   - Drum & Bass
 slug: 'september-6-mix'
 tags:
-  - DJ Mix
-  - Live Mix
+  - Live
   - Vinyl
 title: 'september 6 mix'
 ---

@@ -8,8 +8,7 @@ genres:
   - Breaks
 slug: 'resilience'
 tags:
-  - DJ Mix
-  - Studio Mix
+  - Studio
   - Deep listening
 title: 'resilience'
 ---

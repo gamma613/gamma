@@ -9,7 +9,6 @@ genres:
   - Dubstep
 slug: 'disposable-outcome'
 tags:
-  - DJ Mix
-  - Studio Mix
+  - Studio
 title: 'disposable outcome'
 ---

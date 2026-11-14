@@ -7,8 +7,7 @@ genres:
   - Electro House
 slug: 'wobbles'
 tags:
-  - DJ Mix
-  - Studio Mix
+  - Studio
   - Rave
 title: 'wobbles'
 ---
