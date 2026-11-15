@@ -3,7 +3,8 @@
 import { Card, CardAction, CardContent, TitleArtist } from '@/components';
 import { IconButton } from '@/components/buttons/IconButton';
 import { GenreList, type MusicGenre } from '@/components/music/GenreList';
-import { MusicTypeLabel, type MixType } from '@/components/music/MusicTypeLabel';
+import { MusicMetadata } from '@/components/music/MusicMetadata';
+import type { MixType } from '@/components/music/MusicTypeLabel';
 import { ROUTES } from '@/lib/routes';
 import { cn } from '@/lib/utils';
 import { faEllipsisVertical } from '@fortawesome/free-solid-svg-icons';
@@ -22,6 +23,8 @@ export type PlaylistMusicItem = {
   artist?: string | null;
   type?: string;
   mixType?: MixType | null;
+  year?: number | string | null;
+  bpm?: number | null;
   genres?: MusicGenre[] | null;
 };
 
@@ -140,10 +143,15 @@ function MetaData({ item }: { item: PlaylistMusicItem | null }) {
 
   return (
     <>
-      <MusicTypeLabel type={item.type ?? 'music'} mixType={item.mixType} />
+      <MusicMetadata
+        year={item.year}
+        type={item.type ?? 'music'}
+        mixType={item.mixType}
+        bpm={item.bpm}
+      />
       {genres.length > 0 && (
         <>
-          <span aria-hidden="true"> | </span>
+          <span aria-hidden="true"> · </span>
           <GenreList genres={genres} />
         </>
       )}

@@ -5,7 +5,8 @@ import { PlayInPlayerButton } from '@/modules/player';
 import Image from 'next/image';
 import Link from 'next/link';
 import { GenreList, type MusicGenre } from './GenreList';
-import { MusicTypeLabel, type MixType } from './MusicTypeLabel';
+import { MusicMetadata } from './MusicMetadata';
+import type { MixType } from './MusicTypeLabel';
 
 // ----------------------------------------------------------------------
 
@@ -37,11 +38,6 @@ export function MusicTile({
   year,
 }: MusicTileProps) {
   const hasDistinctArtist = Boolean(artist && artist.toLowerCase() !== 'gamma');
-  const meta = [
-    year != null ? String(year) : null,
-    type ? <MusicTypeLabel key="type" type={type} mixType={mixType} /> : null,
-    bpm ? `${bpm} BPM` : null,
-  ].filter(Boolean);
   const visibleGenres = (genres ?? []).filter(Boolean);
   const visibleTags = (tags ?? []).filter(Boolean);
 
@@ -88,14 +84,9 @@ export function MusicTile({
           </TooltipContent>
         </Tooltip>
 
-        {meta.length > 0 && (
+        {(year != null || type || bpm) && (
           <p className="mt-0.5 text-muted-foreground text-[10px] sm:text-xs truncate">
-            {meta.map((item, index) => (
-              <span key={index}>
-                {index > 0 ? ' · ' : null}
-                {item}
-              </span>
-            ))}
+            <MusicMetadata year={year} type={type} mixType={mixType} bpm={bpm} />
           </p>
         )}
 
