@@ -1,5 +1,6 @@
 ---
 type: mix
+mixType: Studio
 bpm: 130
 date: '2008-04-23'
 genres:
@@ -10,7 +11,6 @@ genres:
       - Nuskool
 slug: 'the-clutch'
 tags:
-  - Studio
   - Dance
 title: 'the clutch'
 ---

@@ -1,5 +1,6 @@
 ---
 type: mix
+mixType: Studio
 bpm: 130
 date: '2007-09-15'
 genres:
@@ -10,7 +11,6 @@ genres:
   - Dubstep
 slug: 'hole-sum'
 tags:
-  - Studio
   - Dark
   - Introspective
 title: 'hole sum'

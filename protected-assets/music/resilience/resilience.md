@@ -1,5 +1,6 @@
 ---
 type: mix
+mixType: Studio
 bpm: 128
 date: '2021-04-06'
 genres:
@@ -8,7 +9,6 @@ genres:
   - Breaks
 slug: 'resilience'
 tags:
-  - Studio
   - Deep listening
 title: 'resilience'
 ---

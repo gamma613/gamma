@@ -5,6 +5,7 @@ import { PlayInPlayerButton } from '@/modules/player';
 import Image from 'next/image';
 import Link from 'next/link';
 import { GenreList, type MusicGenre } from './GenreList';
+import { MusicTypeLabel, type MixType } from './MusicTypeLabel';
 
 // ----------------------------------------------------------------------
 
@@ -14,6 +15,7 @@ export type MusicTileProps = {
   bpm?: number | null;
   href: string;
   genres?: MusicGenre[] | null;
+  mixType?: MixType | null;
   slug: string;
   tags?: string[] | null;
   title: string;
@@ -27,6 +29,7 @@ export function MusicTile({
   coverSrc,
   genres,
   href,
+  mixType,
   slug,
   tags,
   title,
@@ -34,7 +37,11 @@ export function MusicTile({
   year,
 }: MusicTileProps) {
   const hasDistinctArtist = Boolean(artist && artist.toLowerCase() !== 'gamma');
-  const meta = [year, type, bpm ? `${bpm} BPM` : null].filter(Boolean);
+  const meta = [
+    year != null ? String(year) : null,
+    type ? <MusicTypeLabel key="type" type={type} mixType={mixType} /> : null,
+    bpm ? `${bpm} BPM` : null,
+  ].filter(Boolean);
   const visibleGenres = (genres ?? []).filter(Boolean);
   const visibleTags = (tags ?? []).filter(Boolean);
 
@@ -82,17 +89,14 @@ export function MusicTile({
         </Tooltip>
 
         {meta.length > 0 && (
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <p
-                tabIndex={0}
-                className="mt-0.5 text-muted-foreground text-[10px] sm:text-xs truncate"
-              >
-                {meta.join(' · ')}
-              </p>
-            </TooltipTrigger>
-            <TooltipContent>{meta.join(' · ')}</TooltipContent>
-          </Tooltip>
+          <p className="mt-0.5 text-muted-foreground text-[10px] sm:text-xs truncate">
+            {meta.map((item, index) => (
+              <span key={index}>
+                {index > 0 ? ' · ' : null}
+                {item}
+              </span>
+            ))}
+          </p>
         )}
 
         {visibleGenres.length > 0 && (

@@ -1,5 +1,6 @@
 ---
 type: mix
+mixType: Studio
 bpm: 127
 date: '2022-03-17'
 genres:
@@ -7,7 +8,6 @@ genres:
   - House
 slug: 'unstable-elements'
 tags:
-  - Studio
   - Nightlife
 title: 'unstable elements'
 ---

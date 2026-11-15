@@ -8,6 +8,8 @@ import { z } from 'zod';
 
 export const MUSIC_TYPES = ['mix', 'mashup', 'track'] as const;
 export type MusicType = (typeof MUSIC_TYPES)[number];
+export const MIX_TYPES = ['Studio', 'Live'] as const;
+export type MixType = (typeof MIX_TYPES)[number];
 
 /** A standalone umbrella genre or an umbrella genre with its subgenres. */
 const genreSchema = z.union([
@@ -18,9 +20,8 @@ const genreSchema = z.union([
 ]);
 export type MusicGenre = z.infer<typeof genreSchema>;
 
-/** Shape of a music item data source */
-const musicSchema = z.object({
-  type: z.enum(MUSIC_TYPES),
+/** Fields shared by all music item types. */
+const musicFieldsSchema = z.object({
   artist: z.string().min(1).optional().nullable(),
   bpm: z.number().positive().nullable().optional(),
   bpm2: z.number().positive().nullable().optional(),
@@ -32,6 +33,19 @@ const musicSchema = z.object({
   title: z.string().min(1),
   slug: z.string().optional().nullable(),
 });
+
+/** Mixes require a Studio/Live subtype; other media types cannot have one. */
+const musicSchema = z.discriminatedUnion('type', [
+  musicFieldsSchema.extend({ type: z.literal('mix'), mixType: z.enum(MIX_TYPES) }),
+  musicFieldsSchema.extend({
+    type: z.literal('mashup'),
+    mixType: z.never().optional(),
+  }),
+  musicFieldsSchema.extend({
+    type: z.literal('track'),
+    mixType: z.never().optional(),
+  }),
+]);
 
 const music = defineCollection({
   name: 'music',

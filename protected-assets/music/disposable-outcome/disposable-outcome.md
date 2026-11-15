@@ -1,5 +1,6 @@
 ---
 type: mix
+mixType: Studio
 bpm: 135
 date: '2013-12-17'
 genres:
@@ -10,7 +11,6 @@ genres:
       - Nuskool
   - Dubstep
 slug: 'disposable-outcome'
-tags:
-  - Studio
+tags: []
 title: 'disposable outcome'
 ---

@@ -1,5 +1,6 @@
 ---
 type: mix
+mixType: Studio
 bpm: 135
 date: '2008-08-28'
 genres:
@@ -9,7 +10,6 @@ genres:
       - Electro Pop
 slug: 'this-is-for-you'
 tags:
-  - Studio
   - Dance
 title: 'this is for you'
 ---

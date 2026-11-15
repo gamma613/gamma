@@ -1,12 +1,12 @@
 ---
 type: mix
+mixType: Studio
 bpm: 174
 date: '2018-06-20'
 genres:
   - Drum & Bass
 slug: 'thoughtgun'
-tags:
-  - Studio
+tags: []
 title: 'thoughtgun'
 ---
 

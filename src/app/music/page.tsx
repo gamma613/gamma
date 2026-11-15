@@ -35,6 +35,7 @@ export default function MusicIndexPage() {
               coverSrc={coverSrc}
               bpm={item.bpm}
               type={item.type}
+              mixType={item.type === 'mix' ? item.mixType : null}
               year={item.date ? item.date.getFullYear() : null}
               genres={item.genres}
               tags={item.tags}
