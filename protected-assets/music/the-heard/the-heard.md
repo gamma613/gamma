@@ -3,8 +3,10 @@ type: mix
 bpm: 130
 date: '2012-11-24'
 genres:
-  - Electro House
-  - Electro Breaks
+  - House:
+      - Electro
+  - Breaks:
+      - Electro
   - Mainstream
   - Top 40's
 slug: 'the-heard'

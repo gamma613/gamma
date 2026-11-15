@@ -3,9 +3,11 @@ type: mix
 bpm: 135
 date: '2013-12-17'
 genres:
-  - Electro House
-  - Electro Breaks
-  - Nuskool Breaks
+  - House:
+      - Electro
+  - Breaks:
+      - Electro
+      - Nuskool
   - Dubstep
 slug: 'disposable-outcome'
 tags:

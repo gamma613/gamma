@@ -3,7 +3,8 @@ type: mix
 bpm: 130
 date: '2007-09-15'
 genres:
-  - Electro House
+  - House:
+      - Electro
   - Breaks
   - Industrial
   - Dubstep

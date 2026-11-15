@@ -3,9 +3,11 @@ type: mix
 bpm: 135
 date: '2007-11-11'
 genres:
-  - Electro House
-  - Electro Breaks
-  - Nuskool Breaks
+  - House:
+      - Electro
+  - Breaks:
+      - Electro
+      - Nuskool
 slug: 'slide'
 tags:
   - Studio

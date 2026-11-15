@@ -3,9 +3,10 @@ type: mix
 bpm: 125
 date: '2009-06-04'
 genres:
-  - Electro House
+  - House:
+      - Electro
+      - Progressive
   - Breaks
-  - Progressive House
 slug: '2nd-nature'
 tags:
   - Studio

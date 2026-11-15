@@ -3,9 +3,10 @@ type: mix
 bpm: 124
 date: '2007-11-28'
 genres:
-  - Electro House
-  - Fidget
-  - Minimal
+  - House:
+      - Electro
+      - Fidget
+      - Minimal
 slug: 'bwock-rock'
 tags:
   - Studio

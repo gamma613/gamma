@@ -3,7 +3,8 @@ type: mix
 bpm: 135
 date: '2011-09-25'
 genres:
-  - Electro House
+  - House:
+      - Electro
   - Dubstep
 slug: 'all-hours-of-the-night'
 tags:
