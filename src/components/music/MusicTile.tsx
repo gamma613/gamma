@@ -1,8 +1,10 @@
 'use client';
 
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/Tooltip';
 import { PlayInPlayerButton } from '@/modules/player';
 import Image from 'next/image';
 import Link from 'next/link';
+import { GenreList, type MusicGenre } from './GenreList';
 
 // ----------------------------------------------------------------------
 
@@ -11,7 +13,7 @@ export type MusicTileProps = {
   coverSrc: string;
   bpm?: number | null;
   href: string;
-  genres?: string[] | null;
+  genres?: MusicGenre[] | null;
   slug: string;
   tags?: string[] | null;
   title: string;
@@ -61,44 +63,56 @@ export function MusicTile({
 
       {/* Metadata below cover */}
       <div className="mt-2.5 sm:mt-3 min-w-0 flex-1">
-        <Link
-          href={href}
-          className="block min-w-0 group/title focus-visible:outline-2 focus-visible:outline-primary rounded-xs"
-        >
-          <h3
-            className="font-semibold text-foreground text-xs sm:text-sm leading-snug line-clamp-2 group-hover/title:underline"
-            title={title}
-          >
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Link
+              href={href}
+              className="block min-w-0 group/title focus-visible:outline-2 focus-visible:outline-primary rounded-xs"
+            >
+              <h3 className="font-semibold text-foreground text-xs sm:text-sm leading-snug line-clamp-2 group-hover/title:underline">
+                {title}
+                {hasDistinctArtist ? ` - ${artist}` : ''}
+              </h3>
+            </Link>
+          </TooltipTrigger>
+          <TooltipContent>
             {title}
             {hasDistinctArtist ? ` - ${artist}` : ''}
-          </h3>
-        </Link>
+          </TooltipContent>
+        </Tooltip>
 
         {meta.length > 0 && (
-          <p
-            className="mt-0.5 text-muted-foreground text-[10px] sm:text-xs truncate"
-            title={meta.join(' · ')}
-          >
-            {meta.join(' · ')}
-          </p>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <p
+                tabIndex={0}
+                className="mt-0.5 text-muted-foreground text-[10px] sm:text-xs truncate"
+              >
+                {meta.join(' · ')}
+              </p>
+            </TooltipTrigger>
+            <TooltipContent>{meta.join(' · ')}</TooltipContent>
+          </Tooltip>
         )}
 
         {visibleGenres.length > 0 && (
-          <p
-            className="mt-0.5 text-muted-foreground text-[10px] sm:text-xs truncate"
-            title={visibleGenres.join(', ')}
-          >
-            {visibleGenres.join(', ')}
+          <p className="mt-0.5 text-muted-foreground text-[10px] sm:text-xs truncate">
+            <GenreList genres={visibleGenres} />
           </p>
         )}
 
         {visibleTags.length > 0 && (
-          <p
-            className="mt-0.5 text-muted-foreground/80 text-[10px] sm:text-xs truncate"
-            title={visibleTags.join(', ')}
-          >
-            {visibleTags.join(', ')}
-          </p>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <p
+                tabIndex={0}
+                className="mt-0.5 text-muted-foreground text-[10px] sm:text-xs truncate"
+              >
+                {visibleTags.join(', ')}
+              </p>
+            </TooltipTrigger>
+            <TooltipContent>{visibleTags.join(', ')}</TooltipContent>
+          </Tooltip>
         )}
       </div>
 

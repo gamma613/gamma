@@ -5,15 +5,111 @@ import { Tooltip as TooltipPrimitive } from 'radix-ui';
 import * as React from 'react';
 
 const TooltipProvider = TooltipPrimitive.Provider;
+const TOUCH_OPEN_DELAY = 700;
+
+type TouchTooltipActions = { openTouch: () => void };
+const TouchTooltipContext = React.createContext<TouchTooltipActions | null>(null);
 
 function Tooltip({
   disableHoverableContent = true,
+  open,
+  defaultOpen,
+  onOpenChange,
+  delayDuration = 0,
   ...props
 }: React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Root>) {
-  return <TooltipPrimitive.Root disableHoverableContent={disableHoverableContent} {...props} />;
+  const [internalOpen, setInternalOpen] = React.useState(defaultOpen ?? false);
+  const [touchOpen, setTouchOpen] = React.useState(false);
+  const touchOpenRef = React.useRef(false);
+  const isOpen = (open ?? internalOpen) || touchOpen;
+
+  const openTouch = React.useCallback(() => {
+    if (touchOpenRef.current) return;
+    touchOpenRef.current = true;
+    setTouchOpen(true);
+    onOpenChange?.(true);
+  }, [onOpenChange]);
+
+  React.useEffect(() => {
+    if (!touchOpen) return;
+
+    const closeOnClick = () => {
+      touchOpenRef.current = false;
+      setTouchOpen(false);
+      if (open === undefined) setInternalOpen(false);
+      onOpenChange?.(false);
+    };
+    document.addEventListener('click', closeOnClick);
+    return () => document.removeEventListener('click', closeOnClick);
+  }, [onOpenChange, open, touchOpen]);
+
+  return (
+    <TouchTooltipContext.Provider value={{ openTouch }}>
+      <TooltipPrimitive.Root
+        {...props}
+        open={isOpen}
+        onOpenChange={(nextOpen) => {
+          if (open === undefined) setInternalOpen(nextOpen);
+          onOpenChange?.(nextOpen);
+        }}
+        disableHoverableContent={disableHoverableContent}
+        delayDuration={delayDuration}
+      />
+    </TouchTooltipContext.Provider>
+  );
 }
 
-const TooltipTrigger = TooltipPrimitive.Trigger;
+const TooltipTrigger = React.forwardRef<
+  React.ComponentRef<typeof TooltipPrimitive.Trigger>,
+  React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Trigger>
+>((props, ref) => {
+  const touchTooltip = React.useContext(TouchTooltipContext);
+  const openTimer = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  const didOpenOnTouch = React.useRef(false);
+  const suppressClick = React.useRef(false);
+
+  React.useEffect(
+    () => () => {
+      if (openTimer.current) clearTimeout(openTimer.current);
+    },
+    []
+  );
+
+  return (
+    <TooltipPrimitive.Trigger
+      {...props}
+      ref={ref}
+      onPointerDown={(event) => {
+        props.onPointerDown?.(event);
+        if (event.defaultPrevented || event.pointerType !== 'touch') return;
+        didOpenOnTouch.current = false;
+        if (openTimer.current) clearTimeout(openTimer.current);
+        openTimer.current = setTimeout(() => {
+          didOpenOnTouch.current = true;
+          touchTooltip?.openTouch();
+        }, TOUCH_OPEN_DELAY);
+      }}
+      onPointerUp={(event) => {
+        props.onPointerUp?.(event);
+        if (openTimer.current) clearTimeout(openTimer.current);
+        if (didOpenOnTouch.current) suppressClick.current = true;
+      }}
+      onPointerCancel={(event) => {
+        props.onPointerCancel?.(event);
+        if (openTimer.current) clearTimeout(openTimer.current);
+        didOpenOnTouch.current = false;
+      }}
+      onClickCapture={(event) => {
+        props.onClickCapture?.(event);
+        if (!suppressClick.current) return;
+        suppressClick.current = false;
+        event.preventDefault();
+        event.stopPropagation();
+      }}
+    />
+  );
+});
+TooltipTrigger.displayName = TooltipPrimitive.Trigger.displayName;
 
 const TooltipContent = React.forwardRef<
   React.ComponentRef<typeof TooltipPrimitive.Content>,

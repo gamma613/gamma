@@ -16,6 +16,7 @@ const genreSchema = z.union([
     error: 'A genre mapping must contain exactly one umbrella genre',
   }),
 ]);
+export type MusicGenre = z.infer<typeof genreSchema>;
 
 /** Shape of a music item data source */
 const musicSchema = z.object({
