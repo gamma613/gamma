@@ -1,5 +1,6 @@
 ---
 type: mix
+mixType: Studio
 date: '2014-04-30'
 genres:
   - House:
@@ -7,7 +8,6 @@ genres:
   - Mainstream
   - Top 40s
 slug: 'astrids-8th-birthday'
-tags:
-  - Studio
+tags: []
 title: "astrid's 8th birthday"
 ---

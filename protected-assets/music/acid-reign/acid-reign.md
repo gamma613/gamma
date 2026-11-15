@@ -1,5 +1,6 @@
 ---
 type: mix
+mixType: Studio
 bpm: 128
 date: '2008-05-07'
 genres:
@@ -8,7 +9,6 @@ genres:
       - Minimal
 slug: 'acid-reign'
 tags:
-  - Studio
   - Introspective
 title: 'acid reign'
 ---

@@ -1,5 +1,6 @@
 ---
 type: mix
+mixType: Live
 bpm: 150
 date: '2003-09-28'
 genres:
@@ -8,7 +9,6 @@ genres:
       - Hard House
 slug: 'imperfectionist'
 tags:
-  - Live
   - Vinyl
   - Dance
 title: 'imperfectionist'

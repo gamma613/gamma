@@ -1,5 +1,6 @@
 ---
 type: mix
+mixType: Live
 bpm: 139
 date: '2007-10-06'
 genres:
@@ -10,7 +11,6 @@ genres:
       - Electro
 slug: 'breaks-on-a-plane'
 tags:
-  - Live
   - Dance
 title: 'breaks on a plane'
 ---

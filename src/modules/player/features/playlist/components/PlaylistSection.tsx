@@ -205,6 +205,9 @@ function PlaylistSectionReady<TMeta = undefined>({
                     title: item.title,
                     artist: item.artist,
                     type: item.type,
+                    mixType: item.type === 'mix' ? item.mixType : null,
+                    year: item.date.getFullYear(),
+                    bpm: item.bpm,
                     genres: item.genres,
                   }
                 : null;

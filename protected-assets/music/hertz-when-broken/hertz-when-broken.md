@@ -1,5 +1,6 @@
 ---
 type: mix
+mixType: Studio
 bpm: 110
 date: '2009-07-28'
 genres:
@@ -8,7 +9,6 @@ genres:
   - Mainstream
 slug: 'hertz-when-broken'
 tags:
-  - Studio
   - Upbeat
 title: 'hertz when broken'
 ---

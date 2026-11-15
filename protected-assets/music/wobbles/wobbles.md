@@ -1,5 +1,6 @@
 ---
 type: mix
+mixType: Studio
 bpm: 135
 date: '2008-07-16'
 genres:
@@ -8,7 +9,6 @@ genres:
       - Electro
 slug: 'wobbles'
 tags:
-  - Studio
   - Rave
 title: 'wobbles'
 ---

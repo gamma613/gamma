@@ -1,5 +1,6 @@
 ---
 type: mix
+mixType: Studio
 bpm: 124
 date: '2007-11-28'
 genres:
@@ -9,7 +10,6 @@ genres:
       - Minimal
 slug: 'bwock-rock'
 tags:
-  - Studio
   - Quirky
   - Introspective
   - Chickens

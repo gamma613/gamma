@@ -1,5 +1,6 @@
 ---
 type: mix
+mixType: Studio
 bpm: 126
 date: '2008-09-30'
 genres:
@@ -8,7 +9,6 @@ genres:
   - Techno
 slug: 'reserve-psychology'
 tags:
-  - Studio
   - Introspective
 title: 'reserve psychology'
 ---

@@ -1,5 +1,6 @@
 ---
 type: mix
+mixType: Studio
 bpm: 130
 date: '2023-08-19'
 genres:
@@ -7,7 +8,6 @@ genres:
   - Breaks
 slug: 'peach-cake'
 tags:
-  - Studio
   - Dirty
 title: 'peach cake'
 ---

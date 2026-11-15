@@ -1,5 +1,6 @@
 ---
 type: mix
+mixType: Studio
 bpm: 124
 date: '2008-04-12'
 genres:
@@ -9,7 +10,6 @@ genres:
       - Minimal
 slug: 'cooped-up'
 tags:
-  - Studio
   - Quirky
   - Introspective
   - Chickens

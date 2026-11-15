@@ -1,12 +1,12 @@
 ---
 type: mix
+mixType: Studio
 bpm: 175
 date: '2024-03-04'
 genres:
   - Drum & Bass
 slug: 'based'
-tags:
-  - Studio
+tags: []
 title: 'based'
 ---
 
