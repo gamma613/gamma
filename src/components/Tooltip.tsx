@@ -114,7 +114,7 @@ TooltipTrigger.displayName = TooltipPrimitive.Trigger.displayName;
 const TooltipContent = React.forwardRef<
   React.ComponentRef<typeof TooltipPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Content>
->(({ className, children, sideOffset = 4, ...props }, ref) => (
+>(({ className, children, sideOffset = 0, ...props }, ref) => (
   <TooltipPrimitive.Content
     ref={ref}
     sideOffset={sideOffset}
