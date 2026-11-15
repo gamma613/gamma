@@ -3,7 +3,8 @@ type: mix
 bpm: 170
 date: '2017-05-26'
 genres:
-  - Drum & Bass (liquidfunk)
+  - Drum & Bass:
+      - Liquid
 slug: 'glow-and-flow-2'
 tags:
   - Live

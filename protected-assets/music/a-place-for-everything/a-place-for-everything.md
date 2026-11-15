@@ -3,9 +3,10 @@ type: mix
 bpm: 130
 date: '2011-05-24'
 genres:
-  - Minimal
-  - Electro House
-  - Progressive House
+  - House:
+      - Minimal
+      - Electro
+      - Progressive
 slug: 'a-place-for-everything'
 tags:
   - Studio

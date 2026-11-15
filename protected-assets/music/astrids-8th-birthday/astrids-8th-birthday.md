@@ -2,7 +2,8 @@
 type: mix
 date: '2014-04-30'
 genres:
-  - Electro House
+  - House:
+      - Electro
   - Mainstream
   - Top 40s
 slug: 'astrids-8th-birthday'

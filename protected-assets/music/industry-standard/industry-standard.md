@@ -3,7 +3,8 @@ type: mix
 bpm: 131
 date: '2008-08-16'
 genres:
-  - Electro Houe
+  - House:
+      - Electro
 slug: 'industry-standard'
 tags:
   - Studio

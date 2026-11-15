@@ -2,6 +2,7 @@
 
 import { Card, CardAction, CardContent, TitleArtist } from '@/components';
 import { IconButton } from '@/components/buttons/IconButton';
+import { GenreList, type MusicGenre } from '@/components/music/GenreList';
 import { ROUTES } from '@/lib/routes';
 import { cn } from '@/lib/utils';
 import { faEllipsisVertical } from '@fortawesome/free-solid-svg-icons';
@@ -19,7 +20,7 @@ export type PlaylistMusicItem = {
   title: string;
   artist?: string | null;
   type?: string;
-  genres?: string[] | null;
+  genres?: MusicGenre[] | null;
 };
 
 export function MusicRow({
@@ -141,7 +142,7 @@ function MetaData({ item }: { item: PlaylistMusicItem | null }) {
       {genres.length > 0 && (
         <>
           <span aria-hidden="true"> | </span>
-          {genres.join(', ')}
+          <GenreList genres={genres} />
         </>
       )}
     </>

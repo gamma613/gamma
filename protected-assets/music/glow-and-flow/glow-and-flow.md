@@ -2,7 +2,8 @@
 type: mix
 date: '2017-04-01'
 genres:
-  - Progressive House
+  - House:
+      - Progressive
 slug: 'glow-and-flow'
 tags:
   - Live

@@ -9,6 +9,15 @@ import { z } from 'zod';
 export const MUSIC_TYPES = ['mix', 'mashup', 'track'] as const;
 export type MusicType = (typeof MUSIC_TYPES)[number];
 
+/** A standalone umbrella genre or an umbrella genre with its subgenres. */
+const genreSchema = z.union([
+  z.string(),
+  z.record(z.string(), z.array(z.string())).refine((genre) => Object.keys(genre).length === 1, {
+    error: 'A genre mapping must contain exactly one umbrella genre',
+  }),
+]);
+export type MusicGenre = z.infer<typeof genreSchema>;
+
 /** Shape of a music item data source */
 const musicSchema = z.object({
   type: z.enum(MUSIC_TYPES),
@@ -18,7 +27,7 @@ const musicSchema = z.object({
   content: z.string().optional().nullable(),
   date: z.coerce.date(),
   description: z.string().optional(),
-  genres: z.array(z.string()).optional().nullable(),
+  genres: z.array(genreSchema).optional().nullable(),
   tags: z.array(z.string()).optional().nullable(),
   title: z.string().min(1),
   slug: z.string().optional().nullable(),

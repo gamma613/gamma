@@ -3,8 +3,10 @@ type: mix
 bpm: 128
 date: '2007-12-28'
 genres:
-  - Electro House
-  - Electro Breaks
+  - House:
+      - Electro
+  - Breaks:
+      - Electro
 slug: 'indoor-recess'
 tags:
   - Studio
