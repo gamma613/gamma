@@ -10,5 +10,3 @@ tags:
   - deep listening
 title: 'repossession'
 ---
-
-Can i just put shit here?

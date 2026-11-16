@@ -12,5 +12,3 @@ tags:
   - deep listening
 title: 'resilience'
 ---
-
-Mixcloud: https://www.mixcloud.com/dj-gamma/resilience/

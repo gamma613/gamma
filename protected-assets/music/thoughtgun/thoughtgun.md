@@ -9,5 +9,3 @@ slug: 'thoughtgun'
 tags: []
 title: 'thoughtgun'
 ---
-
-Mixcloud: https://www.mixcloud.com/dj-gamma/thoughtgun/

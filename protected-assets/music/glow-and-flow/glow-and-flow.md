@@ -9,5 +9,3 @@ slug: 'glow-and-flow'
 tags: []
 title: 'glow and flow'
 ---
-
-Mixcloud: https://www.mixcloud.com/dj-gamma/glow-and-flow/

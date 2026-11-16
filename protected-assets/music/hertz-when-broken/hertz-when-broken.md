@@ -12,5 +12,3 @@ tags:
   - upbeat
 title: 'hertz when broken'
 ---
-
-Mixcloud: https://www.mixcloud.com/dj-gamma/hertz-when-broken/
