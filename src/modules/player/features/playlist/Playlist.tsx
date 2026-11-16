@@ -76,7 +76,7 @@ export function Playlist({ className }: { className?: string }) {
         ))}
       </nav>
 
-      <div className="space-y-6">
+      <div className="space-y-12">
         <div id="playlist-now-playing" className="scroll-mt-20">
           <NowPlaying />
         </div>
