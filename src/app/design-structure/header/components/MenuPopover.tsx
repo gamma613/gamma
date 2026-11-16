@@ -3,6 +3,7 @@
 import { Button } from '@/components';
 import { IconButton } from '@/components/buttons/IconButton';
 import { usePageCollapse } from '@/components/layout';
+import { trackEvent } from '@/lib/analytics';
 import { ROUTES } from '@/lib/routes';
 import { cn } from '@/lib/utils';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
@@ -100,7 +101,10 @@ export function MenuPopover({ className }: { className?: string }) {
           variant="ghost"
           aria-controls={contentId}
           aria-expanded={open}
-          onClick={() => setOpen((v) => !v)}
+          onClick={() => {
+            trackEvent('navigation_menu_click', { action: open ? 'close' : 'open' });
+            setOpen((v) => !v);
+          }}
         />
       </div>
 
@@ -124,6 +128,7 @@ export function MenuPopover({ className }: { className?: string }) {
               size="sm"
               className="justify-start px-3"
               onClick={() => {
+                trackEvent('navigation_menu_item_click', { item_name: 'music' });
                 router.push(ROUTES.music().root);
                 menuItemClickCallback();
               }}
@@ -136,6 +141,7 @@ export function MenuPopover({ className }: { className?: string }) {
               size="sm"
               className="justify-start px-3"
               onClick={() => {
+                trackEvent('navigation_menu_item_click', { item_name: 'playlist' });
                 router.push('/playlist');
                 menuItemClickCallback();
               }}
@@ -148,6 +154,9 @@ export function MenuPopover({ className }: { className?: string }) {
               size="sm"
               className="justify-start px-3"
               onClick={() => {
+                trackEvent('navigation_menu_item_click', {
+                  item_name: collapsed ? 'expand_page' : 'collapse_page',
+                });
                 toggleCollapsed();
                 setOpen(false);
               }}

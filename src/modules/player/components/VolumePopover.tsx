@@ -1,6 +1,7 @@
 'use client';
 
 import { ButtonProps } from '@/components';
+import { trackEvent } from '@/lib/analytics';
 import { cn } from '@/lib/utils';
 import type React from 'react';
 import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from 'react';
@@ -95,6 +96,7 @@ export function VolumePopover({ anchor = 'bottom', buttonProps, className }: Pro
           disabled={!isReady || buttonProps?.disabled}
           onClick={() => {
             if (!isReady) return;
+            trackEvent('volume_button_click');
             setOpen((v) => !v);
           }}
           {...buttonProps}

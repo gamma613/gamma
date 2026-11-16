@@ -56,6 +56,10 @@ Restart `npm run dev` after changing environment variables. Set `MEDIA_STORAGE=l
 
 For a deployed Next.js app, add the same variables from `.env.example` in the hosting provider's server-side environment variable settings, using a separate bucket-scoped **Object Read Only** token. Set `MEDIA_STORAGE=r2` for the deployment and redeploy. Do not upload `.env.local` or commit credentials. The steps are host-specific; configure them once the hosting provider is selected.
 
+### Analytics (Google Analytics 4)
+
+Set `NEXT_PUBLIC_GA_MEASUREMENT_ID` to a GA4 web stream Measurement ID (for example, `G-XXXXXXXXXX`) in `.env.local` or the hosting provider's environment settings, then restart or redeploy. When configured, the app records page views and `audio_play` / `audio_listen` events. The listen event is emitted in roughly 15-second increments during forward playback and includes the music item slug and seconds listened. Leave it unset to disable analytics. Audio download tracking is not enabled: the stream endpoint also handles normal playback, seeking, and buffering requests.
+
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.

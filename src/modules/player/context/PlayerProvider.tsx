@@ -1,5 +1,6 @@
 'use client';
 
+import { trackEvent } from '@/lib/analytics';
 import { getMusicBySlug } from '@/lib/music/allMusicIndex';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { CHANNEL_NAME, CLAIM_KEY, HISTORY_RESUME_THRESHOLD_SECONDS, STORAGE_KEY } from '../config';
@@ -354,6 +355,32 @@ export function PlayerProvider({
     stateRef.current = state;
   }, [state]);
 
+  const analyticsProgressRef = useRef({ trackId: '', lastPosition: 0, pendingSeconds: 0 });
+  useEffect(() => {
+    if (!didLoadPersisted || !state.track) return;
+    const trackId = state.track.slug;
+    const progress = analyticsProgressRef.current;
+    if (progress.trackId !== trackId) {
+      analyticsProgressRef.current = {
+        trackId,
+        lastPosition: state.positionSeconds,
+        pendingSeconds: 0,
+      };
+      return;
+    }
+
+    const delta = state.positionSeconds - progress.lastPosition;
+    progress.lastPosition = state.positionSeconds;
+    // Count normal forward playback updates, while ignoring seeks and resumes.
+    if (!state.playing || delta <= 0 || delta > 6) return;
+    progress.pendingSeconds += delta;
+    if (progress.pendingSeconds >= 15) {
+      const listenedSeconds = Math.floor(progress.pendingSeconds);
+      progress.pendingSeconds -= listenedSeconds;
+      trackEvent('audio_listen', { item_id: trackId, listened_seconds: listenedSeconds });
+    }
+  }, [didLoadPersisted, state.playing, state.positionSeconds, state.track]);
+
   const lastPersistMsRef = useRef<number>(0);
   useEffect(() => {
     // Avoid overwriting storage with defaults before we've loaded persisted state.
@@ -451,6 +478,7 @@ export function PlayerProvider({
   const play: PlayerActions['play'] = useCallback(
     (track, opts) => {
       const normalized = normalizeTrack(track);
+      trackEvent('audio_play', { item_id: normalized.slug });
       setState((s) => {
         const prevSlug = s.track?.slug ?? null;
         const navigationMode = opts?.navigation ?? 'push';

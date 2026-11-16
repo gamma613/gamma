@@ -1,6 +1,7 @@
 'use client';
 
 import { Slider, Tooltip, TooltipContent, TooltipTrigger } from '@/components';
+import { trackEvent } from '@/lib/analytics';
 import { cn } from '@/lib/utils';
 import { useRef, useState } from 'react';
 import { usePlayerControlsReady } from '../context/usePlayerControlsReady';
@@ -97,7 +98,12 @@ export function SeekBar({ className }: { className?: string }) {
           if (!isReady) return;
 
           setIsScrubbing(false);
-          seek(next[0] ?? 0);
+          const positionSeconds = next[0] ?? 0;
+          trackEvent('playback_seek', {
+            ...(track?.slug ? { item_id: track.slug } : {}),
+            position_seconds: Math.round(positionSeconds),
+          });
+          seek(positionSeconds);
         }}
         step={0.25}
         value={value}

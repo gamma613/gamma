@@ -1,6 +1,7 @@
 'use client';
 
 import { Slider, SliderProps, Tooltip, TooltipContent, TooltipTrigger } from '@/components';
+import { trackEvent } from '@/lib/analytics';
 import { cn } from '@/lib/utils';
 import { useRef, useState } from 'react';
 import { usePlayerControlsReady } from '../context/usePlayerControlsReady';
@@ -92,6 +93,12 @@ export function VolumeSlider({
           const v = next[0] ?? 0;
           setVolume(v);
           setMuted(v === 0);
+        }}
+        onValueCommit={(next) => {
+          if (!isReady) return;
+          trackEvent('volume_slider_change', {
+            volume_percent: Math.round(Math.max(0, Math.min(1, next[0] ?? 0)) * 100),
+          });
         }}
         step={0.01}
         value={sliderValue}

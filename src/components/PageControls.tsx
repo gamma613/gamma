@@ -2,6 +2,7 @@
 
 import { Button, Tooltip, TooltipContent, TooltipTrigger } from '@/components';
 import { usePageCollapse } from '@/components/layout';
+import { trackEvent } from '@/lib/analytics';
 import { useHydrated } from '@/lib/useHydrated';
 import { cn } from '@/lib/utils';
 import { faCompress, faExpand } from '@fortawesome/free-solid-svg-icons';
@@ -33,7 +34,12 @@ export function PageControls() {
             size="icon"
             aria-label={collapseLabel}
             className="active:translate-y-0"
-            onClick={toggleCollapsed}
+            onClick={() => {
+              trackEvent('page_collapse_control_click', {
+                action: collapsed ? 'expand' : 'collapse',
+              });
+              toggleCollapsed();
+            }}
           >
             <FontAwesomeIcon icon={collapsed ? faExpand : faCompress} className="size-4" />
           </Button>

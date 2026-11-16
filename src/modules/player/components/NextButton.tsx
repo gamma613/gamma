@@ -1,6 +1,7 @@
 'use client';
 
 import { Button, Tooltip, TooltipContent, TooltipTrigger, type ButtonProps } from '@/components';
+import { trackEvent } from '@/lib/analytics';
 import { faForwardStep } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { usePlayerControlsReady } from '../context/usePlayerControlsReady';
@@ -24,6 +25,7 @@ export function NextButton({ className, ...buttonProps }: NextButtonProps) {
           disabled={disabled}
           onClick={() => {
             if (disabled) return;
+            trackEvent('now_playing_control_click', { control: 'forward' });
             playNext();
           }}
           className={className}

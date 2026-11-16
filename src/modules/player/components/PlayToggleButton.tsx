@@ -1,6 +1,7 @@
 'use client';
 
 import { Button, ButtonProps, Tooltip, TooltipContent, TooltipTrigger } from '@/components';
+import { trackEvent } from '@/lib/analytics';
 import { faPause, faPlay } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { usePlayerControlsReady } from '../context/usePlayerControlsReady';
@@ -26,6 +27,7 @@ export const PlayToggleButton = ({ className, ...buttonProps }: PlayButtonToggle
           disabled={disabled}
           onClick={() => {
             if (!isReady) return;
+            trackEvent('now_playing_control_click', { control: playing ? 'pause' : 'play' });
             toggle();
           }}
           className={className}
