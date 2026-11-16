@@ -22,6 +22,9 @@ export type MusicTileProps = {
   title: string;
   type?: string | null;
   year?: number | string | null;
+  expandedTags?: boolean;
+  expandedGenres?: boolean;
+  expandedType?: boolean;
 };
 
 export function MusicTile({
@@ -36,6 +39,9 @@ export function MusicTile({
   title,
   type,
   year,
+  expandedTags = false,
+  expandedGenres = false,
+  expandedType = false,
 }: MusicTileProps) {
   const hasDistinctArtist = Boolean(artist && artist.toLowerCase() !== 'gamma');
   const visibleGenres = (genres ?? []).filter(Boolean);
@@ -85,30 +91,45 @@ export function MusicTile({
         </Tooltip>
 
         {(year != null || type || bpm) && (
-          <div className="mt-0.5 text-muted-foreground text-[10px] sm:text-xs truncate">
-            <MusicMetadata year={year} type={type} mixType={mixType} bpm={bpm} />
+          <div
+            className={`mt-0.5 text-muted-foreground text-[10px] sm:text-xs ${expandedType ? 'whitespace-normal break-words' : 'truncate'}`}
+          >
+            <MusicMetadata
+              year={year}
+              type={type}
+              mixType={mixType}
+              bpm={bpm}
+              expandedType={expandedType}
+            />
           </div>
         )}
 
         {visibleGenres.length > 0 && (
-          <div className="mt-0.5 text-muted-foreground text-[10px] sm:text-xs truncate">
-            <GenreList genres={visibleGenres} />
+          <div
+            className={`mt-0.5 text-muted-foreground text-[10px] sm:text-xs ${expandedGenres ? 'whitespace-normal break-words' : 'truncate'}`}
+          >
+            <GenreList genres={visibleGenres} layout={expandedGenres ? 'expanded' : 'inline'} />
           </div>
         )}
 
-        {visibleTags.length > 0 && (
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <div
-                tabIndex={0}
-                className="mt-0.5 text-muted-foreground text-[10px] sm:text-xs truncate"
-              >
-                {visibleTags.join(', ')}
-              </div>
-            </TooltipTrigger>
-            <TooltipContent>{visibleTags.join(', ')}</TooltipContent>
-          </Tooltip>
-        )}
+        {visibleTags.length > 0 &&
+          (expandedTags ? (
+            <div className="mt-0.5 whitespace-normal break-words text-muted-foreground text-[10px] sm:text-xs">
+              {visibleTags.join(', ')}
+            </div>
+          ) : (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div
+                  tabIndex={0}
+                  className="mt-0.5 text-muted-foreground text-[10px] sm:text-xs truncate"
+                >
+                  {visibleTags.join(', ')}
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>{visibleTags.join(', ')}</TooltipContent>
+            </Tooltip>
+          ))}
       </div>
 
       <PlayInPlayerButton

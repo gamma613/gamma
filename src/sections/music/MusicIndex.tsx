@@ -36,6 +36,9 @@ export function MusicIndex({ items }: { items: Music[] }) {
             year={item.date.getFullYear()}
             genres={item.genres}
             tags={item.tags}
+            expandedTags={filters.selectedTags.size > 0}
+            expandedGenres={filters.selectedGenres.size > 0}
+            expandedType={filters.selectedTypes.size > 0}
           />
         ))}
       </div>
