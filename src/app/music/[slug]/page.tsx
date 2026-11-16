@@ -1,4 +1,5 @@
 import { BackButton, DD, DL, DLRow, DT, PageWrapper, TitleArtist } from '@/components';
+import { GenreList } from '@/components/music/GenreList';
 import { formatDateYmd } from '@/lib/formatDate';
 import { getMusicItem } from '@/lib/music/getMusicItem';
 import { ROUTES } from '@/lib/routes';
@@ -70,6 +71,15 @@ export default async function MusicItemPage({ params }: Props) {
             <DT>Duration</DT>
             <DD>54:12</DD>
           </DLRow>
+
+          {item.genres?.length ? (
+            <DLRow>
+              <DT>Genres</DT>
+              <DD>
+                <GenreList genres={item.genres} layout="stacked" />
+              </DD>
+            </DLRow>
+          ) : null}
         </DL>
       </div>
 
