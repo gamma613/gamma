@@ -11,6 +11,6 @@ genres:
 slug: 'a-place-for-everything'
 tags:
   - chillout
-  - introspective
+  - deep listening
 title: 'a place for everything'
 ---

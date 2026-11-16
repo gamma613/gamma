@@ -12,5 +12,6 @@ genres:
 slug: 'subdivision'
 tags:
   - collaboration
+  - deep listening
 title: 'subdivision'
 ---

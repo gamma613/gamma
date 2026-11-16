@@ -13,6 +13,6 @@ genres:
 slug: 'unlawful-assembly-line'
 tags:
   - quirky
-  - chickens
+  - chicken
 title: 'unlawful assembly line'
 ---
