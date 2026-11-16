@@ -44,7 +44,7 @@ export default async function MusicItemPage({ params }: Props) {
         </div>
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-4 items-start">
+      <div className="flex flex-col sm:flex-row gap-4 items-start mt-10">
         <Image
           width={400}
           height={400}
@@ -98,7 +98,7 @@ export default async function MusicItemPage({ params }: Props) {
         </DL>
       </div>
 
-      {item.content}
+      {item.content && <div className="mt-10">{item.content}</div>}
     </PageWrapper>
   );
 }
