@@ -54,7 +54,7 @@ R2_SECRET_ACCESS_KEY=your-read-only-secret-access-key
 
 Restart `npm run dev` after changing environment variables. Set `MEDIA_STORAGE=local` (or remove it) to switch back to local audio. The R2 token is used only by the Next.js server; browser requests continue through `/api/stream/music/<slug>`, including byte-range requests needed for seeking. `.env.local` is gitignored. Never use the write-enabled rclone upload token in the app; use a separate read-only token for playback.
 
-For a deployed Next.js app, add the same variables from `.env.example` in the hosting provider's server-side environment variable settings, using a separate bucket-scoped **Object Read Only** token. Set `MEDIA_STORAGE=r2` for the deployment and redeploy. Do not upload `.env.local` or commit credentials. The steps are host-specific; configure them once the hosting provider is selected.
+For the Vercel deployment, add the required variables from `.env.example` in the Vercel project's **Production** environment settings, using a separate bucket-scoped **Object Read Only** token. Set `MEDIA_STORAGE=r2` and redeploy. Do not upload `.env.local` or commit credentials. The release workflow pulls Vercel's Production settings when it builds a tag.
 
 ### Analytics (Google Analytics 4)
 
@@ -73,8 +73,43 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+## Production deploys and rollbacks (Vercel)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Production deploys are made from version tags, not ordinary branch pushes. The GitHub Actions workflow in `.github/workflows/deploy-production.yml` builds the selected tag with Vercel and deploys it to Production. Vercel's automatic Git deployments are disabled in `vercel.json`, so pushes and pull requests won't deploy by themselves.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### One-time setup
+
+1. In the Vercel project, keep the GitHub repository connected and configure the Production environment variables, including `MEDIA_STORAGE=r2` and the R2 read-only credentials.
+2. Create a Vercel access token in **Account Settings → Tokens**.
+3. From the project directory, run `vercel link` and choose the existing Vercel project. Read `orgId` and `projectId` from the generated, gitignored `.vercel/project.json` file.
+4. In the GitHub repository, open **Settings → Secrets and variables → Actions → New repository secret**. Add:
+   - `VERCEL_TOKEN`: the access token from step 2
+   - `VERCEL_ORG_ID`: `orgId` from `.vercel/project.json`
+   - `VERCEL_PROJECT_ID`: `projectId` from `.vercel/project.json`
+
+Keep the token private. The IDs identify the Vercel team and project but are not credentials.
+
+### Release a version
+
+Commit and push the release changes to GitHub, then create and push an annotated version tag at the commit you want to publish:
+
+```bash
+git checkout main
+git pull
+git tag -a v1.0.0 -m "Release v1.0.0"
+git push origin v1.0.0
+```
+
+Use the next unused version for each release; do not move or reuse a published tag. The automatic trigger matches `vMAJOR.MINOR.PATCH` tags made of numbers, such as `v1.0.0`; tags like `v-next` or `v1.0.0-rc.1` do not trigger a production deployment. Follow the run under the repository's **Actions** tab and confirm the deployment in Vercel. You can also create a GitHub Release using a new matching version tag; that tag push triggers the same workflow.
+
+### Roll back
+
+On the Hobby plan, Vercel Instant Rollback can restore only the immediately previous Production deployment. In the Vercel project, use **Deployments → Instant Rollback** to restore it quickly.
+
+To deploy a release older than the immediately previous deployment, use the GitHub workflow manually:
+
+1. Open **Actions → Deploy production to Vercel → Run workflow**.
+2. Enter the older release tag (for example, `v1.0.0`) in **Git tag or commit SHA to deploy** and run the workflow.
+3. Confirm that workflow checked out the intended tag and that its deployment is serving the production domain.
+
+This deploys the selected historical source as a new Production deployment. It does not reverse database, R2, or other external state changes; handle those separately if a release changed them. After fixing the problem, publish a new version tag rather than moving an existing tag.
