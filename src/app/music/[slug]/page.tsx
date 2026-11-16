@@ -68,6 +68,14 @@ export default async function MusicItemPage({ params }: Props) {
           </DLRow>
 
           <DLRow>
+            <DT>Type</DT>
+            <DD>
+              {item.type}
+              {item.type === 'mix' && item.mixType ? ` (${item.mixType})` : null}
+            </DD>
+          </DLRow>
+
+          <DLRow>
             <DT>Duration</DT>
             <DD>54:12</DD>
           </DLRow>
