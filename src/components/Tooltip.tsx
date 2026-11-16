@@ -5,6 +5,7 @@ import { Tooltip as TooltipPrimitive } from 'radix-ui';
 import * as React from 'react';
 
 const TooltipProvider = TooltipPrimitive.Provider;
+const TooltipPortal = TooltipPrimitive.Portal;
 const TOUCH_OPEN_DELAY = 700;
 
 type TouchTooltipActions = { openTouch: () => void };
@@ -134,4 +135,4 @@ const TooltipContent = React.forwardRef<
 ));
 TooltipContent.displayName = TooltipPrimitive.Content.displayName;
 
-export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger };
+export { Tooltip, TooltipContent, TooltipPortal, TooltipProvider, TooltipTrigger };

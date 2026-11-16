@@ -2,7 +2,7 @@
 
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/Tooltip';
 
-export type MixType = 'Studio' | 'Live';
+export type MixType = 'studio' | 'live';
 
 export function MusicTypeLabel({
   type,
