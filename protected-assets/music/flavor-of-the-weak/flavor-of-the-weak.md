@@ -10,7 +10,7 @@ genres:
       - electro
 slug: 'flavor-of-the-weak'
 tags:
-  - Dance
-  - Rave
+  - dance
+  - rave
 title: 'flavor of the weak'
 ---

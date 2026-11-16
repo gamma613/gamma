@@ -9,7 +9,7 @@ genres:
   - breaks
 slug: 'resilience'
 tags:
-  - Deep listening
+  - deep listening
 title: 'resilience'
 ---
 

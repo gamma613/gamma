@@ -10,6 +10,6 @@ genres:
       - electro pop
 slug: 'this-is-for-you'
 tags:
-  - Dance
+  - dance
 title: 'this is for you'
 ---

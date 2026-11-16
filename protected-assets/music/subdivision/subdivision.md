@@ -11,7 +11,7 @@ genres:
   - drum & bass
 slug: 'subdivision'
 tags:
-  - Collaboration
+  - collaboration
 title: 'subdivision'
 ---
 

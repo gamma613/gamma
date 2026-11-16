@@ -12,7 +12,7 @@ genres:
       - minimal
 slug: 'unlawful-assembly-line'
 tags:
-  - Quirky
-  - Chickens
+  - quirky
+  - chickens
 title: 'unlawful assembly line'
 ---

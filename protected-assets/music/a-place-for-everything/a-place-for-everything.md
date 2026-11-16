@@ -10,7 +10,7 @@ genres:
       - progressive
 slug: 'a-place-for-everything'
 tags:
-  - Chillout
-  - Introspective
+  - chillout
+  - introspective
 title: 'a place for everything'
 ---

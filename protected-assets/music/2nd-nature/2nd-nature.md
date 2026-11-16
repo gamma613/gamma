@@ -10,6 +10,6 @@ genres:
   - breaks
 slug: '2nd-nature'
 tags:
-  - Chillout
+  - chillout
 title: '2nd nature'
 ---

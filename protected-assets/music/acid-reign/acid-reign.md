@@ -9,6 +9,6 @@ genres:
       - minimal
 slug: 'acid-reign'
 tags:
-  - Introspective
+  - introspective
 title: 'acid reign'
 ---

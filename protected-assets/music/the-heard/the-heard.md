@@ -12,6 +12,6 @@ genres:
   - top 40's
 slug: 'the-heard'
 tags:
-  - Dance
+  - dance
 title: 'the heard'
 ---

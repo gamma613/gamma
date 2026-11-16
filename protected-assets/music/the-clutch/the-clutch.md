@@ -11,6 +11,6 @@ genres:
       - nuskool
 slug: 'the-clutch'
 tags:
-  - Dance
+  - dance
 title: 'the clutch'
 ---

@@ -7,7 +7,7 @@ genres:
   - breaks
 slug: 'broke-and-machine'
 tags:
-  - Dark
-  - Introspective
+  - dark
+  - introspective
 title: 'broke & machine'
 ---

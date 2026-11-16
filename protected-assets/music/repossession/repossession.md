@@ -7,7 +7,7 @@ genres:
   - drum & bass:
       - atmospheric
 tags:
-  - Deep Listening
+  - deep listening
 title: 'repossession'
 ---
 

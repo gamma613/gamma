@@ -7,6 +7,6 @@ genres:
   - dubstep
 slug: 'gravity'
 tags:
-  - Dark
+  - dark
 title: 'gravity'
 ---

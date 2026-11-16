@@ -11,6 +11,6 @@ genres:
       - electro
 slug: 'breaks-on-a-plane'
 tags:
-  - Dance
+  - dance
 title: 'breaks on a plane'
 ---

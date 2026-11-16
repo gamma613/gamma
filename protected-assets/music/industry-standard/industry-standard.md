@@ -8,8 +8,8 @@ genres:
       - electro
 slug: 'industry-standard'
 tags:
-  - Dark
-  - Gritty
-  - Atmospheric
+  - dark
+  - gritty
+  - atmospheric
 title: 'industry standard'
 ---

@@ -9,7 +9,7 @@ length: 8m
 title: slide it from paris with disco
 slug: slide-it-from-paris-with-disco
 tags:
-  - Mini Mix
+  - mini mix
 timestamp: 1232752089
 file: 'slide-it-from-paris-with-disco.mp3'
 ---

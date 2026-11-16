@@ -7,6 +7,6 @@ genres:
   - dubstep
 slug: 'in-the-eye'
 tags:
-  - Introspective
+  - introspective
 title: 'in the eye'
 ---

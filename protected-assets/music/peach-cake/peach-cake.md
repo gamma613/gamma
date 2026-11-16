@@ -8,6 +8,6 @@ genres:
   - breaks
 slug: 'peach-cake'
 tags:
-  - Dirty
+  - dirty
 title: 'peach cake'
 ---

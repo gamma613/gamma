@@ -10,7 +10,7 @@ genres:
       - electro
 slug: 'indoor-recess'
 tags:
-  - Dance
-  - Dirty
+  - dance
+  - dirty
 title: 'indoor recess'
 ---

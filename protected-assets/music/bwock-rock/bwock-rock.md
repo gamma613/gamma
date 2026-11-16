@@ -10,8 +10,8 @@ genres:
       - minimal
 slug: 'bwock-rock'
 tags:
-  - Quirky
-  - Introspective
-  - Chickens
+  - quirky
+  - introspective
+  - chickens
 title: 'bwock rock'
 ---

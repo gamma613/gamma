@@ -10,8 +10,8 @@ genres:
       - minimal
 slug: 'cooped-up'
 tags:
-  - Quirky
-  - Introspective
-  - Chickens
+  - quirky
+  - introspective
+  - chickens
 title: 'cooped up'
 ---

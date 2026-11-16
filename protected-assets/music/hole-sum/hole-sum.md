@@ -11,7 +11,7 @@ genres:
   - dubstep
 slug: 'hole-sum'
 tags:
-  - Dark
-  - Introspective
+  - dark
+  - introspective
 title: 'hole sum'
 ---

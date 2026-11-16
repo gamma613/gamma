@@ -9,6 +9,6 @@ genres:
   - techno
 slug: 'reserve-psychology'
 tags:
-  - Introspective
+  - introspective
 title: 'reserve psychology'
 ---

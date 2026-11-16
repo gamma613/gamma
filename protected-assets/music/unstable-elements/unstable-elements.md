@@ -8,7 +8,7 @@ genres:
   - house
 slug: 'unstable-elements'
 tags:
-  - Nightlife
+  - nightlife
 title: 'unstable elements'
 ---
 

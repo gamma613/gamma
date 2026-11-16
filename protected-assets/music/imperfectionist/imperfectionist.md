@@ -9,7 +9,7 @@ genres:
       - hard house
 slug: 'imperfectionist'
 tags:
-  - Vinyl
-  - Dance
+  - vinyl
+  - dance
 title: 'imperfectionist'
 ---

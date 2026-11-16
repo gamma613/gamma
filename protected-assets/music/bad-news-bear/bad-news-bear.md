@@ -9,7 +9,7 @@ genres:
       - fidget
 slug: 'bad-news-bear'
 tags:
-  - Dark
-  - Gritty
+  - dark
+  - gritty
 title: 'bad news bear'
 ---

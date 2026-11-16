@@ -14,6 +14,9 @@ export type MixType = (typeof MIX_TYPES)[number];
 const lowercaseGenreNameSchema = z.string().refine((name) => name === name.toLowerCase(), {
   error: 'Genre names and subgenres must be lowercase',
 });
+const lowercaseTagSchema = z.string().refine((tag) => tag === tag.toLowerCase(), {
+  error: 'Tags must be lowercase',
+});
 
 /** A standalone genre or an umbrella genre with its subgenres. */
 const genreSchema = z.union([
@@ -35,7 +38,7 @@ const musicFieldsSchema = z.object({
   date: z.coerce.date(),
   description: z.string().optional(),
   genres: z.array(genreSchema).optional().nullable(),
-  tags: z.array(z.string()).optional().nullable(),
+  tags: z.array(lowercaseTagSchema).optional().nullable(),
   title: z.string().min(1),
   slug: z.string().optional().nullable(),
 });

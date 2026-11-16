@@ -9,7 +9,7 @@ genres:
   - mainstream
 slug: 'hertz-when-broken'
 tags:
-  - Upbeat
+  - upbeat
 title: 'hertz when broken'
 ---
 

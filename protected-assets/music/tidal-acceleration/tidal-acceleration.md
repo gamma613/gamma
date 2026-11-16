@@ -7,7 +7,7 @@ genres:
   - dubstep
 slug: 'tidal-acceleration'
 tags:
-  - Dark
-  - Gritty
+  - dark
+  - gritty
 title: 'tidal acceleration'
 ---

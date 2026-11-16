@@ -9,7 +9,7 @@ genres:
   - dubstep
 slug: 'all-hours-of-the-night'
 tags:
-  - Dance
-  - Rave
+  - dance
+  - rave
 title: 'all hours of the night'
 ---

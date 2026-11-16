@@ -8,7 +8,7 @@ genres:
       - electro
 slug: '3rd-party'
 tags:
-  - Dance
-  - Rave
+  - dance
+  - rave
 title: '3rd party'
 ---

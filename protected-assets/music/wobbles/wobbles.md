@@ -9,6 +9,6 @@ genres:
       - electro
 slug: 'wobbles'
 tags:
-  - Rave
+  - rave
 title: 'wobbles'
 ---
