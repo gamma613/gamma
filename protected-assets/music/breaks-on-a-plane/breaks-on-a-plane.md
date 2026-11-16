@@ -1,13 +1,13 @@
 ---
 type: mix
-mixType: Live
+mixType: live
 bpm: 139
 date: '2007-10-06'
 genres:
-  - Breaks:
+  - breaks:
       - nuskool
       - electro
-  - House:
+  - house:
       - electro
 slug: 'breaks-on-a-plane'
 tags:

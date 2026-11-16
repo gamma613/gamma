@@ -1,12 +1,12 @@
 ---
 type: mix
-mixType: Studio
+mixType: studio
 bpm: 135
 date: '2012-09-14'
 genres:
-  - House:
+  - house:
       - electro
-  - Breaks:
+  - breaks:
       - electro
 slug: 'rockin-a-hard-place'
 tags: []

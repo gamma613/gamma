@@ -1,10 +1,10 @@
 ---
 type: mix
-mixType: Live
+mixType: live
 bpm: 170
 date: '2017-05-26'
 genres:
-  - Drum & Bass:
+  - drum & bass:
       - liquid
 slug: 'glow-and-flow-2'
 tags: []

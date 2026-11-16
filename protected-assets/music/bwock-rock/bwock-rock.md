@@ -1,10 +1,10 @@
 ---
 type: mix
-mixType: Studio
+mixType: studio
 bpm: 124
 date: '2007-11-28'
 genres:
-  - House:
+  - house:
       - electro
       - fidget
       - minimal

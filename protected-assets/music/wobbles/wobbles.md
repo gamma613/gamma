@@ -1,10 +1,10 @@
 ---
 type: mix
-mixType: Studio
+mixType: studio
 bpm: 135
 date: '2008-07-16'
 genres:
-  - House:
+  - house:
       - fidget
       - electro
 slug: 'wobbles'

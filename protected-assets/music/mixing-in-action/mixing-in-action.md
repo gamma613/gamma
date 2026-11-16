@@ -1,12 +1,12 @@
 ---
 type: mix
-mixType: Studio
+mixType: studio
 bpm: 135
 date: '2008-07-09'
 genres:
-  - House:
+  - house:
       - electro
-  - Pop:
+  - pop:
       - electro pop
 slug: 'mixing-in-action'
 tags: []

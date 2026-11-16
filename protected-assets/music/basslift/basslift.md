@@ -1,10 +1,10 @@
 ---
 type: mix
-mixType: Live
+mixType: live
 bpm: 173
 date: '2020-09-26'
 genres:
-  - Drum & Bass
+  - drum & bass
 slug: 'basslift'
 tags: []
 title: 'basslift'

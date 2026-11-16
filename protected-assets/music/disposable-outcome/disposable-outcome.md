@@ -1,15 +1,15 @@
 ---
 type: mix
-mixType: Studio
+mixType: studio
 bpm: 135
 date: '2013-12-17'
 genres:
-  - House:
+  - house:
       - electro
-  - Breaks:
+  - breaks:
       - electro
       - nuskool
-  - Dubstep
+  - dubstep
 slug: 'disposable-outcome'
 tags: []
 title: 'disposable outcome'

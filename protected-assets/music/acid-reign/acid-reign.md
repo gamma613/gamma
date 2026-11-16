@@ -1,10 +1,10 @@
 ---
 type: mix
-mixType: Studio
+mixType: studio
 bpm: 128
 date: '2008-05-07'
 genres:
-  - House:
+  - house:
       - deep
       - minimal
 slug: 'acid-reign'

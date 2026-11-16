@@ -1,12 +1,12 @@
 ---
 type: mix
-mixType: Studio
+mixType: studio
 bpm: 128
 date: '2021-04-06'
 genres:
-  - Garage
-  - House
-  - Breaks
+  - garage
+  - house
+  - breaks
 slug: 'resilience'
 tags:
   - Deep listening

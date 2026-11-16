@@ -1,12 +1,12 @@
 ---
 type: mix
-mixType: Studio
+mixType: studio
 bpm: 135
 date: '2011-09-25'
 genres:
-  - House:
+  - house:
       - electro
-  - Dubstep
+  - dubstep
 slug: 'all-hours-of-the-night'
 tags:
   - Dance

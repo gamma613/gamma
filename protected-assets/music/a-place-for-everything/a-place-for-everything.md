@@ -1,10 +1,10 @@
 ---
 type: mix
-mixType: Studio
+mixType: studio
 bpm: 130
 date: '2011-05-24'
 genres:
-  - House:
+  - house:
       - minimal
       - electro
       - progressive

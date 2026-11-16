@@ -1,10 +1,10 @@
 ---
 type: mix
-mixType: Studio
+mixType: studio
 bpm: 131
 date: '2008-08-16'
 genres:
-  - House:
+  - house:
       - electro
 slug: 'industry-standard'
 tags:

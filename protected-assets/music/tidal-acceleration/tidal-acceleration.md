@@ -1,10 +1,10 @@
 ---
 type: mix
-mixType: Studio
+mixType: studio
 bpm: 70
 date: '2008-12-13'
 genres:
-  - Dubstep
+  - dubstep
 slug: 'tidal-acceleration'
 tags:
   - Dark

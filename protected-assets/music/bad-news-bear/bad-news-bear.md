@@ -1,10 +1,10 @@
 ---
 type: mix
-mixType: Studio
+mixType: studio
 bpm: 135
 date: '2008-06-25'
 genres:
-  - House:
+  - house:
       - electro
       - fidget
 slug: 'bad-news-bear'

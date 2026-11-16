@@ -1,10 +1,10 @@
 ---
 type: mix
-mixType: Studio
+mixType: studio
 bpm: 70
 date: '2014-08-05'
 genres:
-  - Dubstep
+  - dubstep
 slug: 'displacement'
 tags: []
 title: 'displacement'

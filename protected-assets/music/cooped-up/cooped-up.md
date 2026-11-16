@@ -1,10 +1,10 @@
 ---
 type: mix
-mixType: Studio
+mixType: studio
 bpm: 124
 date: '2008-04-12'
 genres:
-  - House:
+  - house:
       - electro
       - fidget
       - minimal

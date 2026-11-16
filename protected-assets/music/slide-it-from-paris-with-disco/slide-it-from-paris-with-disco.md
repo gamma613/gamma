@@ -3,7 +3,7 @@ type: mashup
 bpm: 130
 date: '2009-01-23'
 genres:
-  - House:
+  - house:
       - electro
 length: 8m
 title: slide it from paris with disco

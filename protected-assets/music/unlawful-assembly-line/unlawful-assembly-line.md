@@ -1,14 +1,14 @@
 ---
 type: mix
-mixType: Studio
+mixType: studio
 bpm: 135
 date: '2009-04-23'
 genres:
-  - House:
+  - house:
       - tech
       - electro
       - minimal
-  - Techno:
+  - techno:
       - minimal
 slug: 'unlawful-assembly-line'
 tags:

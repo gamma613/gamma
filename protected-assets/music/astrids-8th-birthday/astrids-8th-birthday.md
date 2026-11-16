@@ -1,12 +1,12 @@
 ---
 type: mix
-mixType: Studio
+mixType: studio
 date: '2014-04-30'
 genres:
-  - House:
+  - house:
       - electro
-  - Mainstream
-  - Top 40s
+  - mainstream
+  - top 40s
 slug: 'astrids-8th-birthday'
 tags: []
 title: "astrid's 8th birthday"

@@ -1,6 +1,6 @@
 ---
 type: mix
-mixType: Live
+mixType: live
 date: '2020-05-17'
 genres: []
 slug: '2020-05-17-livestream'

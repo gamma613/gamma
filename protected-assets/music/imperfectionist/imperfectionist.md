@@ -1,10 +1,10 @@
 ---
 type: mix
-mixType: Live
+mixType: live
 bpm: 150
 date: '2003-09-28'
 genres:
-  - Hard Dance:
+  - hard dance:
       - hard trance
       - hard house
 slug: 'imperfectionist'

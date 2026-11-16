@@ -1,14 +1,14 @@
 ---
 type: mix
-mixType: Studio
+mixType: studio
 bpm: 130
 date: '2007-09-15'
 genres:
-  - House:
+  - house:
       - electro
-  - Breaks
-  - Industrial
-  - Dubstep
+  - breaks
+  - industrial
+  - dubstep
 slug: 'hole-sum'
 tags:
   - Dark
