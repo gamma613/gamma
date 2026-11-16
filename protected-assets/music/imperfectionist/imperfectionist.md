@@ -14,4 +14,4 @@ tags:
 title: 'imperfectionist'
 ---
 
-My first time ever recording a mix I was willing to share with others. It was a big lesson in letting go and embracing imperfection.
+My first time ever recording a mix I was willing to share with others. It was a big lesson in letting go and embracing imperfection, especially since this mix was done on proper vinyl.

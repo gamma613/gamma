@@ -5,8 +5,8 @@ date: '2020-05-17'
 genres:
   - bass music
   - drum & bass
-  - breaks
-    - nuskool
+  - breaks:
+      - nuskool
   - house
 slug: '2020-05-17-livestream'
 tags: []
