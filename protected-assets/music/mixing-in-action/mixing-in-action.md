@@ -5,9 +5,9 @@ bpm: 135
 date: '2008-07-09'
 genres:
   - House:
-      - Electro
+      - electro
   - Pop:
-      - Electro Pop
+      - electro pop
 slug: 'mixing-in-action'
 tags: []
 title: 'mixing in action'

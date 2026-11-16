@@ -5,10 +5,10 @@ bpm: 139
 date: '2007-10-06'
 genres:
   - Breaks:
-      - Nuskool
-      - Electro
+      - nuskool
+      - electro
   - House:
-      - Electro
+      - electro
 slug: 'breaks-on-a-plane'
 tags:
   - Dance

@@ -5,10 +5,10 @@ bpm: 130
 date: '2008-04-23'
 genres:
   - House:
-      - Electro
+      - electro
   - Breaks:
-      - Electro
-      - Nuskool
+      - electro
+      - nuskool
 slug: 'the-clutch'
 tags:
   - Dance

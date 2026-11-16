@@ -5,10 +5,10 @@ bpm: 135
 date: '2013-12-17'
 genres:
   - House:
-      - Electro
+      - electro
   - Breaks:
-      - Electro
-      - Nuskool
+      - electro
+      - nuskool
   - Dubstep
 slug: 'disposable-outcome'
 tags: []

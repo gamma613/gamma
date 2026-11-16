@@ -5,7 +5,7 @@ bpm: 130
 date: '2007-09-15'
 genres:
   - House:
-      - Electro
+      - electro
   - Breaks
   - Industrial
   - Dubstep

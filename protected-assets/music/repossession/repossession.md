@@ -5,7 +5,7 @@ bpm: 175
 date: '2024-03-04'
 genres:
   - Drum & Bass:
-      - Atmospheric
+      - atmospheric
 tags:
   - Deep Listening
 title: 'repossession'

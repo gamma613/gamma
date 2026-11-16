@@ -5,8 +5,8 @@ bpm: 128
 date: '2008-05-07'
 genres:
   - House:
-      - Deep
-      - Minimal
+      - deep
+      - minimal
 slug: 'acid-reign'
 tags:
   - Introspective

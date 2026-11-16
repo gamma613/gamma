@@ -5,9 +5,9 @@ bpm: 135
 date: '2008-09-13'
 genres:
   - House:
-      - Electro
+      - electro
   - Breaks:
-      - Electro
+      - electro
 slug: 'flavor-of-the-weak'
 tags:
   - Dance

@@ -5,9 +5,9 @@ bpm: 124
 date: '2008-04-12'
 genres:
   - House:
-      - Electro
-      - Fidget
-      - Minimal
+      - electro
+      - fidget
+      - minimal
 slug: 'cooped-up'
 tags:
   - Quirky

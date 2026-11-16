@@ -5,11 +5,11 @@ bpm: 135
 date: '2009-04-23'
 genres:
   - House:
-      - Tech
-      - Electro
-      - Minimal
+      - tech
+      - electro
+      - minimal
   - Techno:
-      - Minimal
+      - minimal
 slug: 'unlawful-assembly-line'
 tags:
   - Quirky

@@ -4,7 +4,7 @@ mixType: Live
 date: '2017-09-16'
 genres:
   - Hip-Hop:
-      - Trip-Hop
+      - trip-hop
   - House
   - Drum & Bass
 slug: 'dont-feed-the-artists'

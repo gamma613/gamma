@@ -5,8 +5,8 @@ bpm: 125
 date: '2009-06-04'
 genres:
   - House:
-      - Electro
-      - Progressive
+      - electro
+      - progressive
   - Breaks
 slug: '2nd-nature'
 tags:

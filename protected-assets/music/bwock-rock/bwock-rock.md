@@ -5,9 +5,9 @@ bpm: 124
 date: '2007-11-28'
 genres:
   - House:
-      - Electro
-      - Fidget
-      - Minimal
+      - electro
+      - fidget
+      - minimal
 slug: 'bwock-rock'
 tags:
   - Quirky

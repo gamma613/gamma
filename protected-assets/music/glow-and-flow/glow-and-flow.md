@@ -4,7 +4,7 @@ mixType: Live
 date: '2017-04-01'
 genres:
   - House:
-      - Progressive
+      - progressive
 slug: 'glow-and-flow'
 tags: []
 title: 'glow and flow'

@@ -7,7 +7,7 @@ bpm2: 174
 date: '2017-05-13'
 genres:
   - Dubstep:
-      - Deep
+      - deep
   - Drum & Bass
 slug: 'subdivision'
 tags:

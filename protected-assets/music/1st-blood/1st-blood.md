@@ -5,8 +5,8 @@ bpm: 139
 date: '2009-03-16'
 genres:
   - House:
-      - Electro
-      - Tech
+      - electro
+      - tech
 slug: '1st-blood'
 tags:
   - Dark

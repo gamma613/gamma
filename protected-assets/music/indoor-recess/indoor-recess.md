@@ -5,9 +5,9 @@ bpm: 128
 date: '2007-12-28'
 genres:
   - House:
-      - Electro
+      - electro
   - Breaks:
-      - Electro
+      - electro
 slug: 'indoor-recess'
 tags:
   - Dance

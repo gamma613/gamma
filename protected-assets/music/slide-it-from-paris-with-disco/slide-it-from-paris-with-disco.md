@@ -4,7 +4,7 @@ bpm: 130
 date: '2009-01-23'
 genres:
   - House:
-      - Electro
+      - electro
 length: 8m
 title: slide it from paris with disco
 slug: slide-it-from-paris-with-disco

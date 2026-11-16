@@ -5,8 +5,8 @@ bpm: 150
 date: '2003-09-28'
 genres:
   - Hard Dance:
-      - Hard Trance
-      - Hard House
+      - hard trance
+      - hard house
 slug: 'imperfectionist'
 tags:
   - Vinyl

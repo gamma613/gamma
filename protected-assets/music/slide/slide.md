@@ -5,10 +5,10 @@ bpm: 135
 date: '2007-11-11'
 genres:
   - House:
-      - Electro
+      - electro
   - Breaks:
-      - Electro
-      - Nuskool
+      - electro
+      - nuskool
 slug: 'slide'
 tags: []
 title: 'slide'

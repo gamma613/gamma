@@ -5,9 +5,9 @@ bpm: 135
 date: '2008-08-28'
 genres:
   - House:
-      - Electro
+      - electro
   - Pop:
-      - Electro Pop
+      - electro pop
 slug: 'this-is-for-you'
 tags:
   - Dance

@@ -4,7 +4,7 @@ mixType: Studio
 date: '2014-04-30'
 genres:
   - House:
-      - Electro
+      - electro
   - Mainstream
   - Top 40s
 slug: 'astrids-8th-birthday'
