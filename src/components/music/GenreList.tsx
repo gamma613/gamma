@@ -11,7 +11,7 @@ export function GenreList({
 }: {
   genres?: MusicGenre[] | null;
   className?: string;
-  layout?: 'inline' | 'stacked';
+  layout?: 'inline' | 'expanded' | 'stacked';
 }) {
   const visibleGenres = genres?.filter(Boolean) ?? [];
 
@@ -26,8 +26,8 @@ export function GenreList({
 
         return (
           <span key={`${name}-${index}`} className={layout === 'stacked' ? 'block' : undefined}>
-            {layout === 'inline' && index > 0 ? ', ' : null}
-            {layout === 'stacked' ? (
+            {layout !== 'stacked' && index > 0 ? ', ' : null}
+            {layout === 'stacked' || layout === 'expanded' ? (
               <>
                 {name}
                 {subgenres.length > 0 ? ` (${subgenres.join(', ')})` : null}

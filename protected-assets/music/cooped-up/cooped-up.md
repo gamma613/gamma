@@ -11,7 +11,8 @@ genres:
 slug: 'cooped-up'
 tags:
   - quirky
-  - introspective
-  - chickens
+  - chicken
 title: 'cooped up'
 ---
+
+After making Bwock Rock, I knew I'd want to make at least one other chicken-inspired mix.

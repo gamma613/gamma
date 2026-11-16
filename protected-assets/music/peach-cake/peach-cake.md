@@ -8,6 +8,7 @@ genres:
   - breaks
 slug: 'peach-cake'
 tags:
+  - dance
   - dirty
 title: 'peach cake'
 ---

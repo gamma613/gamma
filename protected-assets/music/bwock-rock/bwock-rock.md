@@ -11,7 +11,8 @@ genres:
 slug: 'bwock-rock'
 tags:
   - quirky
-  - introspective
-  - chickens
+  - chicken
 title: 'bwock rock'
 ---
+
+What's the matter, Colonel Sanders? 🐓

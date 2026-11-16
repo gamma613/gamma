@@ -8,10 +8,12 @@ genres:
       - electro
   - breaks:
       - electro
-  - mainstream
-  - top 40's
+  - mainstream:
+      - top 40
 slug: 'the-heard'
 tags:
   - dance
 title: 'the heard'
 ---
+
+What if I made an entire mix of top 40s remixes?

@@ -10,6 +10,8 @@ genres:
 slug: 'all-hours-of-the-night'
 tags:
   - dance
-  - rave
+  - nightlife
 title: 'all hours of the night'
 ---
+
+Over 2 hours of high-energy tribute to rave culture.

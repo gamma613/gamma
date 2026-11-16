@@ -4,9 +4,9 @@ mixType: studio
 bpm: 126
 date: '2008-09-30'
 genres:
-  - minimal
+  - techno:
+      - minimal
   - ambient
-  - techno
 slug: 'reserve-psychology'
 tags:
   - introspective

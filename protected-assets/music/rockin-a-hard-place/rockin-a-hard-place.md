@@ -9,6 +9,7 @@ genres:
   - breaks:
       - electro
 slug: 'rockin-a-hard-place'
-tags: []
-title: 'rockin a hard place'
+tags:
+  - dance
+title: "rockin' a hard place"
 ---
