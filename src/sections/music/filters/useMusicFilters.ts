@@ -1,9 +1,26 @@
 'use client';
 
 import type { Music } from '@/lib/music/allMusicIndex';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 type GenreOptions = Map<string, Set<string>>;
+type PersistedMusicFilters = {
+  bpmRange?: unknown;
+  yearRange?: unknown;
+  tags?: unknown;
+  types?: unknown;
+  genres?: unknown;
+};
+
+const STORAGE_KEY = 'gamma.music.filters.v1';
+
+function readRange(value: unknown, domain: readonly [number, number]): [number, number] | null {
+  if (!Array.isArray(value) || value.length !== 2 || !value.every(Number.isFinite)) return null;
+
+  const low = Math.max(domain[0], Math.min(domain[1], value[0]));
+  const high = Math.max(domain[0], Math.min(domain[1], value[1]));
+  return [Math.min(low, high), Math.max(low, high)];
+}
 
 function getGenreOptions(items: Music[]): GenreOptions {
   const options: GenreOptions = new Map();
@@ -70,6 +87,75 @@ export function useMusicFilters(items: Music[]) {
   const [selectedTags, setSelectedTags] = useState<Set<string>>(() => new Set());
   const [selectedTypes, setSelectedTypes] = useState<Set<string>>(() => new Set());
   const [selectedGenres, setSelectedGenres] = useState<Set<string>>(() => new Set());
+  const [didLoadPersisted, setDidLoadPersisted] = useState(false);
+
+  useEffect(() => {
+    if (didLoadPersisted) return;
+
+    try {
+      const raw = window.localStorage.getItem(STORAGE_KEY);
+      const persisted = raw ? (JSON.parse(raw) as PersistedMusicFilters) : null;
+      if (persisted && typeof persisted === 'object') {
+        const storedBpmRange = readRange(persisted.bpmRange, bpmDomain);
+        const storedYearRange = readRange(persisted.yearRange, yearDomain);
+        if (storedBpmRange) setBpmRange(storedBpmRange);
+        if (storedYearRange) setYearRange(storedYearRange);
+
+        if (Array.isArray(persisted.tags)) {
+          setSelectedTags(
+            new Set(persisted.tags.filter((tag): tag is string => tags.includes(tag)))
+          );
+        }
+        if (Array.isArray(persisted.types)) {
+          const validTypes = new Set<string>([...types, 'mix::studio', 'mix::live']);
+          setSelectedTypes(
+            new Set(
+              persisted.types.filter(
+                (type): type is string => typeof type === 'string' && validTypes.has(type)
+              )
+            )
+          );
+        }
+        if (Array.isArray(persisted.genres)) {
+          const validGenres = new Set<string>();
+          for (const [parent, subgenres] of genreOptions) {
+            validGenres.add(parent);
+            subgenres.forEach((subgenre) => validGenres.add(`${parent}::${subgenre}`));
+          }
+          setSelectedGenres(
+            new Set(
+              persisted.genres.filter(
+                (genre): genre is string => typeof genre === 'string' && validGenres.has(genre)
+              )
+            )
+          );
+        }
+      }
+    } catch {
+      // Ignore malformed or unavailable local storage.
+    }
+
+    setDidLoadPersisted(true);
+  }, [bpmDomain, didLoadPersisted, genreOptions, tags, types, yearDomain]);
+
+  useEffect(() => {
+    if (!didLoadPersisted) return;
+
+    try {
+      window.localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify({
+          bpmRange,
+          yearRange,
+          tags: [...selectedTags],
+          types: [...selectedTypes],
+          genres: [...selectedGenres],
+        })
+      );
+    } catch {
+      // Ignore unavailable local storage.
+    }
+  }, [bpmRange, didLoadPersisted, selectedGenres, selectedTags, selectedTypes, yearRange]);
 
   const isFiltered =
     bpmRange[0] !== bpmDomain[0] ||
