@@ -88,6 +88,13 @@ export default async function MusicItemPage({ params }: Props) {
               </DD>
             </DLRow>
           ) : null}
+
+          {item.tags?.length ? (
+            <DLRow>
+              <DT>Tags</DT>
+              <DD>{item.tags.join(', ')}</DD>
+            </DLRow>
+          ) : null}
         </DL>
       </div>
 
