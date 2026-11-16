@@ -7,9 +7,11 @@ export type MusicGenre = string | Record<string, string[]>;
 export function GenreList({
   genres,
   className,
+  layout = 'inline',
 }: {
   genres?: MusicGenre[] | null;
   className?: string;
+  layout?: 'inline' | 'stacked';
 }) {
   const visibleGenres = genres?.filter(Boolean) ?? [];
 
@@ -23,9 +25,18 @@ export function GenreList({
         const subgenres = mapping?.[1] ?? [];
 
         return (
-          <span key={`${name}-${index}`}>
-            {index > 0 ? ', ' : null}
-            {subgenres.length > 0 ? <GenreTooltip name={name} subgenres={subgenres} /> : name}
+          <span key={`${name}-${index}`} className={layout === 'stacked' ? 'block' : undefined}>
+            {layout === 'inline' && index > 0 ? ', ' : null}
+            {layout === 'stacked' ? (
+              <>
+                {name}
+                {subgenres.length > 0 ? ` (${subgenres.join(', ')})` : null}
+              </>
+            ) : subgenres.length > 0 ? (
+              <GenreTooltip name={name} subgenres={subgenres} />
+            ) : (
+              name
+            )}
           </span>
         );
       })}
