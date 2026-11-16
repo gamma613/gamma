@@ -22,7 +22,6 @@ export type MusicTileProps = {
   title: string;
   type?: string | null;
   year?: number | string | null;
-  expandedTags?: boolean;
   expandedGenres?: boolean;
   expandedType?: boolean;
 };
@@ -39,7 +38,6 @@ export function MusicTile({
   title,
   type,
   year,
-  expandedTags = false,
   expandedGenres = false,
   expandedType = false,
 }: MusicTileProps) {
@@ -105,31 +103,16 @@ export function MusicTile({
         )}
 
         {visibleGenres.length > 0 && (
-          <div
-            className={`mt-0.5 text-muted-foreground text-[10px] sm:text-xs ${expandedGenres ? 'whitespace-normal break-words' : 'truncate'}`}
-          >
+          <div className="mt-0.5 whitespace-normal break-words text-muted-foreground text-[10px] sm:text-xs">
             <GenreList genres={visibleGenres} layout={expandedGenres ? 'expanded' : 'inline'} />
           </div>
         )}
 
-        {visibleTags.length > 0 &&
-          (expandedTags ? (
-            <div className="mt-0.5 whitespace-normal break-words text-muted-foreground text-[10px] sm:text-xs">
-              {visibleTags.join(', ')}
-            </div>
-          ) : (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div
-                  tabIndex={0}
-                  className="mt-0.5 text-muted-foreground text-[10px] sm:text-xs truncate"
-                >
-                  {visibleTags.join(', ')}
-                </div>
-              </TooltipTrigger>
-              <TooltipContent>{visibleTags.join(', ')}</TooltipContent>
-            </Tooltip>
-          ))}
+        {visibleTags.length > 0 && (
+          <div className="mt-0.5 whitespace-normal break-words text-muted-foreground text-[10px] sm:text-xs">
+            {visibleTags.join(', ')}
+          </div>
+        )}
       </div>
 
       <PlayInPlayerButton
