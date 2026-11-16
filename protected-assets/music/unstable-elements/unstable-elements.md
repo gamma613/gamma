@@ -1,15 +1,13 @@
 ---
 type: mix
-mixType: Studio
+mixType: studio
 bpm: 127
 date: '2022-03-17'
 genres:
-  - Bass
-  - House
+  - bass
+  - house
 slug: 'unstable-elements'
 tags:
-  - Nightlife
+  - nightlife
 title: 'unstable elements'
 ---
-
-Mixcloud: https://www.mixcloud.com/dj-gamma/unstable-elements/

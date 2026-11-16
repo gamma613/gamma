@@ -1,12 +1,12 @@
 ---
 type: mix
-mixType: Studio
+mixType: studio
 date: '2007-12-08'
 genres:
-  - House
-  - Breaks
+  - house
+  - breaks
 slug: 'live-at-soul-selecta-2007-12-08'
 tags:
-  - Dance
+  - dance
 title: 'live at soul selecta (2007-12-08)'
 ---

@@ -1,16 +1,16 @@
 ---
 type: mix
-mixType: Studio
+mixType: studio
 bpm: 130
 date: '2008-04-23'
 genres:
-  - House:
-      - Electro
-  - Breaks:
-      - Electro
-      - Nuskool
+  - house:
+      - electro
+  - breaks:
+      - electro
+      - nuskool
 slug: 'the-clutch'
 tags:
-  - Dance
+  - dance
 title: 'the clutch'
 ---

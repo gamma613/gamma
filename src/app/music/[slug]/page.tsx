@@ -1,4 +1,5 @@
 import { BackButton, DD, DL, DLRow, DT, PageWrapper, TitleArtist } from '@/components';
+import { GenreList } from '@/components/music/GenreList';
 import { formatDateYmd } from '@/lib/formatDate';
 import { getMusicItem } from '@/lib/music/getMusicItem';
 import { ROUTES } from '@/lib/routes';
@@ -43,7 +44,7 @@ export default async function MusicItemPage({ params }: Props) {
         </div>
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-4 items-start">
+      <div className="flex flex-col sm:flex-row gap-4 items-start mt-10">
         <Image
           width={400}
           height={400}
@@ -67,13 +68,37 @@ export default async function MusicItemPage({ params }: Props) {
           </DLRow>
 
           <DLRow>
+            <DT>Type</DT>
+            <DD>
+              {item.type}
+              {item.type === 'mix' && item.mixType ? ` (${item.mixType})` : null}
+            </DD>
+          </DLRow>
+
+          <DLRow>
             <DT>Duration</DT>
             <DD>54:12</DD>
           </DLRow>
+
+          {item.genres?.length ? (
+            <DLRow>
+              <DT>Genres</DT>
+              <DD>
+                <GenreList genres={item.genres} layout="stacked" />
+              </DD>
+            </DLRow>
+          ) : null}
+
+          {item.tags?.length ? (
+            <DLRow>
+              <DT>Tags</DT>
+              <DD>{item.tags.join(', ')}</DD>
+            </DLRow>
+          ) : null}
         </DL>
       </div>
 
-      {item.content}
+      {item.content && <div className="mt-10">{item.content}</div>}
     </PageWrapper>
   );
 }

@@ -1,14 +1,14 @@
 ---
 type: mix
-mixType: Studio
+mixType: studio
 bpm: 130
 date: '2009-01-23'
 genres:
-  - House:
-      - Electro
+  - house:
+      - electro
 slug: '3rd-party'
 tags:
-  - Dance
-  - Rave
+  - dance
+  - rave
 title: '3rd party'
 ---

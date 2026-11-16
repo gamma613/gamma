@@ -1,17 +1,17 @@
 ---
 type: mix
-mixType: Studio
+mixType: studio
 bpm: 124
 date: '2007-11-28'
 genres:
-  - House:
-      - Electro
-      - Fidget
-      - Minimal
+  - house:
+      - electro
+      - fidget
+      - minimal
 slug: 'bwock-rock'
 tags:
-  - Quirky
-  - Introspective
-  - Chickens
+  - quirky
+  - introspective
+  - chickens
 title: 'bwock rock'
 ---

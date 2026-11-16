@@ -1,16 +1,16 @@
 ---
 type: mix
-mixType: Studio
+mixType: studio
 bpm: 135
 date: '2008-09-13'
 genres:
-  - House:
-      - Electro
-  - Breaks:
-      - Electro
+  - house:
+      - electro
+  - breaks:
+      - electro
 slug: 'flavor-of-the-weak'
 tags:
-  - Dance
-  - Rave
+  - dance
+  - rave
 title: 'flavor of the weak'
 ---

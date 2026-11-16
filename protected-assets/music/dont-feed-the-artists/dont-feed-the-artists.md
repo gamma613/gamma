@@ -1,12 +1,12 @@
 ---
 type: mix
-mixType: Live
+mixType: live
 date: '2017-09-16'
 genres:
-  - Hip-Hop:
-      - Trip-Hop
-  - House
-  - Drum & Bass
+  - hip-hop:
+      - trip-hop
+  - house
+  - drum & bass
 slug: 'dont-feed-the-artists'
 tags: []
 title: "don't feed the artists"

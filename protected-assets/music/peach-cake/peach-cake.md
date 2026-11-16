@@ -1,13 +1,13 @@
 ---
 type: mix
-mixType: Studio
+mixType: studio
 bpm: 130
 date: '2023-08-19'
 genres:
-  - House
-  - Breaks
+  - house
+  - breaks
 slug: 'peach-cake'
 tags:
-  - Dirty
+  - dirty
 title: 'peach cake'
 ---

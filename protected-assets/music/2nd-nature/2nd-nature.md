@@ -1,15 +1,15 @@
 ---
 type: mix
-mixType: Studio
+mixType: studio
 bpm: 125
 date: '2009-06-04'
 genres:
-  - House:
-      - Electro
-      - Progressive
-  - Breaks
+  - house:
+      - electro
+      - progressive
+  - breaks
 slug: '2nd-nature'
 tags:
-  - Chillout
+  - chillout
 title: '2nd nature'
 ---

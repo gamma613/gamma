@@ -8,15 +8,24 @@ import { z } from 'zod';
 
 export const MUSIC_TYPES = ['mix', 'mashup', 'track'] as const;
 export type MusicType = (typeof MUSIC_TYPES)[number];
-export const MIX_TYPES = ['Studio', 'Live'] as const;
+export const MIX_TYPES = ['live', 'studio'] as const;
 export type MixType = (typeof MIX_TYPES)[number];
 
-/** A standalone umbrella genre or an umbrella genre with its subgenres. */
+const lowercaseGenreNameSchema = z.string().refine((name) => name === name.toLowerCase(), {
+  error: 'Genre names and subgenres must be lowercase',
+});
+const lowercaseTagSchema = z.string().refine((tag) => tag === tag.toLowerCase(), {
+  error: 'Tags must be lowercase',
+});
+
+/** A standalone genre or an umbrella genre with its subgenres. */
 const genreSchema = z.union([
-  z.string(),
-  z.record(z.string(), z.array(z.string())).refine((genre) => Object.keys(genre).length === 1, {
-    error: 'A genre mapping must contain exactly one umbrella genre',
-  }),
+  lowercaseGenreNameSchema,
+  z
+    .record(lowercaseGenreNameSchema, z.array(lowercaseGenreNameSchema))
+    .refine((genre) => Object.keys(genre).length === 1, {
+      error: 'A genre mapping must contain exactly one umbrella genre',
+    }),
 ]);
 export type MusicGenre = z.infer<typeof genreSchema>;
 
@@ -29,7 +38,7 @@ const musicFieldsSchema = z.object({
   date: z.coerce.date(),
   description: z.string().optional(),
   genres: z.array(genreSchema).optional().nullable(),
-  tags: z.array(z.string()).optional().nullable(),
+  tags: z.array(lowercaseTagSchema).optional().nullable(),
   title: z.string().min(1),
   slug: z.string().optional().nullable(),
 });

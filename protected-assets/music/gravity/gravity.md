@@ -1,12 +1,12 @@
 ---
 type: mix
-mixType: Studio
+mixType: studio
 bpm: 70
 date: '2009-10-30'
 genres:
-  - Dubstep
+  - dubstep
 slug: 'gravity'
 tags:
-  - Dark
+  - dark
 title: 'gravity'
 ---

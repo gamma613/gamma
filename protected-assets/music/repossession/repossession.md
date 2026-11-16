@@ -1,14 +1,12 @@
 ---
 type: mix
-mixType: Studio
+mixType: studio
 bpm: 175
 date: '2024-03-04'
 genres:
-  - Drum & Bass:
-      - Atmospheric
+  - drum & bass:
+      - atmospheric
 tags:
-  - Deep Listening
+  - deep listening
 title: 'repossession'
 ---
-
-Can i just put shit here?

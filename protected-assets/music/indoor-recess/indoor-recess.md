@@ -1,16 +1,16 @@
 ---
 type: mix
-mixType: Studio
+mixType: studio
 bpm: 128
 date: '2007-12-28'
 genres:
-  - House:
-      - Electro
-  - Breaks:
-      - Electro
+  - house:
+      - electro
+  - breaks:
+      - electro
 slug: 'indoor-recess'
 tags:
-  - Dance
-  - Dirty
+  - dance
+  - dirty
 title: 'indoor recess'
 ---

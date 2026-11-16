@@ -1,12 +1,12 @@
 ---
 type: mix
-mixType: Studio
+mixType: studio
 bpm: 70
 date: '2008-03-29'
 genres:
-  - Dubstep
+  - dubstep
 slug: 'in-the-eye'
 tags:
-  - Introspective
+  - introspective
 title: 'in the eye'
 ---

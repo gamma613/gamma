@@ -1,16 +1,16 @@
 ---
 type: mix
-mixType: Studio
+mixType: studio
 bpm: 130
 date: '2011-05-24'
 genres:
-  - House:
-      - Minimal
-      - Electro
-      - Progressive
+  - house:
+      - minimal
+      - electro
+      - progressive
 slug: 'a-place-for-everything'
 tags:
-  - Chillout
-  - Introspective
+  - chillout
+  - introspective
 title: 'a place for everything'
 ---

@@ -1,15 +1,15 @@
 ---
 type: mix
-mixType: Studio
+mixType: studio
 bpm: 131
 date: '2008-08-16'
 genres:
-  - House:
-      - Electro
+  - house:
+      - electro
 slug: 'industry-standard'
 tags:
-  - Dark
-  - Gritty
-  - Atmospheric
+  - dark
+  - gritty
+  - atmospheric
 title: 'industry standard'
 ---

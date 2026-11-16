@@ -1,17 +1,17 @@
 ---
 type: mix
-mixType: Studio
+mixType: studio
 bpm: 130
 date: '2012-11-24'
 genres:
-  - House:
-      - Electro
-  - Breaks:
-      - Electro
-  - Mainstream
-  - Top 40's
+  - house:
+      - electro
+  - breaks:
+      - electro
+  - mainstream
+  - top 40's
 slug: 'the-heard'
 tags:
-  - Dance
+  - dance
 title: 'the heard'
 ---

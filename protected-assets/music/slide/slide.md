@@ -1,14 +1,14 @@
 ---
 type: mix
-mixType: Studio
+mixType: studio
 bpm: 135
 date: '2007-11-11'
 genres:
-  - House:
-      - Electro
-  - Breaks:
-      - Electro
-      - Nuskool
+  - house:
+      - electro
+  - breaks:
+      - electro
+      - nuskool
 slug: 'slide'
 tags: []
 title: 'slide'
