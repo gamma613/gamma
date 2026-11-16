@@ -85,26 +85,26 @@ export function MusicTile({
         </Tooltip>
 
         {(year != null || type || bpm) && (
-          <p className="mt-0.5 text-muted-foreground text-[10px] sm:text-xs truncate">
+          <div className="mt-0.5 text-muted-foreground text-[10px] sm:text-xs truncate">
             <MusicMetadata year={year} type={type} mixType={mixType} bpm={bpm} />
-          </p>
+          </div>
         )}
 
         {visibleGenres.length > 0 && (
-          <p className="mt-0.5 text-muted-foreground text-[10px] sm:text-xs truncate">
+          <div className="mt-0.5 text-muted-foreground text-[10px] sm:text-xs truncate">
             <GenreList genres={visibleGenres} />
-          </p>
+          </div>
         )}
 
         {visibleTags.length > 0 && (
           <Tooltip>
             <TooltipTrigger asChild>
-              <p
+              <div
                 tabIndex={0}
                 className="mt-0.5 text-muted-foreground text-[10px] sm:text-xs truncate"
               >
                 {visibleTags.join(', ')}
-              </p>
+              </div>
             </TooltipTrigger>
             <TooltipContent>{visibleTags.join(', ')}</TooltipContent>
           </Tooltip>
