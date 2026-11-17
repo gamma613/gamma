@@ -7,6 +7,7 @@ import '@/theme/styles/app.css';
 import '@fortawesome/fontawesome-svg-core/styles.css';
 import type { Metadata } from 'next';
 import ClientProviders from './design-structure/ClientProviders';
+import { DevVersionMeta } from './design-structure/DevVersionMeta';
 
 const fontVars = [
   ...Object.values(sansFonts).map((f) => f.variable),
@@ -15,6 +16,9 @@ const fontVars = [
 
 export const metadata: Metadata = {
   description: '',
+  other: {
+    'app-version': process.env.NEXT_PUBLIC_APP_VERSION ?? 'development',
+  },
   title: {
     default: 'DJ gamma 🦇 Ottawa, Canada',
     template: '%s | DJ gamma 🦇 Ottawa, Canada',
@@ -31,6 +35,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={cn('font-sans dark', fontVars)}>
       <body className="antialiased">
+        {process.env.NODE_ENV === 'development' && <DevVersionMeta />}
         <ClientProviders>
           <div className="relative min-h-screen">
             <BokehBackground className="z-0" />

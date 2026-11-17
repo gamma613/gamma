@@ -28,12 +28,21 @@ jobs:
 
     steps:
       - name: Check out release
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           ref: ${{ inputs.ref || github.ref }}
 
+      - name: Set app version
+        run: |
+          if [[ "$GITHUB_EVENT_NAME" == "push" && "$GITHUB_REF_TYPE" == "tag" ]]; then
+            app_version="$GITHUB_REF_NAME"
+          else
+            app_version="$(git describe --tags --exact-match HEAD 2>/dev/null || git rev-parse --short HEAD)"
+          fi
+          echo "NEXT_PUBLIC_APP_VERSION=$app_version" >> "$GITHUB_ENV"
+
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: 22
 
