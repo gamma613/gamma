@@ -50,7 +50,10 @@ export async function GET(
     CONFIG.debug && console.log(err);
     // Try fallback cover
     try {
-      const fallbackImageFile = path.join(process.cwd(), artConfig.fallback);
+      const fallbackImageFile = path.join(
+        /*turbopackIgnore: true*/ process.cwd(),
+        artConfig.fallback
+      );
       return await renderImage(fallbackImageFile);
     } catch (err2) {
       CONFIG.debug && console.log(err2);

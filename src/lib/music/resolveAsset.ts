@@ -34,7 +34,7 @@ async function resolveBySuffix({
   for (const ext of preferredExts) {
     for (const base of preferredBases) {
       const exact = `${base}.${ext}`;
-      if (set.has(exact)) return path.join(dir, exact);
+      if (set.has(exact)) return path.join(/*turbopackIgnore: true*/ dir, exact);
     }
   }
 
@@ -42,7 +42,7 @@ async function resolveBySuffix({
   for (const ext of preferredExts) {
     const needle = `-${suffix}.${ext}`;
     const match = sorted.find((name) => name.endsWith(needle));
-    if (match) return path.join(dir, match);
+    if (match) return path.join(/*turbopackIgnore: true*/ dir, match);
   }
 
   return null;
