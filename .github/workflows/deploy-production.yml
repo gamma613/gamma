@@ -55,5 +55,18 @@ jobs:
       - name: Build production deployment
         run: vercel build --prod --token="$VERCEL_TOKEN"
 
+      - name: Check Vercel build output
+        run: |
+          ls -la .vercel/output
+          if [[ -L .vercel/output/builds.json ]]; then
+            echo "builds.json is a symlink to:"
+            readlink .vercel/output/builds.json
+          elif [[ -f .vercel/output/builds.json ]]; then
+            echo "builds.json exists as a regular file"
+          else
+            echo "::error::.vercel/output/builds.json is missing"
+            exit 1
+          fi
+
       - name: Deploy to production
         run: vercel deploy --prebuilt --prod --token="$VERCEL_TOKEN"
