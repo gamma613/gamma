@@ -16,6 +16,8 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+The app's `<meta name="app-version">` updates to `development-{branch}` while `npm run dev` is running (or `development-commit-{sha}` for a detached Git checkout). A development-only endpoint checks the current Git branch every second; the initial value defaults to `development`.
+
 ## Media storage (Cloudflare R2)
 
 The R2 bucket for media is `gamma-media`, in the **America East** location. Local development copies of audio and video live flat in `developer-assets/media/`, named by slug; media files are gitignored. New uploads go directly to the bucket root. Cover art and music metadata stay in `protected-assets/music/`.
@@ -75,7 +77,7 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 ## Production deploys and rollbacks (Vercel)
 
-Production deploys are made from version tags, not ordinary branch pushes. The GitHub Actions workflow in `.github/workflows/deploy-production.yml` builds the selected tag with Vercel and deploys it to Production. Vercel's automatic Git deployments are disabled in `vercel.json`, so pushes and pull requests won't deploy by themselves.
+Production deploys are made from version tags, not ordinary branch pushes. The GitHub Actions workflow in `.github/workflows/deploy-production.yml` builds the selected tag with Vercel and deploys it to Production. It also sets `NEXT_PUBLIC_APP_VERSION` from the tag (or the short commit SHA for a manual SHA deploy); the root layout publishes this as `<meta name="app-version">`. Vercel's automatic Git deployments are disabled in `vercel.json`, so pushes and pull requests won't deploy by themselves.
 
 ### One-time setup
 
