@@ -72,12 +72,16 @@ async function renderImage(filePath: string) {
   return new NextResponse(stream as unknown as BodyInit, {
     headers: {
       'Content-Type': imageContentTypeFromExt(ext),
-      /**
-       * browser caches for 5 minutes
-       * CDN caches for 30 minutes
-       * CDN may serve stale for 24h while refreshing in background
-       */
-      'Cache-Control': 'public, max-age=300, s-maxage=1800, stale-while-revalidate=604800',
+      'Cache-Control':
+        process.env.NODE_ENV === 'development'
+          ? // No cache for local dev
+            'no-store'
+          : /**
+             * browser caches for 5 minutes
+             * CDN caches for 30 minutes
+             * CDN may serve stale for 24h while refreshing in background
+             */
+            'public, max-age=300, s-maxage=1800, stale-while-revalidate=604800',
     },
   });
 }
