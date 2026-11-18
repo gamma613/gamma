@@ -110,6 +110,7 @@ export function SeekBar({ className }: { className?: string }) {
         className={cn(
           'w-full',
           !isReady && 'invisible pointer-events-none',
+          '[&_[data-slot=slider-track]]:h-2',
           // Rectangular seekbar (no radius).
           '[&_[data-slot=slider-track]]:rounded-none'
         )}
