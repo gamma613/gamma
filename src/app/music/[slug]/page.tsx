@@ -84,7 +84,7 @@ export default async function MusicItemPage({ params }: Props) {
             <DLRow>
               <DT>Genres</DT>
               <DD>
-                <GenreList genres={item.genres} layout="stacked" />
+                <GenreList genres={item.genres} layout="expanded" />
               </DD>
             </DLRow>
           ) : null}
