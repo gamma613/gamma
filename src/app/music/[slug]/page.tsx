@@ -98,7 +98,27 @@ export default async function MusicItemPage({ params }: Props) {
         </DL>
       </div>
 
-      {item.content && <div className="mt-10">{item.content}</div>}
+      {item.content && (
+        <section className="mt-10" aria-labelledby="description-heading">
+          <h2 id="description-heading" className="text-lg font-semibold">
+            Description
+          </h2>
+          {item.content}
+        </section>
+      )}
+
+      {item.tracklist?.length ? (
+        <section className="mt-10" aria-labelledby="tracklist-heading">
+          <h2 id="tracklist-heading" className="text-lg font-semibold">
+            Tracklist
+          </h2>
+          <ol className="mt-3 list-decimal pl-6 space-y-1">
+            {item.tracklist.map((track, index) => (
+              <li key={`${index}-${track}`}>{track}</li>
+            ))}
+          </ol>
+        </section>
+      ) : null}
     </PageWrapper>
   );
 }
