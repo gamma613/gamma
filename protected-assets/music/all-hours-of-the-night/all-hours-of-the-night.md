@@ -6,6 +6,8 @@ date: '2011-09-25'
 genres:
   - house:
       - electro
+  - breaks:
+      - electro
   - dubstep
 slug: 'all-hours-of-the-night'
 tags:

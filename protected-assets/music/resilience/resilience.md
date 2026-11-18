@@ -13,5 +13,3 @@ tags:
   - chillout
 title: 'resilience'
 ---
-
-You've been through so much, and just look at yourself still showing up. Celebrate this!
