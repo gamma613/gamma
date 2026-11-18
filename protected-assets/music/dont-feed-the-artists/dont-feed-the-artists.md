@@ -97,4 +97,4 @@ tracklist:
   - 'SPY & Etherwood - Because of You'
 ---
 
-Live art event at Art House Cafe, Ottawa Ontario. I had forgotten my headphones, so there was a whole lot of visual cueing and flying on insticnt.
+Live art event at Art House Cafe, Ottawa Ontario. I had forgotten my headphones, so there was a whole lot of visual cueing, and flying on instinct.

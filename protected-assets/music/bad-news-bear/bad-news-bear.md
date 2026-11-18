@@ -19,7 +19,7 @@ tracklist:
   - 'Purple Crush - Vacation (bird peterson mix)'
   - 'Junkie XL f. Lauren Rocket - More (d.i.m. pop em all dub rework)'
   - 'Evolution & Danny Soundz - N!@#$ What!'
-  - 'Angie Brown - Movin Up (stupid fresh rmx, gamma edit)'
+  - 'Angie Brown - Movin Up (stupid fresh rmx edit)'
   - 'DJ Icey f. Nikki Carabello - Glance (dj icey mix)'
   - 'Justin Long & Cops & Robbers - Full Throttle'
   - 'DiscoTech - La Gente'

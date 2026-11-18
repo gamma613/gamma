@@ -38,7 +38,7 @@ tracklist:
   - 'Koan Sound - Clowny'
   - 'DZ - Just Rolling'
   - 'Nero - Something Else'
-  - "TC - Where's My Money (caspa rmx, gamma edit)"
+  - "TC - Where's My Money (caspa rmx)"
   - 'Robyn - Konichiwa Bitches (menta rmx)'
   - 'Foreign Beggars & DJ Primecuts - Hit That Gash (itchy naaan re-rub)'
   - 'Leon Jean-Marie - Bring It On (rusko rmx)'
