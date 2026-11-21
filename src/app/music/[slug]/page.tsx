@@ -22,6 +22,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const description = item?.description?.trim() || item?.content?.trim() || '';
 
   return {
+    alternates: item ? { canonical: ROUTES.music(slug).root } : undefined,
     description,
     openGraph: item
       ? {
@@ -29,6 +30,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
           images: [{ alt: `Artwork for ${item.title}`, url: ROUTES.music(slug).art('cover') }],
           title: `${item.artist ? `${item.artist} — ` : ''}${item.title}`,
           type: 'music.song',
+          url: ROUTES.music(slug).root,
         }
       : undefined,
     title: item?.title ?? NOT_FOUND_TITLE,
