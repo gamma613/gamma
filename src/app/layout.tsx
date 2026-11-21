@@ -16,6 +16,7 @@ const fontVars = [
 
 export const metadata: Metadata = {
   description: '',
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://gamma613.ca'),
   other: {
     'app-version': process.env.NEXT_PUBLIC_APP_VERSION ?? 'development',
   },

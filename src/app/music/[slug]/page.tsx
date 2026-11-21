@@ -22,7 +22,23 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return {
     description: item?.description ?? '',
+    openGraph: item
+      ? {
+          description: item.description ?? '',
+          images: [{ alt: `Artwork for ${item.title}`, url: ROUTES.music(slug).art('cover') }],
+          title: `${item.artist ? `${item.artist} — ` : ''}${item.title}`,
+          type: 'music.song',
+        }
+      : undefined,
     title: item?.title ?? NOT_FOUND_TITLE,
+    twitter: item
+      ? {
+          card: 'summary_large_image',
+          description: item.description ?? '',
+          images: [ROUTES.music(slug).art('cover')],
+          title: `${item.artist ? `${item.artist} — ` : ''}${item.title}`,
+        }
+      : undefined,
   };
 }
 

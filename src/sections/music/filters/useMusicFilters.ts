@@ -9,6 +9,10 @@ type PersistedMusicFilters = {
   bpmRange?: unknown;
   /** Full BPM bounds when `bpmRange` was saved; used to detect an unrestricted range. */
   bpmDomain?: unknown;
+  /** Selected duration slider bounds, validated before restoring from storage. */
+  durationRange?: unknown;
+  /** Full duration bounds when `durationRange` was saved. */
+  durationDomain?: unknown;
   /** Selected release-year slider bounds, validated before restoring from storage. */
   yearRange?: unknown;
   /** Full release-year bounds when `yearRange` was saved; used to detect an unrestricted range. */
@@ -109,6 +113,14 @@ export function useMusicFilters(items: Music[]) {
     const max = Math.ceil(values.length ? Math.max(...values) : 1);
     return [min, Math.max(min + 1, max)] as const;
   }, [items]);
+  const durationDomain = useMemo(() => {
+    const values = items
+      .map((item) => item.durationSeconds)
+      .filter((value): value is number => value != null);
+    const min = Math.floor(values.length ? Math.min(...values) : 0);
+    const max = Math.ceil(values.length ? Math.max(...values) : 1);
+    return [min, Math.max(min + 1, max)] as const;
+  }, [items]);
   const yearDomain = useMemo(() => {
     const years = items.map((item) => item.date.getFullYear());
     const min = years.length ? Math.min(...years) : new Date().getFullYear();
@@ -117,26 +129,32 @@ export function useMusicFilters(items: Music[]) {
   }, [items]);
 
   const [bpmRange, setBpmRange] = useState<[number, number]>([...bpmDomain]);
+  const [durationRange, setDurationRange] = useState<[number, number]>([...durationDomain]);
   const [yearRange, setYearRange] = useState<[number, number]>([...yearDomain]);
   const [selectedTags, setSelectedTags] = useState<Set<string>>(() => new Set());
   const [selectedTypes, setSelectedTypes] = useState<Set<string>>(() => new Set());
   const [selectedGenres, setSelectedGenres] = useState<Set<string>>(() => new Set());
   const [didLoadPersisted, setDidLoadPersisted] = useState(false);
-  const previousDomains = useRef({ bpm: bpmDomain, year: yearDomain });
+  const previousDomains = useRef({ bpm: bpmDomain, duration: durationDomain, year: yearDomain });
 
   useEffect(() => {
     const previous = previousDomains.current;
     const bpmDomainChanged = bpmDomain[0] !== previous.bpm[0] || bpmDomain[1] !== previous.bpm[1];
+    const durationDomainChanged =
+      durationDomain[0] !== previous.duration[0] || durationDomain[1] !== previous.duration[1];
     const yearDomainChanged =
       yearDomain[0] !== previous.year[0] || yearDomain[1] !== previous.year[1];
     const hadFullBpmRange = bpmRange[0] === previous.bpm[0] && bpmRange[1] === previous.bpm[1];
+    const hadFullDurationRange =
+      durationRange[0] === previous.duration[0] && durationRange[1] === previous.duration[1];
     const hadFullYearRange = yearRange[0] === previous.year[0] && yearRange[1] === previous.year[1];
 
     if (bpmDomainChanged && hadFullBpmRange) setBpmRange([...bpmDomain]);
+    if (durationDomainChanged && hadFullDurationRange) setDurationRange([...durationDomain]);
     if (yearDomainChanged && hadFullYearRange) setYearRange([...yearDomain]);
 
-    previousDomains.current = { bpm: bpmDomain, year: yearDomain };
-  }, [bpmDomain, bpmRange, yearDomain, yearRange]);
+    previousDomains.current = { bpm: bpmDomain, duration: durationDomain, year: yearDomain };
+  }, [bpmDomain, bpmRange, durationDomain, durationRange, yearDomain, yearRange]);
 
   useEffect(() => {
     if (didLoadPersisted) return;
@@ -146,6 +164,9 @@ export function useMusicFilters(items: Music[]) {
       const persisted = raw ? (JSON.parse(raw) as PersistedMusicFilters) : null;
       if (persisted && typeof persisted === 'object') {
         setBpmRange(restoreRange(persisted.bpmRange, persisted.bpmDomain, bpmDomain));
+        setDurationRange(
+          restoreRange(persisted.durationRange, persisted.durationDomain, durationDomain)
+        );
         setYearRange(restoreRange(persisted.yearRange, persisted.yearDomain, yearDomain));
 
         if (Array.isArray(persisted.tags)) {
@@ -183,7 +204,7 @@ export function useMusicFilters(items: Music[]) {
     }
 
     setDidLoadPersisted(true);
-  }, [bpmDomain, didLoadPersisted, genreOptions, tags, types, yearDomain]);
+  }, [bpmDomain, didLoadPersisted, durationDomain, genreOptions, tags, types, yearDomain]);
 
   useEffect(() => {
     if (!didLoadPersisted) return;
@@ -194,6 +215,8 @@ export function useMusicFilters(items: Music[]) {
         JSON.stringify({
           bpmRange,
           bpmDomain,
+          durationRange,
+          durationDomain,
           yearRange,
           yearDomain,
           tags: [...selectedTags],
@@ -208,6 +231,8 @@ export function useMusicFilters(items: Music[]) {
     bpmDomain,
     bpmRange,
     didLoadPersisted,
+    durationDomain,
+    durationRange,
     selectedGenres,
     selectedTags,
     selectedTypes,
@@ -218,6 +243,8 @@ export function useMusicFilters(items: Music[]) {
   const isFiltered =
     bpmRange[0] !== bpmDomain[0] ||
     bpmRange[1] !== bpmDomain[1] ||
+    durationRange[0] !== durationDomain[0] ||
+    durationRange[1] !== durationDomain[1] ||
     yearRange[0] !== yearDomain[0] ||
     yearRange[1] !== yearDomain[1] ||
     selectedTags.size > 0 ||
@@ -228,10 +255,20 @@ export function useMusicFilters(items: Music[]) {
     () =>
       items.filter((item) => {
         if (bpmRange[0] !== bpmDomain[0] || bpmRange[1] !== bpmDomain[1]) {
-          if (item.bpm == null) return false;
-          const itemMin = Math.min(item.bpm, item.bpm2 ?? item.bpm);
-          const itemMax = Math.max(item.bpm, item.bpm2 ?? item.bpm);
-          if (itemMax < bpmRange[0] || itemMin > bpmRange[1]) return false;
+          const itemBpms = [item.bpm, item.bpm2].filter((value): value is number => value != null);
+          if (itemBpms.length) {
+            const itemMin = Math.min(...itemBpms);
+            const itemMax = Math.max(...itemBpms);
+            if (itemMax < bpmRange[0] || itemMin > bpmRange[1]) return false;
+          }
+        }
+
+        if (
+          item.durationSeconds != null &&
+          (durationRange[0] !== durationDomain[0] || durationRange[1] !== durationDomain[1]) &&
+          (item.durationSeconds < durationRange[0] || item.durationSeconds > durationRange[1])
+        ) {
+          return false;
         }
 
         const year = item.date.getFullYear();
@@ -261,7 +298,18 @@ export function useMusicFilters(items: Music[]) {
 
         return true;
       }),
-    [bpmDomain, bpmRange, items, selectedGenres, selectedTags, selectedTypes, yearDomain, yearRange]
+    [
+      bpmDomain,
+      bpmRange,
+      durationDomain,
+      durationRange,
+      items,
+      selectedGenres,
+      selectedTags,
+      selectedTypes,
+      yearDomain,
+      yearRange,
+    ]
   );
 
   function toggleSelection(current: Set<string>, value: string, set: (next: Set<string>) => void) {
@@ -289,6 +337,7 @@ export function useMusicFilters(items: Music[]) {
 
   function clearFilters() {
     setBpmRange([...bpmDomain]);
+    setDurationRange([...durationDomain]);
     setYearRange([...yearDomain]);
     setSelectedTags(new Set());
     setSelectedTypes(new Set());
@@ -298,6 +347,8 @@ export function useMusicFilters(items: Music[]) {
   return {
     bpmDomain,
     bpmRange,
+    durationDomain,
+    durationRange,
     clearFilters,
     filteredItems,
     genreOptions,
@@ -306,6 +357,7 @@ export function useMusicFilters(items: Music[]) {
     selectedTags,
     selectedTypes,
     setBpmRange,
+    setDurationRange,
     setSelectedGenres,
     setSelectedTags,
     setSelectedTypes,

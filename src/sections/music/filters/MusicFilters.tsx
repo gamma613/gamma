@@ -8,6 +8,7 @@ import {
   TooltipPortal,
   TooltipTrigger,
 } from '@/components';
+import { formatTrackTime } from '@/modules/player/utils';
 import { faFilter } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect, useRef } from 'react';
@@ -22,12 +23,14 @@ export function MusicFilters({
   bpmRange,
   clearFilters,
   durationDomain,
+  durationRange,
   genreOptions,
   isFiltered,
   selectedGenres,
   selectedTags,
   selectedTypes,
   setBpmRange,
+  setDurationRange,
   setSelectedGenres,
   setSelectedTags,
   setSelectedTypes,
@@ -106,6 +109,26 @@ export function MusicFilters({
             onValueChange={(value) => setBpmRange([value[0], value[1]])}
             aria-label="BPM range"
           />
+          <p className="mt-1 text-xs text-muted-foreground">Items without BPM stay visible.</p>
+        </fieldset>
+
+        <fieldset className="mb-5">
+          <legend className="mb-2 text-sm font-medium">Duration</legend>
+          <div className="mb-2 flex justify-between text-xs text-muted-foreground">
+            <span>{formatTrackTime(durationRange[0])}</span>
+            <span>{formatTrackTime(durationRange[1])}</span>
+          </div>
+          <Slider
+            min={durationDomain[0]}
+            max={durationDomain[1]}
+            step={1}
+            value={durationRange}
+            onValueChange={(value) => setDurationRange([value[0], value[1]])}
+            aria-label="Duration range"
+          />
+          <p className="mt-1 text-xs text-muted-foreground">
+            Items without a duration stay visible.
+          </p>
         </fieldset>
 
         <fieldset className="mb-5">
