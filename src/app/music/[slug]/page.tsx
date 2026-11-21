@@ -19,12 +19,13 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const item = getMusicItem(slug);
+  const description = item?.description?.trim() || item?.content?.trim() || '';
 
   return {
-    description: item?.description ?? '',
+    description,
     openGraph: item
       ? {
-          description: item.description ?? '',
+          description,
           images: [{ alt: `Artwork for ${item.title}`, url: ROUTES.music(slug).art('cover') }],
           title: `${item.artist ? `${item.artist} — ` : ''}${item.title}`,
           type: 'music.song',
@@ -34,7 +35,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     twitter: item
       ? {
           card: 'summary_large_image',
-          description: item.description ?? '',
+          description,
           images: [ROUTES.music(slug).art('cover')],
           title: `${item.artist ? `${item.artist} — ` : ''}${item.title}`,
         }
