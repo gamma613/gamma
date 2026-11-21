@@ -3,6 +3,7 @@ type: mix
 mixType: studio
 bpm: 70
 date: '2014-08-05'
+durationSeconds: 5559
 genres:
   - dubstep
 slug: 'displacement'

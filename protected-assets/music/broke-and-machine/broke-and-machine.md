@@ -3,6 +3,7 @@ type: mix
 mixType: studio
 bpm: 100
 date: '2008-10-05'
+durationSeconds: 3668
 genres:
   - breaks
 slug: 'broke-and-machine'

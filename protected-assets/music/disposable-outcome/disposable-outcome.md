@@ -3,6 +3,7 @@ type: mix
 mixType: studio
 bpm: 135
 date: '2013-12-17'
+durationSeconds: 4774
 genres:
   - house:
       - electro

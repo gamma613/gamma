@@ -3,6 +3,7 @@ type: mix
 mixType: studio
 bpm: 175
 date: '2024-03-04'
+durationSeconds: 3862
 genres:
   - drum & bass
 slug: 'based'

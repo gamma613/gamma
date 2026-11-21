@@ -3,6 +3,7 @@ type: mix
 mixType: studio
 bpm: 127
 date: '2022-03-17'
+durationSeconds: 7070
 genres:
   - bass
   - house

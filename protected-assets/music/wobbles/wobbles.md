@@ -3,6 +3,7 @@ type: mix
 mixType: studio
 bpm: 135
 date: '2008-07-16'
+durationSeconds: 3910
 genres:
   - house:
       - fidget

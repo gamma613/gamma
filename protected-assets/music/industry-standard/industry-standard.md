@@ -3,6 +3,7 @@ type: mix
 mixType: studio
 bpm: 131
 date: '2008-08-16'
+durationSeconds: 4158
 genres:
   - house:
       - electro

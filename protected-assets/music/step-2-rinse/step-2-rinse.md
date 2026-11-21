@@ -3,6 +3,7 @@ type: mix
 mixType: studio
 bpm: 175
 date: '2008-10-20'
+durationSeconds: 3842
 genres:
   - drum & bass
   - jungle

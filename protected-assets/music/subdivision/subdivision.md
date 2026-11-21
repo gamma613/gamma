@@ -5,6 +5,7 @@ mixType: studio
 bpm: 70
 bpm2: 174
 date: '2017-05-13'
+durationSeconds: 5460
 genres:
   - dubstep:
       - deep

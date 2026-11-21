@@ -3,6 +3,7 @@ type: mix
 mixType: live
 bpm: 150
 date: '2003-08-28'
+durationSeconds: 4038
 genres:
   - hard dance:
       - hard trance

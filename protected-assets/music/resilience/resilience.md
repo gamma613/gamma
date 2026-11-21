@@ -3,6 +3,7 @@ type: mix
 mixType: studio
 bpm: 128
 date: '2021-04-06'
+durationSeconds: 4056
 genres:
   - garage
   - house

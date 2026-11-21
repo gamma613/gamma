@@ -3,6 +3,7 @@ type: mix
 mixType: live
 bpm: 139
 date: '2007-10-06'
+durationSeconds: 4215
 genres:
   - breaks:
       - nuskool

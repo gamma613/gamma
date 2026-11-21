@@ -4,6 +4,7 @@ mixType: studio
 bpm: 80
 bpm2: 128
 date: '2014-04-30'
+durationSeconds: 2638
 genres:
   - house:
       - electro

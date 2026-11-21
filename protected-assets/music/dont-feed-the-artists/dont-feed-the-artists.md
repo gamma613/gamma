@@ -2,6 +2,7 @@
 type: mix
 mixType: live
 date: '2017-09-16'
+durationSeconds: 15360
 genres:
   - hip-hop:
       - trip-hop

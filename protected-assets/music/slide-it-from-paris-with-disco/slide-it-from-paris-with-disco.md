@@ -2,6 +2,7 @@
 type: mashup
 bpm: 130
 date: '2009-01-23'
+durationSeconds: 533
 genres:
   - house:
       - electro

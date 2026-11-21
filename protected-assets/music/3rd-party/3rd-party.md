@@ -3,6 +3,7 @@ type: mix
 mixType: studio
 bpm: 130
 date: '2009-01-23'
+durationSeconds: 4712
 genres:
   - house:
       - electro

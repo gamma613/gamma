@@ -2,6 +2,7 @@
 type: mix
 mixType: live
 date: '2020-09-13'
+durationSeconds: 5409
 genres:
   - drum & bass
 slug: 'grump-and-bass'

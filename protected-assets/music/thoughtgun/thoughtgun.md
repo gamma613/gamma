@@ -3,6 +3,7 @@ type: mix
 mixType: studio
 bpm: 174
 date: '2018-06-20'
+durationSeconds: 4234
 genres:
   - drum & bass
 slug: 'thoughtgun'

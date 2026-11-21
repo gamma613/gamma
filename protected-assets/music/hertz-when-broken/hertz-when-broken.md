@@ -3,6 +3,7 @@ type: mix
 mixType: studio
 bpm: 110
 date: '2009-07-28'
+durationSeconds: 3986
 genres:
   - breaks
   - house

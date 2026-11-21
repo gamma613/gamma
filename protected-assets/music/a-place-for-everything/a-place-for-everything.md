@@ -3,6 +3,7 @@ type: mix
 mixType: studio
 bpm: 130
 date: '2011-05-24'
+durationSeconds: 3862
 genres:
   - house:
       - minimal

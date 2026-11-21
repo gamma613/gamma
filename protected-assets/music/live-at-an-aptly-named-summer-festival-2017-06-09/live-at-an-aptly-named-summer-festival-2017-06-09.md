@@ -2,6 +2,7 @@
 type: mix
 mixType: live
 date: '2017-06-09'
+durationSeconds: 3086
 genres:
   - house:
       - deep

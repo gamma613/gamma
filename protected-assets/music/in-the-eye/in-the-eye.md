@@ -3,6 +3,7 @@ type: mix
 mixType: studio
 bpm: 70
 date: '2008-03-29'
+durationSeconds: 3838
 genres:
   - dubstep
 slug: 'in-the-eye'

@@ -2,6 +2,7 @@
 type: mix
 mixType: live
 date: '2020-05-17'
+durationSeconds: 9309
 genres:
   - bass music
   - drum & bass

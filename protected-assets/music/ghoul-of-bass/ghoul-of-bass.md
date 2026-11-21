@@ -2,6 +2,7 @@
 type: mix
 mixType: live
 date: '2026-10-31'
+durationSeconds: 3622
 bpm: 132
 genres:
   - bass music

@@ -3,6 +3,7 @@ type: mix
 mixType: studio
 bpm: 128
 date: '2008-05-07'
+durationSeconds: 3630
 genres:
   - house:
       - deep

@@ -37,6 +37,7 @@ const musicFieldsSchema = z.object({
   content: z.string().optional().nullable(),
   date: z.coerce.date(),
   description: z.string().optional(),
+  durationSeconds: z.number().int().positive().optional().nullable(),
   genres: z.array(genreSchema).optional().nullable(),
   tags: z.array(lowercaseTagSchema).optional().nullable(),
   tracklist: z.array(z.string().min(1)).optional().nullable(),

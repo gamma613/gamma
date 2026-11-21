@@ -3,6 +3,7 @@ type: mix
 mixType: studio
 bpm: 175
 date: '2024-03-04'
+durationSeconds: 3589
 genres:
   - drum & bass:
       - atmospheric

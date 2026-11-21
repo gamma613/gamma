@@ -2,6 +2,7 @@
 type: mix
 mixType: live
 date: '2017-04-01'
+durationSeconds: 4016
 genres:
   - house:
       - progressive

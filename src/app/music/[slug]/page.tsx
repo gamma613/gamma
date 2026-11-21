@@ -4,6 +4,7 @@ import { formatDateYmd } from '@/lib/formatDate';
 import { getMusicItem } from '@/lib/music/getMusicItem';
 import { ROUTES } from '@/lib/routes';
 import { PlayInPlayerButton } from '@/modules/player';
+import { formatTrackTime } from '@/modules/player/utils';
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
@@ -75,10 +76,12 @@ export default async function MusicItemPage({ params }: Props) {
             </DD>
           </DLRow>
 
-          <DLRow>
-            <DT>Duration</DT>
-            <DD>54:12</DD>
-          </DLRow>
+          {item.durationSeconds != null ? (
+            <DLRow>
+              <DT>Duration</DT>
+              <DD>{formatTrackTime(item.durationSeconds)}</DD>
+            </DLRow>
+          ) : null}
 
           {item.genres?.length ? (
             <DLRow>

@@ -3,6 +3,7 @@ type: mix
 mixType: live
 bpm: 170
 date: '2017-05-26'
+durationSeconds: 3924
 genres:
   - drum & bass:
       - liquid

@@ -3,6 +3,7 @@ type: mix
 mixType: studio
 bpm: 126
 date: '2008-09-30'
+durationSeconds: 4217
 genres:
   - techno:
       - minimal

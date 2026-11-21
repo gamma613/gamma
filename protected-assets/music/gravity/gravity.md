@@ -3,6 +3,7 @@ type: mix
 mixType: studio
 bpm: 70
 date: '2009-10-30'
+durationSeconds: 3694
 genres:
   - dubstep
 slug: 'gravity'

@@ -2,6 +2,7 @@
 type: mix
 mixType: studio
 date: '2007-12-08'
+durationSeconds: 3897
 genres:
   - house
   - breaks

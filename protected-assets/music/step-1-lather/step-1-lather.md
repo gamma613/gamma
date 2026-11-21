@@ -3,6 +3,7 @@ type: mix
 mixType: studio
 bpm: 170
 date: '2008-10-17'
+durationSeconds: 4211
 genres:
   - drum & bass:
       - atmospheric

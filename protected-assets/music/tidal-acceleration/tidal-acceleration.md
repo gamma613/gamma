@@ -3,6 +3,7 @@ type: mix
 mixType: studio
 bpm: 70
 date: '2008-12-13'
+durationSeconds: 4440
 genres:
   - dubstep
 slug: 'tidal-acceleration'
