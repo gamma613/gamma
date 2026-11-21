@@ -30,7 +30,7 @@ export function MusicPageActions({
 
   async function copyLink() {
     try {
-      await navigator.clipboard.writeText(window.location.href);
+      await navigator.clipboard.writeText(`${window.location.origin}${window.location.pathname}`);
       setCopied(true);
       trackEvent('music_share', { item_id: slug, method: 'copy_link' });
       window.setTimeout(() => setCopied(false), 2000);
