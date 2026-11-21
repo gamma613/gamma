@@ -1,9 +1,9 @@
 import { BackButton, DD, DL, DLRow, DT, PageWrapper, TitleArtist } from '@/components';
 import { GenreList } from '@/components/music/GenreList';
+import { MusicPageActions } from '@/components/music/MusicPageActions';
 import { formatDateYmd } from '@/lib/formatDate';
 import { getMusicItem } from '@/lib/music/getMusicItem';
 import { ROUTES } from '@/lib/routes';
-import { PlayInPlayerButton } from '@/modules/player';
 import { formatTrackTime } from '@/modules/player/utils';
 import type { Metadata } from 'next';
 import Image from 'next/image';
@@ -52,14 +52,9 @@ export default async function MusicItemPage({ params }: Props) {
   return (
     <PageWrapper>
       <BackButton />
-      <div className="flex items-center gap-6">
-        <h1 className="order-2 flex-1 min-w-0 text-lg sm:text-sm lg:text-2xl">
-          <TitleArtist title={item.title} artist={item.artist} />
-        </h1>
-        <div className="order-1 shrink-0">
-          <PlayInPlayerButton slug={slug} />
-        </div>
-      </div>
+      <h1 className="xs:text-lg sm:text-xl md:text-2xl lg:text-3xl">
+        <TitleArtist title={item.title} artist={item.artist} />
+      </h1>
 
       <div className="flex flex-col sm:flex-row gap-4 items-start mt-10">
         <Image
@@ -70,51 +65,59 @@ export default async function MusicItemPage({ params }: Props) {
           unoptimized
           className="w-full sm:max-w-1/2 max-w-[400px] h-auto"
         />
-        <DL variant="table">
-          <DLRow>
-            <DT>BPM</DT>
-            <DD>
-              {item.bpm}
-              {item.bpm2 && ` — ${item.bpm2}`}
-            </DD>
-          </DLRow>
-
-          <DLRow>
-            <DT>Released</DT>
-            <DD>{released}</DD>
-          </DLRow>
-
-          <DLRow>
-            <DT>Type</DT>
-            <DD>
-              {item.type}
-              {item.type === 'mix' && item.mixType ? ` (${item.mixType})` : null}
-            </DD>
-          </DLRow>
-
-          {item.durationSeconds != null ? (
+        <div>
+          <MusicPageActions
+            slug={slug}
+            artist={item.artist ?? ''}
+            title={item.title}
+            className="my-5"
+          />
+          <DL variant="table">
             <DLRow>
-              <DT>Duration</DT>
-              <DD>{formatTrackTime(item.durationSeconds)}</DD>
-            </DLRow>
-          ) : null}
-
-          {item.genres?.length ? (
-            <DLRow>
-              <DT>Genres</DT>
+              <DT>BPM</DT>
               <DD>
-                <GenreList genres={item.genres} layout="expanded" />
+                {item.bpm}
+                {item.bpm2 && ` — ${item.bpm2}`}
               </DD>
             </DLRow>
-          ) : null}
 
-          {item.tags?.length ? (
             <DLRow>
-              <DT>Tags</DT>
-              <DD>{item.tags.join(', ')}</DD>
+              <DT>Released</DT>
+              <DD>{released}</DD>
             </DLRow>
-          ) : null}
-        </DL>
+
+            <DLRow>
+              <DT>Type</DT>
+              <DD>
+                {item.type}
+                {item.type === 'mix' && item.mixType ? ` (${item.mixType})` : null}
+              </DD>
+            </DLRow>
+
+            {item.durationSeconds != null ? (
+              <DLRow>
+                <DT>Duration</DT>
+                <DD>{formatTrackTime(item.durationSeconds)}</DD>
+              </DLRow>
+            ) : null}
+
+            {item.genres?.length ? (
+              <DLRow>
+                <DT>Genres</DT>
+                <DD>
+                  <GenreList genres={item.genres} layout="expanded" />
+                </DD>
+              </DLRow>
+            ) : null}
+
+            {item.tags?.length ? (
+              <DLRow>
+                <DT>Tags</DT>
+                <DD>{item.tags.join(', ')}</DD>
+              </DLRow>
+            ) : null}
+          </DL>
+        </div>
       </div>
 
       {item.content && (
