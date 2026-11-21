@@ -21,6 +21,7 @@ export function MusicFilters({
   bpmDomain,
   bpmRange,
   clearFilters,
+  durationDomain,
   genreOptions,
   isFiltered,
   selectedGenres,
