@@ -37,6 +37,9 @@ trap 'rm -f "$report_file" "$candidate_file" "$selection_file"' EXIT
 copy_options=(
   --checksum
   --s3-no-check-bucket
+)
+
+media_filters=(
   --include "*.mp3"
   --include "*.mp4"
   --include "*.m4a"
@@ -47,6 +50,7 @@ copy_options=(
 echo "Checking media ($mode): $source -> $destination"
 rclone copy "$source" "$destination" \
   "${copy_options[@]}" \
+  "${media_filters[@]}" \
   --combined "$report_file" \
   --dry-run
 
