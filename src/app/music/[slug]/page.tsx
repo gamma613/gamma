@@ -1,4 +1,5 @@
 import { BackButton, DD, DL, DLRow, DT, PageWrapper, TitleArtist } from '@/components';
+import { ArtworkWithBlurFill } from '@/components/music/ArtworkWithBlurFill';
 import { GenreList } from '@/components/music/GenreList';
 import { MusicPageActions } from '@/components/music/MusicPageActions';
 import { formatDateYmd } from '@/lib/formatDate';
@@ -6,7 +7,6 @@ import { getMusicItem } from '@/lib/music/getMusicItem';
 import { ROUTES } from '@/lib/routes';
 import { formatTrackTime } from '@/modules/player/utils';
 import type { Metadata } from 'next';
-import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { NOT_FOUND_TITLE } from '../../not-found';
 
@@ -57,15 +57,11 @@ export default async function MusicItemPage({ params }: Props) {
       </h1>
 
       <div className="flex flex-col sm:flex-row gap-4 items-start mt-10">
-        <Image
-          width={400}
-          height={400}
+        <ArtworkWithBlurFill
           src={ROUTES.music(slug).art('cover')}
           alt={`Artwork for ${item.title}`}
-          unoptimized
-          className="w-full sm:max-w-1/2 max-w-[400px] h-auto"
         />
-        <div>
+        <div className="w-full min-w-0 sm:flex-1">
           <MusicPageActions
             slug={slug}
             artist={item.artist ?? ''}
