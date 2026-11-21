@@ -2,7 +2,6 @@
 
 import { MusicTile } from '@/components/music';
 import type { Music } from '@/lib/music/allMusicIndex';
-import { ROUTES } from '@/lib/routes';
 import { MusicFilters, useMusicFilters } from './filters';
 import { MusicResultsCount } from './MusicResultsCount';
 
@@ -25,17 +24,7 @@ export function MusicIndex({ items }: { items: Music[] }) {
         {filters.filteredItems.map((item) => (
           <MusicTile
             key={item.slug}
-            slug={item.slug}
-            title={item.title}
-            artist={item.artist}
-            href={ROUTES.music(item.slug).root}
-            coverSrc={ROUTES.music(item.slug).art('cover')}
-            bpm={item.bpm}
-            type={item.type}
-            mixType={item.type === 'mix' ? item.mixType : null}
-            year={item.date.getFullYear()}
-            genres={item.genres}
-            tags={item.tags}
+            item={item}
             expandedGenres={filters.selectedGenres.size > 0}
             expandedType={filters.selectedTypes.size > 0}
           />

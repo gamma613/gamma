@@ -1,46 +1,28 @@
 'use client';
 
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/Tooltip';
+import type { Music } from '@/lib/music/allMusicIndex';
+import { ROUTES } from '@/lib/routes';
 import { PlayInPlayerButton } from '@/modules/player';
 import Image from 'next/image';
 import Link from 'next/link';
-import { GenreList, type MusicGenre } from './GenreList';
+import { GenreList } from './GenreList';
 import { MusicMetadata } from './MusicMetadata';
-import type { MixType } from './MusicTypeLabel';
 
 // ----------------------------------------------------------------------
 
 export type MusicTileProps = {
-  artist?: string | null;
-  coverSrc: string;
-  bpm?: number | null;
-  href: string;
-  genres?: MusicGenre[] | null;
-  mixType?: MixType | null;
-  slug: string;
-  tags?: string[] | null;
-  title: string;
-  type?: string | null;
-  year?: number | string | null;
+  item: Music;
   expandedGenres?: boolean;
   expandedType?: boolean;
 };
 
-export function MusicTile({
-  artist,
-  bpm,
-  coverSrc,
-  genres,
-  href,
-  mixType,
-  slug,
-  tags,
-  title,
-  type,
-  year,
-  expandedGenres = false,
-  expandedType = false,
-}: MusicTileProps) {
+export function MusicTile({ item, expandedGenres = false, expandedType = false }: MusicTileProps) {
+  const { artist, bpm, date, genres, slug, tags, title, type } = item;
+  const href = ROUTES.music(slug).root;
+  const coverSrc = ROUTES.music(slug).art('cover');
+  const mixType = type === 'mix' ? item.mixType : null;
+  const year = date.getFullYear();
   const hasDistinctArtist = Boolean(artist && artist.toLowerCase() !== 'gamma');
   const visibleGenres = (genres ?? []).filter(Boolean);
   const visibleTags = (tags ?? []).filter(Boolean);
