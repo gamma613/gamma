@@ -37,3 +37,5 @@ tracklist:
   - 'BTK - Shredder'
   - "Phibes - I Don't Give a Fuck"
 ---
+
+Starts off deep and edgy, building into some banging dancefloor stuff. "Based" off of a live set I threw down in November 2024.

@@ -29,3 +29,5 @@ tracklist:
   - 'MUGHTE - Feeling You'
   - 'Delah & Ciland - Fall Down'
 ---
+
+Much deeper DnB than I usually play, and it was a really good outlet. I'm happy with how it turned out.
