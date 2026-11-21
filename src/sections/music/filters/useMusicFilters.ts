@@ -1,25 +1,59 @@
 'use client';
 
 import type { Music } from '@/lib/music/allMusicIndex';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 type GenreOptions = Map<string, Set<string>>;
 type PersistedMusicFilters = {
+  /** Selected BPM slider bounds, validated before restoring from storage. */
   bpmRange?: unknown;
+  /** Full BPM bounds when `bpmRange` was saved; used to detect an unrestricted range. */
+  bpmDomain?: unknown;
+  /** Selected release-year slider bounds, validated before restoring from storage. */
   yearRange?: unknown;
+  /** Full release-year bounds when `yearRange` was saved; used to detect an unrestricted range. */
+  yearDomain?: unknown;
+  /** Selected tags; unknown or unavailable values are discarded during restoration. */
   tags?: unknown;
+  /** Selected item types, including optional mix subtype values. */
   types?: unknown;
+  /** Selected genre names and parent/subgenre values. */
   genres?: unknown;
 };
 
 const STORAGE_KEY = 'gamma.music.filters.v1';
 
-function readRange(value: unknown, domain: readonly [number, number]): [number, number] | null {
+function parseRange(value: unknown): [number, number] | null {
   if (!Array.isArray(value) || value.length !== 2 || !value.every(Number.isFinite)) return null;
 
-  const low = Math.max(domain[0], Math.min(domain[1], value[0]));
-  const high = Math.max(domain[0], Math.min(domain[1], value[1]));
+  return [Math.min(value[0], value[1]), Math.max(value[0], value[1])];
+}
+
+function readRange(value: unknown, domain: readonly [number, number]): [number, number] | null {
+  const range = parseRange(value);
+  if (!range) return null;
+
+  const low = Math.max(domain[0], Math.min(domain[1], range[0]));
+  const high = Math.max(domain[0], Math.min(domain[1], range[1]));
   return [Math.min(low, high), Math.max(low, high)];
+}
+
+function restoreRange(
+  value: unknown,
+  savedDomainValue: unknown,
+  currentDomain: readonly [number, number]
+): [number, number] {
+  const savedRange = parseRange(value);
+  const savedDomain = parseRange(savedDomainValue);
+
+  // Older saved filters did not record their domain, so their range may just
+  // be the old catalog default. Treat it as unrestricted after this migration.
+  if (!savedRange || !savedDomain) return [...currentDomain];
+  if (savedRange[0] === savedDomain[0] && savedRange[1] === savedDomain[1]) {
+    return [...currentDomain];
+  }
+
+  return readRange(savedRange, currentDomain) ?? [...currentDomain];
 }
 
 function getGenreOptions(items: Music[]): GenreOptions {
@@ -88,6 +122,21 @@ export function useMusicFilters(items: Music[]) {
   const [selectedTypes, setSelectedTypes] = useState<Set<string>>(() => new Set());
   const [selectedGenres, setSelectedGenres] = useState<Set<string>>(() => new Set());
   const [didLoadPersisted, setDidLoadPersisted] = useState(false);
+  const previousDomains = useRef({ bpm: bpmDomain, year: yearDomain });
+
+  useEffect(() => {
+    const previous = previousDomains.current;
+    const bpmDomainChanged = bpmDomain[0] !== previous.bpm[0] || bpmDomain[1] !== previous.bpm[1];
+    const yearDomainChanged =
+      yearDomain[0] !== previous.year[0] || yearDomain[1] !== previous.year[1];
+    const hadFullBpmRange = bpmRange[0] === previous.bpm[0] && bpmRange[1] === previous.bpm[1];
+    const hadFullYearRange = yearRange[0] === previous.year[0] && yearRange[1] === previous.year[1];
+
+    if (bpmDomainChanged && hadFullBpmRange) setBpmRange([...bpmDomain]);
+    if (yearDomainChanged && hadFullYearRange) setYearRange([...yearDomain]);
+
+    previousDomains.current = { bpm: bpmDomain, year: yearDomain };
+  }, [bpmDomain, bpmRange, yearDomain, yearRange]);
 
   useEffect(() => {
     if (didLoadPersisted) return;
@@ -96,10 +145,8 @@ export function useMusicFilters(items: Music[]) {
       const raw = window.localStorage.getItem(STORAGE_KEY);
       const persisted = raw ? (JSON.parse(raw) as PersistedMusicFilters) : null;
       if (persisted && typeof persisted === 'object') {
-        const storedBpmRange = readRange(persisted.bpmRange, bpmDomain);
-        const storedYearRange = readRange(persisted.yearRange, yearDomain);
-        if (storedBpmRange) setBpmRange(storedBpmRange);
-        if (storedYearRange) setYearRange(storedYearRange);
+        setBpmRange(restoreRange(persisted.bpmRange, persisted.bpmDomain, bpmDomain));
+        setYearRange(restoreRange(persisted.yearRange, persisted.yearDomain, yearDomain));
 
         if (Array.isArray(persisted.tags)) {
           setSelectedTags(
@@ -146,7 +193,9 @@ export function useMusicFilters(items: Music[]) {
         STORAGE_KEY,
         JSON.stringify({
           bpmRange,
+          bpmDomain,
           yearRange,
+          yearDomain,
           tags: [...selectedTags],
           types: [...selectedTypes],
           genres: [...selectedGenres],
@@ -155,7 +204,16 @@ export function useMusicFilters(items: Music[]) {
     } catch {
       // Ignore unavailable local storage.
     }
-  }, [bpmRange, didLoadPersisted, selectedGenres, selectedTags, selectedTypes, yearRange]);
+  }, [
+    bpmDomain,
+    bpmRange,
+    didLoadPersisted,
+    selectedGenres,
+    selectedTags,
+    selectedTypes,
+    yearDomain,
+    yearRange,
+  ]);
 
   const isFiltered =
     bpmRange[0] !== bpmDomain[0] ||

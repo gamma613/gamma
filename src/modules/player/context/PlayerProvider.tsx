@@ -249,7 +249,7 @@ export function PlayerProvider({
   defaultTrack?: PlayerTrack | PlayerTrackId;
 }) {
   const tabId = useMemo(() => getTabId(), []);
-  const recentTrackIds = useMemo(() => getRecentTrackIds(), []);
+  const recentTrackIds = getRecentTrackIds();
   const resolvedDefaultTrack = useMemo(() => {
     if (!defaultTrack) return null;
     if (typeof defaultTrack === 'string') return resolveAndNormalize(defaultTrack);
@@ -272,8 +272,12 @@ export function PlayerProvider({
     history: [],
   }));
   const [didLoadPersisted, setDidLoadPersisted] = useState(false);
+  const didInitializeRef = useRef(false);
 
   useEffect(() => {
+    if (didInitializeRef.current) return;
+    didInitializeRef.current = true;
+
     const persisted = loadPersisted();
 
     const fallbackTrack = (() => {
@@ -349,6 +353,20 @@ export function PlayerProvider({
 
     setDidLoadPersisted(true);
   }, [recentTrackIds, resolvedDefaultTrack]);
+
+  useEffect(() => {
+    if (!didLoadPersisted) return;
+
+    setState((s) => ({
+      ...s,
+      onDeck: computeOnDeck({
+        libraryIds: recentTrackIds,
+        queue: s.queue,
+        history: s.history.map((entry) => entry.trackId),
+        currentSlug: s.track?.slug ?? null,
+      }),
+    }));
+  }, [didLoadPersisted, recentTrackIds]);
 
   const stateRef = useRef<PlayerState>(state);
   useEffect(() => {
