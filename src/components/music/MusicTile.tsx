@@ -24,7 +24,7 @@ export function MusicTile({
   expandedType = false,
   item,
 }: MusicTileProps) {
-  const { artist, bpm, date, genres, slug, tags, title, type } = item;
+  const { artist, bpm, date, durationSeconds, genres, slug, tags, title, type } = item;
   const href = ROUTES.music(slug).root;
   const coverSrc = ROUTES.music(slug).art('cover');
   const mixType = type === 'mix' ? item.mixType : null;
@@ -72,27 +72,28 @@ export function MusicTile({
         </Link>
 
         {/* General metadata */}
-        <div className="mt-0.5">
+        <div className="mt-1">
           <MusicMetadata
+            bpm={bpm}
             date={date}
             dateFormat="full"
-            type={type}
-            mixType={mixType}
-            bpm={bpm}
+            durationSeconds={durationSeconds}
             expandedType={expandedType}
+            mixType={mixType}
+            type={type}
           />
         </div>
 
         {/* Genres */}
         {visibleGenres.length > 0 && (
-          <div className="mt-0.5 whitespace-normal break-words">
+          <div className="mt-1 whitespace-normal break-words">
             <GenreList genres={visibleGenres} layout={expandedGenres ? 'expanded' : 'inline'} />
           </div>
         )}
 
         {/* Tags */}
         {visibleTags.length > 0 && (
-          <div className="mt-0.5 whitespace-normal break-words">{visibleTags.join(', ')}</div>
+          <div className="mt-1 whitespace-normal break-words">{visibleTags.join(', ')}</div>
         )}
       </div>
 
