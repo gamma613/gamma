@@ -149,12 +149,7 @@ function MetaData({ item }: { item: PlaylistMusicItem | null }) {
         mixType={item.mixType}
         bpm={item.bpm}
       />
-      {genres.length > 0 && (
-        <>
-          <span aria-hidden="true"> · </span>
-          <GenreList genres={genres} />
-        </>
-      )}
+      {genres.length > 0 && <GenreList genres={genres} />}
     </>
   );
 }
