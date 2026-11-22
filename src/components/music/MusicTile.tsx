@@ -2,6 +2,7 @@
 
 import type { Music } from '@/lib/music/allMusicIndex';
 import { ROUTES } from '@/lib/routes';
+import { cn } from '@/lib/utils';
 import { PlayInPlayerButton } from '@/modules/player';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -35,7 +36,10 @@ export function MusicTile({
     <article
       id={`music-tile-${slug}`}
       data-slug={slug}
-      className="group/tile flex h-full flex-col rounded-xl bg-card/60 hover:bg-card/90 border border-border/40 hover:border-border/80 transition-all duration-200 p-2.5 sm:p-3 shadow-xs hover:shadow-md"
+      className={cn(
+        'group/tile flex h-full flex-col rounded-xl bg-card/60 hover:bg-card/90 border border-border/40 hover:border-border/80 transition-all duration-200 p-2.5 sm:p-3 shadow-xs hover:shadow-md',
+        className
+      )}
     >
       {/* Cover artwork */}
       <Link
@@ -68,7 +72,7 @@ export function MusicTile({
         </Link>
 
         {/* General metadata */}
-        <div className={`mt-0.5 ${expandedType ? 'whitespace-normal break-words' : 'truncate'}`}>
+        <div className="mt-0.5">
           <MusicMetadata
             date={date}
             dateFormat="full"
