@@ -1,46 +1,33 @@
 'use client';
 
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/Tooltip';
+import type { Music } from '@/lib/music/allMusicIndex';
+import { ROUTES } from '@/lib/routes';
+import { cn } from '@/lib/utils';
 import { PlayInPlayerButton } from '@/modules/player';
 import Image from 'next/image';
 import Link from 'next/link';
-import { GenreList, type MusicGenre } from './GenreList';
+import { GenreList } from './GenreList';
 import { MusicMetadata } from './MusicMetadata';
-import type { MixType } from './MusicTypeLabel';
 
 // ----------------------------------------------------------------------
 
 export type MusicTileProps = {
-  artist?: string | null;
-  coverSrc: string;
-  bpm?: number | null;
-  href: string;
-  genres?: MusicGenre[] | null;
-  mixType?: MixType | null;
-  slug: string;
-  tags?: string[] | null;
-  title: string;
-  type?: string | null;
-  year?: number | string | null;
+  className?: string;
   expandedGenres?: boolean;
   expandedType?: boolean;
+  item: Music;
 };
 
 export function MusicTile({
-  artist,
-  bpm,
-  coverSrc,
-  genres,
-  href,
-  mixType,
-  slug,
-  tags,
-  title,
-  type,
-  year,
+  className,
   expandedGenres = false,
   expandedType = false,
+  item,
 }: MusicTileProps) {
+  const { artist, bpm, date, durationSeconds, genres, slug, tags, title, type } = item;
+  const href = ROUTES.music(slug).root;
+  const coverSrc = ROUTES.music(slug).art('cover');
+  const mixType = type === 'mix' ? item.mixType : null;
   const hasDistinctArtist = Boolean(artist && artist.toLowerCase() !== 'gamma');
   const visibleGenres = (genres ?? []).filter(Boolean);
   const visibleTags = (tags ?? []).filter(Boolean);
@@ -49,7 +36,10 @@ export function MusicTile({
     <article
       id={`music-tile-${slug}`}
       data-slug={slug}
-      className="group/tile flex h-full flex-col rounded-xl bg-card/60 hover:bg-card/90 border border-border/40 hover:border-border/80 transition-all duration-200 p-2.5 sm:p-3 shadow-xs hover:shadow-md"
+      className={cn(
+        'group/tile flex h-full flex-col rounded-xl bg-card/60 hover:bg-card/90 border border-border/40 hover:border-border/80 transition-all duration-200 p-2.5 sm:p-3 shadow-xs hover:shadow-md',
+        className
+      )}
     >
       {/* Cover artwork */}
       <Link
@@ -69,52 +59,45 @@ export function MusicTile({
       </Link>
 
       {/* Metadata below cover */}
-      <div className="mt-2.5 sm:mt-3 min-w-0 flex-1">
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Link
-              href={href}
-              className="block min-w-0 group/title focus-visible:outline-2 focus-visible:outline-primary rounded-xs"
-            >
-              <h3 className="font-semibold text-foreground text-xs sm:text-sm leading-snug line-clamp-2 group-hover/title:underline">
-                {title}
-                {hasDistinctArtist ? ` - ${artist}` : ''}
-              </h3>
-            </Link>
-          </TooltipTrigger>
-          <TooltipContent>
+      <div className="mt-2.5 sm:mt-3 min-w-0 flex-1 text-xs sm:text-sm md:text-md text-muted-foreground">
+        {/* Title and artist */}
+        <Link
+          href={href}
+          className="block min-w-0 group/title focus-visible:outline-2 focus-visible:outline-primary rounded-xs"
+        >
+          <h3 className="font-semibold text-foreground text-xs sm:text-sm leading-snug line-clamp-2 group-hover/title:underline">
             {title}
             {hasDistinctArtist ? ` - ${artist}` : ''}
-          </TooltipContent>
-        </Tooltip>
+          </h3>
+        </Link>
 
-        {(year != null || type || bpm) && (
-          <div
-            className={`mt-0.5 text-muted-foreground text-[10px] sm:text-xs ${expandedType ? 'whitespace-normal break-words' : 'truncate'}`}
-          >
-            <MusicMetadata
-              year={year}
-              type={type}
-              mixType={mixType}
-              bpm={bpm}
-              expandedType={expandedType}
-            />
-          </div>
-        )}
+        {/* General metadata */}
+        <div className="mt-1">
+          <MusicMetadata
+            bpm={bpm}
+            date={date}
+            dateFormat="full"
+            durationSeconds={durationSeconds}
+            expandedType={expandedType}
+            mixType={mixType}
+            type={type}
+          />
+        </div>
 
+        {/* Genres */}
         {visibleGenres.length > 0 && (
-          <div className="mt-0.5 whitespace-normal break-words text-muted-foreground text-[10px] sm:text-xs">
+          <div className="mt-1 whitespace-normal break-words">
             <GenreList genres={visibleGenres} layout={expandedGenres ? 'expanded' : 'inline'} />
           </div>
         )}
 
+        {/* Tags */}
         {visibleTags.length > 0 && (
-          <div className="mt-0.5 whitespace-normal break-words text-muted-foreground text-[10px] sm:text-xs">
-            {visibleTags.join(', ')}
-          </div>
+          <div className="mt-1 whitespace-normal break-words">{visibleTags.join(', ')}</div>
         )}
       </div>
 
+      {/* Play button */}
       <PlayInPlayerButton
         slug={slug}
         progressShape="none"

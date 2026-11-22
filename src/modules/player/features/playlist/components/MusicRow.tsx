@@ -23,7 +23,7 @@ export type PlaylistMusicItem = {
   artist?: string | null;
   type?: string;
   mixType?: MixType | null;
-  year?: number | string | null;
+  date?: Date | null;
   bpm?: number | null;
   genres?: MusicGenre[] | null;
 };
@@ -144,7 +144,7 @@ function MetaData({ item }: { item: PlaylistMusicItem | null }) {
   return (
     <>
       <MusicMetadata
-        year={item.year}
+        date={item.date}
         type={item.type ?? 'music'}
         mixType={item.mixType}
         bpm={item.bpm}
