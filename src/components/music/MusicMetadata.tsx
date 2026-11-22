@@ -46,13 +46,13 @@ export function MusicMetadata({
   ].filter(Boolean);
 
   return (
-    <>
+    <div className="flex flex-wrap">
       {items.map((item, index) => (
-        <span key={index}>
+        <span key={index} className="whitespace-nowrap">
           {index > 0 ? ' · ' : null}
           {item}
         </span>
       ))}
-    </>
+    </div>
   );
 }
