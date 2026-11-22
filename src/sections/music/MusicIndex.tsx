@@ -24,7 +24,6 @@ export function MusicIndex({ items }: { items: Music[] }) {
         {filters.filteredItems.map((item) => (
           <MusicTile
             key={item.slug}
-
             expandedGenres={filters.selectedGenres.size > 0}
             expandedType={filters.selectedTypes.size > 0}
             item={item}
