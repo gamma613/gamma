@@ -21,7 +21,6 @@ export function MusicTile({ item, expandedGenres = false, expandedType = false }
   const href = ROUTES.music(slug).root;
   const coverSrc = ROUTES.music(slug).art('cover');
   const mixType = type === 'mix' ? item.mixType : null;
-  const year = date.getFullYear();
   const hasDistinctArtist = Boolean(artist && artist.toLowerCase() !== 'gamma');
   const visibleGenres = (genres ?? []).filter(Boolean);
   const visibleTags = (tags ?? []).filter(Boolean);
@@ -67,7 +66,8 @@ export function MusicTile({ item, expandedGenres = false, expandedType = false }
           className={`mt-0.5 text-muted-foreground text-[10px] sm:text-xs ${expandedType ? 'whitespace-normal break-words' : 'truncate'}`}
         >
           <MusicMetadata
-            year={year}
+            date={date}
+            dateFormat="full"
             type={type}
             mixType={mixType}
             bpm={bpm}
