@@ -11,12 +11,18 @@ import { MusicMetadata } from './MusicMetadata';
 // ----------------------------------------------------------------------
 
 export type MusicTileProps = {
-  item: Music;
+  className?: string;
   expandedGenres?: boolean;
   expandedType?: boolean;
+  item: Music;
 };
 
-export function MusicTile({ item, expandedGenres = false, expandedType = false }: MusicTileProps) {
+export function MusicTile({
+  className,
+  expandedGenres = false,
+  expandedType = false,
+  item,
+}: MusicTileProps) {
   const { artist, bpm, date, genres, slug, tags, title, type } = item;
   const href = ROUTES.music(slug).root;
   const coverSrc = ROUTES.music(slug).art('cover');
@@ -49,7 +55,7 @@ export function MusicTile({ item, expandedGenres = false, expandedType = false }
       </Link>
 
       {/* Metadata below cover */}
-      <div className="mt-2.5 sm:mt-3 min-w-0 flex-1">
+      <div className="mt-2.5 sm:mt-3 min-w-0 flex-1 text-xs sm:text-sm md:text-md text-muted-foreground">
         {/* Title and artist */}
         <Link
           href={href}
@@ -62,9 +68,7 @@ export function MusicTile({ item, expandedGenres = false, expandedType = false }
         </Link>
 
         {/* General metadata */}
-        <div
-          className={`mt-0.5 text-muted-foreground text-[10px] sm:text-xs ${expandedType ? 'whitespace-normal break-words' : 'truncate'}`}
-        >
+        <div className={`mt-0.5 ${expandedType ? 'whitespace-normal break-words' : 'truncate'}`}>
           <MusicMetadata
             date={date}
             dateFormat="full"
@@ -77,16 +81,14 @@ export function MusicTile({ item, expandedGenres = false, expandedType = false }
 
         {/* Genres */}
         {visibleGenres.length > 0 && (
-          <div className="mt-0.5 whitespace-normal break-words text-muted-foreground text-[10px] sm:text-xs">
+          <div className="mt-0.5 whitespace-normal break-words">
             <GenreList genres={visibleGenres} layout={expandedGenres ? 'expanded' : 'inline'} />
           </div>
         )}
 
         {/* Tags */}
         {visibleTags.length > 0 && (
-          <div className="mt-0.5 whitespace-normal break-words text-muted-foreground text-[10px] sm:text-xs">
-            {visibleTags.join(', ')}
-          </div>
+          <div className="mt-0.5 whitespace-normal break-words">{visibleTags.join(', ')}</div>
         )}
       </div>
 
