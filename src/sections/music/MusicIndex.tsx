@@ -20,7 +20,7 @@ export function MusicIndex({ items }: { items: Music[] }) {
         />
       </div>
 
-      <div className="grid gap-3.5 xs:gap-4 sm:gap-5 lg:gap-6 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3.5 xs:gap-4 sm:gap-5 lg:gap-6">
         {filters.filteredItems.map((item) => (
           <MusicTile
             key={item.slug}
