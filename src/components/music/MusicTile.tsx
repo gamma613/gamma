@@ -1,6 +1,5 @@
 'use client';
 
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/Tooltip';
 import type { Music } from '@/lib/music/allMusicIndex';
 import { ROUTES } from '@/lib/routes';
 import { PlayInPlayerButton } from '@/modules/player';
@@ -52,24 +51,18 @@ export function MusicTile({ item, expandedGenres = false, expandedType = false }
 
       {/* Metadata below cover */}
       <div className="mt-2.5 sm:mt-3 min-w-0 flex-1">
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Link
-              href={href}
-              className="block min-w-0 group/title focus-visible:outline-2 focus-visible:outline-primary rounded-xs"
-            >
-              <h3 className="font-semibold text-foreground text-xs sm:text-sm leading-snug line-clamp-2 group-hover/title:underline">
-                {title}
-                {hasDistinctArtist ? ` - ${artist}` : ''}
-              </h3>
-            </Link>
-          </TooltipTrigger>
-          <TooltipContent>
+        {/* Title and artist */}
+        <Link
+          href={href}
+          className="block min-w-0 group/title focus-visible:outline-2 focus-visible:outline-primary rounded-xs"
+        >
+          <h3 className="font-semibold text-foreground text-xs sm:text-sm leading-snug line-clamp-2 group-hover/title:underline">
             {title}
             {hasDistinctArtist ? ` - ${artist}` : ''}
-          </TooltipContent>
-        </Tooltip>
+          </h3>
+        </Link>
 
+        {/* Explain */}
         {(year != null || type || bpm) && (
           <div
             className={`mt-0.5 text-muted-foreground text-[10px] sm:text-xs ${expandedType ? 'whitespace-normal break-words' : 'truncate'}`}
