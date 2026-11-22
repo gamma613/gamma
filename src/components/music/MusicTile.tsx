@@ -62,27 +62,27 @@ export function MusicTile({ item, expandedGenres = false, expandedType = false }
           </h3>
         </Link>
 
-        {/* Explain */}
-        {(year != null || type || bpm) && (
-          <div
-            className={`mt-0.5 text-muted-foreground text-[10px] sm:text-xs ${expandedType ? 'whitespace-normal break-words' : 'truncate'}`}
-          >
-            <MusicMetadata
-              year={year}
-              type={type}
-              mixType={mixType}
-              bpm={bpm}
-              expandedType={expandedType}
-            />
-          </div>
-        )}
+        {/* General metadata */}
+        <div
+          className={`mt-0.5 text-muted-foreground text-[10px] sm:text-xs ${expandedType ? 'whitespace-normal break-words' : 'truncate'}`}
+        >
+          <MusicMetadata
+            year={year}
+            type={type}
+            mixType={mixType}
+            bpm={bpm}
+            expandedType={expandedType}
+          />
+        </div>
 
+        {/* Genres */}
         {visibleGenres.length > 0 && (
           <div className="mt-0.5 whitespace-normal break-words text-muted-foreground text-[10px] sm:text-xs">
             <GenreList genres={visibleGenres} layout={expandedGenres ? 'expanded' : 'inline'} />
           </div>
         )}
 
+        {/* Tags */}
         {visibleTags.length > 0 && (
           <div className="mt-0.5 whitespace-normal break-words text-muted-foreground text-[10px] sm:text-xs">
             {visibleTags.join(', ')}
@@ -90,6 +90,7 @@ export function MusicTile({ item, expandedGenres = false, expandedType = false }
         )}
       </div>
 
+      {/* Play button */}
       <PlayInPlayerButton
         slug={slug}
         progressShape="none"
