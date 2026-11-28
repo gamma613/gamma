@@ -1,6 +1,7 @@
 import { Header } from '@/app/design-structure/header';
 import { VisualizerBarsLayer } from '@/app/design-structure/VisualizerBarsLayer';
 import { BokehBackground } from '@/components';
+import { DEFAULT_SOCIAL_IMAGE } from '@/lib/metadata';
 import { cn } from '@/lib/utils';
 import { monoFonts, sansFonts } from '@/theme/fonts';
 import '@/theme/styles/app.css';
@@ -17,12 +18,20 @@ const fontVars = [
 export const metadata: Metadata = {
   description: '',
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://gamma613.ca'),
+  openGraph: {
+    images: [DEFAULT_SOCIAL_IMAGE],
+    type: 'website',
+  },
   other: {
     'app-version': process.env.NEXT_PUBLIC_APP_VERSION ?? 'development',
   },
   title: {
     default: 'DJ gamma 🦇 Ottawa, Canada',
     template: '%s | DJ gamma 🦇 Ottawa, Canada',
+  },
+  twitter: {
+    card: 'summary',
+    images: [DEFAULT_SOCIAL_IMAGE.url],
   },
 };
 

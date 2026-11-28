@@ -1,13 +1,32 @@
 import { PageWrapper } from '@/components';
+import { DEFAULT_SOCIAL_IMAGE } from '@/lib/metadata';
+import { ROUTES } from '@/lib/routes';
 import { MusicIndex } from '@/sections/music/MusicIndex';
 import { allMusic } from 'content-collections';
 import type { Metadata } from 'next';
 
 // ----------------------------------------------------------------------
 
+const DESCRIPTION = 'Explore mixes, tracks, and musical offerings.';
+const TITLE = 'Music Library';
+
 export const metadata: Metadata = {
-  description: 'Explore mixes, tracks, and musical offerings.',
-  title: 'Music Library',
+  alternates: { canonical: ROUTES.music().root },
+  description: DESCRIPTION,
+  openGraph: {
+    description: DESCRIPTION,
+    images: [DEFAULT_SOCIAL_IMAGE],
+    title: TITLE,
+    type: 'website',
+    url: ROUTES.music().root,
+  },
+  title: TITLE,
+  twitter: {
+    card: 'summary',
+    description: DESCRIPTION,
+    images: [DEFAULT_SOCIAL_IMAGE.url],
+    title: TITLE,
+  },
 };
 
 export default function MusicIndexPage() {
