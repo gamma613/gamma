@@ -1,6 +1,10 @@
 'use client';
 
 import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
   Button,
   Slider,
   Tooltip,
@@ -16,6 +20,34 @@ import type { MusicFiltersState } from './useMusicFilters';
 
 function checkboxClassName() {
   return 'size-4 accent-primary';
+}
+
+function FilterAccordionTriggerLabel({
+  active = false,
+  count = 0,
+  label,
+}: {
+  active?: boolean;
+  count?: number;
+  label: string;
+}) {
+  let indicator = null;
+  if (count > 0) {
+    indicator = (
+      <span className="rounded-full bg-primary/15 px-1.5 py-0.5 text-xs font-medium text-primary">
+        {count}
+      </span>
+    );
+  } else if (active) {
+    indicator = <span className="size-2 rounded-full bg-primary" aria-label="Filter active" />;
+  }
+
+  return (
+    <span className="flex items-center gap-2">
+      <span>{label}</span>
+      {indicator}
+    </span>
+  );
 }
 
 export function MusicFilters({
@@ -82,7 +114,7 @@ export function MusicFilters({
       </Tooltip>
 
       <div className="absolute left-0 z-30 mt-2 max-h-[min(75vh,42rem)] w-[min(22rem,calc(100vw-2rem))] overflow-y-auto rounded-xl border border-border bg-popover p-4 text-popover-foreground shadow-lg">
-        <div className="mb-4 flex items-center justify-between">
+        <div className="mb-3 flex items-center justify-between">
           <h2 className="font-semibold">Filters</h2>
           <Button
             type="button"
@@ -95,171 +127,227 @@ export function MusicFilters({
           </Button>
         </div>
 
-        <fieldset className="mb-5">
-          <legend className="mb-2 text-sm font-medium">BPM</legend>
-          <div className="mb-2 flex justify-between text-xs text-muted-foreground">
-            <span>{bpmRange[0]} BPM</span>
-            <span>{bpmRange[1]} BPM</span>
-          </div>
-          <Slider
-            min={bpmDomain[0]}
-            max={bpmDomain[1]}
-            step={1}
-            value={bpmRange}
-            onValueChange={(value) => setBpmRange([value[0], value[1]])}
-            aria-label="BPM range"
-          />
-          <p className="mt-1 text-xs text-muted-foreground">Items without BPM stay visible.</p>
-        </fieldset>
+        <Accordion type="multiple" className="border-t border-border">
+          <AccordionItem value="genre">
+            <AccordionTrigger>
+              <FilterAccordionTriggerLabel label="Genre" count={selectedGenres.size} />
+            </AccordionTrigger>
+            <AccordionContent>
+              <fieldset>
+                <legend className="sr-only">Genre</legend>
+                <div className="space-y-3 text-sm">
+                  {[...genreOptions].map(([parent, subgenres]) => (
+                    <div key={parent}>
+                      <label className="flex items-center gap-2 font-medium">
+                        <input
+                          type="checkbox"
+                          className={checkboxClassName()}
+                          checked={selectedGenres.has(parent)}
+                          onChange={() =>
+                            toggleParentSelection(
+                              selectedGenres,
+                              parent,
+                              [...subgenres].map((subgenre) => `${parent}::${subgenre}`),
+                              setSelectedGenres
+                            )
+                          }
+                        />
+                        <span>{parent}</span>
+                      </label>
+                      {subgenres.size > 0 ? (
+                        <div className="ml-6 mt-1 space-y-1 border-l border-border pl-3">
+                          {[...subgenres]
+                            .sort((a, b) => a.localeCompare(b))
+                            .map((subgenre) => {
+                              const key = `${parent}::${subgenre}`;
+                              return (
+                                <label
+                                  key={key}
+                                  className="flex items-center gap-2 text-muted-foreground"
+                                >
+                                  <input
+                                    type="checkbox"
+                                    className={checkboxClassName()}
+                                    checked={selectedGenres.has(parent) || selectedGenres.has(key)}
+                                    disabled={selectedGenres.has(parent)}
+                                    onChange={() =>
+                                      toggleSelection(selectedGenres, key, setSelectedGenres)
+                                    }
+                                  />
+                                  <span>{subgenre}</span>
+                                </label>
+                              );
+                            })}
+                        </div>
+                      ) : null}
+                    </div>
+                  ))}
+                </div>
+              </fieldset>
+            </AccordionContent>
+          </AccordionItem>
 
-        <fieldset className="mb-5">
-          <legend className="mb-2 text-sm font-medium">Duration</legend>
-          <div className="mb-2 flex justify-between text-xs text-muted-foreground">
-            <span>{formatTrackTime(durationRange[0])}</span>
-            <span>{formatTrackTime(durationRange[1])}</span>
-          </div>
-          <Slider
-            min={durationDomain[0]}
-            max={durationDomain[1]}
-            step={1}
-            value={durationRange}
-            onValueChange={(value) => setDurationRange([value[0], value[1]])}
-            aria-label="Duration range"
-          />
-          <p className="mt-1 text-xs text-muted-foreground">
-            Items without a duration stay visible.
-          </p>
-        </fieldset>
-
-        <fieldset className="mb-5">
-          <legend className="mb-2 text-sm font-medium">Date</legend>
-          <div className="mb-2 flex justify-between text-xs text-muted-foreground">
-            <span>{yearRange[0]}</span>
-            <span>{yearRange[1]}</span>
-          </div>
-          <Slider
-            min={yearDomain[0]}
-            max={yearDomain[1]}
-            step={1}
-            value={yearRange}
-            onValueChange={(value) => setYearRange([value[0], value[1]])}
-            aria-label="Release year range"
-          />
-        </fieldset>
-
-        <fieldset className="mb-5">
-          <legend className="mb-2 text-sm font-medium">Tags</legend>
-          <div className="grid max-h-36 grid-cols-2 gap-x-3 gap-y-2 overflow-y-auto text-sm">
-            {tags.map((tag) => (
-              <label key={tag} className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  className={checkboxClassName()}
-                  checked={selectedTags.has(tag)}
-                  onChange={() => toggleSelection(selectedTags, tag, setSelectedTags)}
+          <AccordionItem value="bpm">
+            <AccordionTrigger>
+              <FilterAccordionTriggerLabel
+                label="BPM"
+                active={bpmRange[0] !== bpmDomain[0] || bpmRange[1] !== bpmDomain[1]}
+              />
+            </AccordionTrigger>
+            <AccordionContent className="px-1">
+              <fieldset>
+                <legend className="sr-only">BPM</legend>
+                <div className="mb-2 flex justify-between text-xs text-muted-foreground">
+                  <span>{bpmRange[0]} BPM</span>
+                  <span>{bpmRange[1]} BPM</span>
+                </div>
+                <Slider
+                  min={bpmDomain[0]}
+                  max={bpmDomain[1]}
+                  step={1}
+                  value={bpmRange}
+                  onValueChange={(value) => setBpmRange([value[0], value[1]])}
+                  aria-label="BPM range"
                 />
-                <span>{tag}</span>
-              </label>
-            ))}
-          </div>
-        </fieldset>
+              </fieldset>
+            </AccordionContent>
+          </AccordionItem>
 
-        <fieldset className="mb-5">
-          <legend className="mb-2 text-sm font-medium">Types</legend>
-          <div className="space-y-3 text-sm">
-            {types.map((type) => (
-              <div key={type}>
-                <label className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    className={checkboxClassName()}
-                    checked={selectedTypes.has(type)}
-                    onChange={() =>
-                      toggleParentSelection(
-                        selectedTypes,
-                        type,
-                        type === 'mix' ? ['mix::studio', 'mix::live'] : [],
-                        setSelectedTypes
-                      )
-                    }
-                  />
-                  <span>{type.charAt(0).toUpperCase() + type.slice(1)}</span>
-                </label>
-                {type === 'mix' ? (
-                  <div className="ml-6 mt-1 space-y-1 border-l border-border pl-3">
-                    {['studio', 'live'].map((mixType) => {
-                      const key = `mix::${mixType}`;
-                      return (
-                        <label key={key} className="flex items-center gap-2 text-muted-foreground">
-                          <input
-                            type="checkbox"
-                            className={checkboxClassName()}
-                            checked={selectedTypes.has('mix') || selectedTypes.has(key)}
-                            disabled={selectedTypes.has('mix')}
-                            onChange={() => toggleSelection(selectedTypes, key, setSelectedTypes)}
-                          />
-                          <span>{mixType}</span>
-                        </label>
-                      );
-                    })}
-                  </div>
-                ) : null}
-              </div>
-            ))}
-          </div>
-        </fieldset>
+          <AccordionItem value="type">
+            <AccordionTrigger>
+              <FilterAccordionTriggerLabel label="Type" count={selectedTypes.size} />
+            </AccordionTrigger>
+            <AccordionContent>
+              <fieldset>
+                <legend className="sr-only">Type</legend>
+                <div className="space-y-3 text-sm">
+                  {types.map((type) => (
+                    <div key={type}>
+                      <label className="flex items-center gap-2">
+                        <input
+                          type="checkbox"
+                          className={checkboxClassName()}
+                          checked={selectedTypes.has(type)}
+                          onChange={() =>
+                            toggleParentSelection(
+                              selectedTypes,
+                              type,
+                              type === 'mix' ? ['mix::studio', 'mix::live'] : [],
+                              setSelectedTypes
+                            )
+                          }
+                        />
+                        <span>{type.charAt(0).toUpperCase() + type.slice(1)}</span>
+                      </label>
+                      {type === 'mix' ? (
+                        <div className="ml-6 mt-1 space-y-1 border-l border-border pl-3">
+                          {['studio', 'live'].map((mixType) => {
+                            const key = `mix::${mixType}`;
+                            return (
+                              <label
+                                key={key}
+                                className="flex items-center gap-2 text-muted-foreground"
+                              >
+                                <input
+                                  type="checkbox"
+                                  className={checkboxClassName()}
+                                  checked={selectedTypes.has('mix') || selectedTypes.has(key)}
+                                  disabled={selectedTypes.has('mix')}
+                                  onChange={() =>
+                                    toggleSelection(selectedTypes, key, setSelectedTypes)
+                                  }
+                                />
+                                <span>{mixType}</span>
+                              </label>
+                            );
+                          })}
+                        </div>
+                      ) : null}
+                    </div>
+                  ))}
+                </div>
+              </fieldset>
+            </AccordionContent>
+          </AccordionItem>
 
-        <fieldset>
-          <legend className="mb-2 text-sm font-medium">Genres</legend>
-          <div className="space-y-3 text-sm">
-            {[...genreOptions].map(([parent, subgenres]) => (
-              <div key={parent}>
-                <label className="flex items-center gap-2 font-medium">
-                  <input
-                    type="checkbox"
-                    className={checkboxClassName()}
-                    checked={selectedGenres.has(parent)}
-                    onChange={() =>
-                      toggleParentSelection(
-                        selectedGenres,
-                        parent,
-                        [...subgenres].map((subgenre) => `${parent}::${subgenre}`),
-                        setSelectedGenres
-                      )
-                    }
-                  />
-                  <span>{parent}</span>
-                </label>
-                {subgenres.size > 0 ? (
-                  <div className="ml-6 mt-1 space-y-1 border-l border-border pl-3">
-                    {[...subgenres]
-                      .sort((a, b) => a.localeCompare(b))
-                      .map((subgenre) => {
-                        const key = `${parent}::${subgenre}`;
-                        return (
-                          <label
-                            key={key}
-                            className="flex items-center gap-2 text-muted-foreground"
-                          >
-                            <input
-                              type="checkbox"
-                              className={checkboxClassName()}
-                              checked={selectedGenres.has(parent) || selectedGenres.has(key)}
-                              disabled={selectedGenres.has(parent)}
-                              onChange={() =>
-                                toggleSelection(selectedGenres, key, setSelectedGenres)
-                              }
-                            />
-                            <span>{subgenre}</span>
-                          </label>
-                        );
-                      })}
-                  </div>
-                ) : null}
-              </div>
-            ))}
-          </div>
-        </fieldset>
+          <AccordionItem value="duration">
+            <AccordionTrigger>
+              <FilterAccordionTriggerLabel
+                label="Duration"
+                active={
+                  durationRange[0] !== durationDomain[0] || durationRange[1] !== durationDomain[1]
+                }
+              />
+            </AccordionTrigger>
+            <AccordionContent className="px-1">
+              <fieldset>
+                <legend className="sr-only">Duration</legend>
+                <div className="mb-2 flex justify-between text-xs text-muted-foreground">
+                  <span>{formatTrackTime(durationRange[0])}</span>
+                  <span>{formatTrackTime(durationRange[1])}</span>
+                </div>
+                <Slider
+                  min={durationDomain[0]}
+                  max={durationDomain[1]}
+                  step={1}
+                  value={durationRange}
+                  onValueChange={(value) => setDurationRange([value[0], value[1]])}
+                  aria-label="Duration range"
+                />
+              </fieldset>
+            </AccordionContent>
+          </AccordionItem>
+
+          <AccordionItem value="tags">
+            <AccordionTrigger>
+              <FilterAccordionTriggerLabel label="Tags" count={selectedTags.size} />
+            </AccordionTrigger>
+            <AccordionContent>
+              <fieldset>
+                <legend className="sr-only">Tags</legend>
+                <div className="grid max-h-48 grid-cols-2 gap-x-3 gap-y-2 overflow-y-auto text-sm">
+                  {tags.map((tag) => (
+                    <label key={tag} className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        className={checkboxClassName()}
+                        checked={selectedTags.has(tag)}
+                        onChange={() => toggleSelection(selectedTags, tag, setSelectedTags)}
+                      />
+                      <span>{tag}</span>
+                    </label>
+                  ))}
+                </div>
+              </fieldset>
+            </AccordionContent>
+          </AccordionItem>
+
+          <AccordionItem value="date">
+            <AccordionTrigger>
+              <FilterAccordionTriggerLabel
+                label="Date"
+                active={yearRange[0] !== yearDomain[0] || yearRange[1] !== yearDomain[1]}
+              />
+            </AccordionTrigger>
+            <AccordionContent className="px-1">
+              <fieldset>
+                <legend className="sr-only">Date</legend>
+                <div className="mb-2 flex justify-between text-xs text-muted-foreground">
+                  <span>{yearRange[0]}</span>
+                  <span>{yearRange[1]}</span>
+                </div>
+                <Slider
+                  min={yearDomain[0]}
+                  max={yearDomain[1]}
+                  step={1}
+                  value={yearRange}
+                  onValueChange={(value) => setYearRange([value[0], value[1]])}
+                  aria-label="Release year range"
+                />
+              </fieldset>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
       </div>
     </details>
   );
