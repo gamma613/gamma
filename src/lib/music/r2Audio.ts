@@ -1,9 +1,9 @@
 import { createHash, createHmac } from 'crypto';
-import { audioContentTypeFromExt } from './supported';
 
 const R2_REGION = 'auto';
 const R2_SERVICE = 's3';
-const SIGNED_URL_TTL_SECONDS = 60;
+// Long enough for buffered playback, pausing, and range seeking within a listening session.
+const SIGNED_URL_TTL_SECONDS = 3600;
 
 function awsEncode(value: string): string {
   return encodeURIComponent(value).replace(
@@ -81,21 +81,7 @@ function createPresignedGetUrl(key: string): URL {
   return url;
 }
 
-export async function fetchR2Audio(slug: string, range: string | null): Promise<Response> {
-  const response = await fetch(createPresignedGetUrl(`${slug}.mp3`), {
-    headers: range ? { Range: range } : undefined,
-    cache: 'no-store',
-  });
-
-  if (!response.ok && response.status !== 206) {
-    await response.body?.cancel();
-    if (response.status === 404) return response;
-    throw new Error(`R2 audio request failed with status ${response.status}`);
-  }
-
-  return response;
-}
-
-export function r2AudioContentType(): string {
-  return audioContentTypeFromExt('mp3');
+/** Returns a short-lived presigned R2 GET URL so clients stream audio directly from R2. */
+export function getR2AudioUrl(slug: string): URL {
+  return createPresignedGetUrl(`${slug}.mp3`);
 }
