@@ -2,7 +2,7 @@ import fs from 'fs';
 import fsp from 'fs/promises';
 import path from 'path';
 import { getMusicItem } from '@/lib/music/getMusicItem';
-import { fetchR2Audio, r2AudioContentType } from '@/lib/music/r2Audio';
+import { getR2AudioUrl } from '@/lib/music/r2Audio';
 import { resolveMusicAudioFile } from '@/lib/music/resolveAsset';
 import { audioContentTypeFromExt } from '@/lib/music/supported';
 import { NextResponse } from 'next/server';
@@ -17,20 +17,14 @@ export async function GET(req: Request, { params }: { params: Promise<{ slug: st
     if (!item) throw new Error(`Music item not found: ${slug}`);
 
     if (process.env.MEDIA_STORAGE === 'r2') {
-      const upstream = await fetchR2Audio(slug, req.headers.get('range'));
-      if (upstream.status === 404) return new NextResponse('Not found', { status: 404 });
-
-      const headers = new Headers({
-        'Content-Type': upstream.headers.get('content-type') || r2AudioContentType(),
-        'Accept-Ranges': upstream.headers.get('accept-ranges') || 'bytes',
-        'Cache-Control': 'public, max-age=300, s-maxage=1800, stale-while-revalidate=604800',
+      // Redirect so audio bytes stream directly from R2 rather than through Next.js/Vercel.
+      // Never CDN-cache a presigned URL response, or expired signatures will be served.
+      return NextResponse.redirect(getR2AudioUrl(slug), {
+        status: 307,
+        headers: {
+          'Cache-Control': 'private, no-store',
+        },
       });
-      for (const name of ['content-length', 'content-range']) {
-        const value = upstream.headers.get(name);
-        if (value) headers.set(name, value);
-      }
-
-      return new NextResponse(upstream.body, { status: upstream.status, headers });
     }
 
     const audioFile = await resolveMusicAudioFile(slug);

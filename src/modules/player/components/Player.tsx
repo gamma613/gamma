@@ -68,6 +68,7 @@ export const Player = () => {
     <ReactPlayer
       ref={playerRef}
       src={track.src}
+      crossOrigin="anonymous"
       playing={playing}
       controls={false}
       muted={muted}
