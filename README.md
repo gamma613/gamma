@@ -16,7 +16,7 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-The app's `<meta name="app-version">` updates to `development-{branch}` while `npm run dev` is running (or `development-commit-{sha}` for a detached Git checkout). A development-only endpoint checks the current Git branch every second; the initial value defaults to `development`.
+The app's `<meta name="app-version">` updates to `development-{branch}` while `npm run dev` is running (or `development-commit-{sha}` for a detached Git checkout). A development-only endpoint checks the current Git branch on page load and when the browser tab regains focus; the initial value defaults to `development`.
 
 ## Media storage (Cloudflare R2)
 

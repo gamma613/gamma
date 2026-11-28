@@ -2,15 +2,29 @@
 
 import { useEffect } from 'react';
 
+const MIN_REFRESH_INTERVAL_MS = 500;
+
 export function DevVersionMeta() {
   useEffect(() => {
     let active = true;
-    let timeout: ReturnType<typeof setTimeout>;
+    let inFlight = false;
+    let lastFetchedAt = 0;
+    let controller: AbortController | null = null;
 
     const refreshVersion = async () => {
+      const now = Date.now();
+      if (inFlight || now - lastFetchedAt < MIN_REFRESH_INTERVAL_MS) return;
+
+      inFlight = true;
+      lastFetchedAt = now;
+      controller = new AbortController();
+
       try {
-        const response = await fetch('/api/version', { cache: 'no-store' });
-        if (response.ok) {
+        const response = await fetch('/api/version', {
+          cache: 'no-store',
+          signal: controller.signal,
+        });
+        if (active && response.ok) {
           const { version } = (await response.json()) as { version: string };
           let meta = document.querySelector<HTMLMetaElement>('meta[name="app-version"]');
 
@@ -23,17 +37,32 @@ export function DevVersionMeta() {
           meta.content = version;
         }
       } catch {
-        // Keep the last known version if the development server is restarting.
+        // Keep the last known version if the development server is restarting or aborted.
       } finally {
-        if (active) timeout = setTimeout(refreshVersion, 1000);
+        inFlight = false;
+        controller = null;
+      }
+    };
+
+    const handleFocus = () => {
+      void refreshVersion();
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        void refreshVersion();
       }
     };
 
     void refreshVersion();
+    window.addEventListener('focus', handleFocus);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
 
     return () => {
       active = false;
-      clearTimeout(timeout);
+      controller?.abort();
+      window.removeEventListener('focus', handleFocus);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, []);
 
