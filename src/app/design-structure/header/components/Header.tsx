@@ -22,7 +22,13 @@ export function Header() {
           <HeaderPlayer />
         </div>
         <Link href="/" className="inline-block">
-          <Image src="/logo-transparent.png" alt="gamma logo" height="44" width="44" priority />
+          <Image
+            src="/logo-transparent-dark.png"
+            alt="gamma logo"
+            height="44"
+            width="44"
+            priority
+          />
         </Link>
       </div>
     </header>
